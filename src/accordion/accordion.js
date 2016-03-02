@@ -103,7 +103,7 @@ angular.module('mm.foundation.accordion', [])
                     }
                     setIsOpen && setIsOpen($scope.$parent, value);
                 });
-            }
+            };
         }
     };
 })

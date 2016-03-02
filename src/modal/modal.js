@@ -117,9 +117,13 @@ angular.module('mm.foundation.modal', ['mm.foundation.transition'])
 
 .factory('$modalStack', function($window, $transition, $timeout, $document, $compile, $rootScope, $$stackedMap) {
 
-    var OPENED_MODAL_CLASS = 'modal-open';
+    var body = $document.find('body').eq(0);
 
-    var backdropDomEl, backdropScope, cssTop;
+    var OPENED_MODAL_CLASS = 'is-reveal-open';
+
+    var backdropDomEl;
+    var backdropScope;
+    var cssTop;
     var openedWindows = $$stackedMap.createNew();
     var $modalStack = {};
 
@@ -140,8 +144,16 @@ angular.module('mm.foundation.modal', ['mm.foundation.transition'])
         }
     });
 
+    function resizeHandler(){
+      var opened = openedWindows.keys();
+      for (var i = 0; i < opened.length; i++) {
+          $modalStack.reposition(opened[i]);
+      }
+    }
+
+
     function removeModalWindow(modalInstance) {
-        var parent = $document.find(modalInstance.options.parent).eq(0);
+        var body = $document.find('body').eq(0);
         var modalWindow = openedWindows.get(modalInstance).value;
 
         //clean up the stack
@@ -150,8 +162,11 @@ angular.module('mm.foundation.modal', ['mm.foundation.transition'])
         //remove window DOM element
         removeAfterAnimate(modalWindow.modalDomEl, modalWindow.modalScope, 300, function() {
             modalWindow.modalScope.$destroy();
-            parent.toggleClass(OPENED_MODAL_CLASS, openedWindows.length() > 0);
             checkRemoveBackdrop();
+            if(openedWindows.length() === 0){
+              body.removeClass(OPENED_MODAL_CLASS);
+              angular.element($window).unbind('resize', resizeHandler);
+            }
         });
     }
 
@@ -200,13 +215,38 @@ angular.module('mm.foundation.modal', ['mm.foundation.transition'])
         }
     }
 
-    function calculateModalTop(modalElement, offset) {
-        if (angular.isUndefined(offset)) {
-            offset = 0;
-        }
-        var scrollY = $window.pageYOffset || 0;
-        return offset + scrollY;
+
+    function getModalCenter(modalInstance){
+
+      var options = openedWindows.get(modalInstance);
+
+      // Create a faux modal div to compute the correct position
+      var faux = angular.element('<div class="reveal without-overlay ' + modal.windowClass + '" style="z-index:-1; display: block;"></div>');
+      body.prepend(faux[0]);
+
+      var windowWidth = window.innerWidth
+      || document.documentElement.clientWidth
+      || document.body.clientWidth;
+
+      var windowHeight = window.innerHeight
+      || document.documentElement.clientHeight
+      || document.body.clientHeight;
+
+      var width = faux[0].offsetWidth;
+      var height = faux[0].offsetHeight;
+
+      var left = parseInt((windowWidth - width) / 2, 10);
+      var top;
+      if (height > windowHeight) {
+        top = parseInt(Math.min(100, windowHeight / 10), 10);
+      } else {
+        top = parseInt((windowHeight - height) / 4, 10);
+      }
+
+      faux.remove();
+      return {top: top, left: left};
     }
+
 
     $document.bind('keydown', function(evt) {
         var modal;
@@ -221,54 +261,52 @@ angular.module('mm.foundation.modal', ['mm.foundation.transition'])
         }
     });
 
-    $modalStack.open = function(modalInstance, modal) {
+    $modalStack.open = function(modalInstance, options) {
         modalInstance.options = {
-            deferred: modal.deferred,
-            modalScope: modal.scope,
-            backdrop: modal.backdrop,
-            keyboard: modal.keyboard,
-            parent: modal.parent
+            deferred: options.deferred,
+            modalScope: options.scope,
+            backdrop: options.backdrop,
+            keyboard: options.keyboard,
         };
         openedWindows.add(modalInstance, modalInstance.options);
 
-        var parent = $document.find(modal.parent).eq(0),
-            currBackdropIndex = backdropIndex();
+        var currBackdropIndex = backdropIndex();
 
         if (currBackdropIndex >= 0 && !backdropDomEl) {
             backdropScope = $rootScope.$new(true);
             backdropScope.index = currBackdropIndex;
             backdropDomEl = $compile('<div modal-backdrop></div>')(backdropScope);
-            parent.append(backdropDomEl);
+            body.prepend(backdropDomEl);
         }
 
-        // Create a faux modal div just to measure its
-        // distance to top
-        var faux = angular.element('<div class="reveal-modal" style="z-index:-1""></div>');
-        parent.append(faux[0]);
-        cssTop = parseInt($window.getComputedStyle(faux[0]).top) || 0;
-        var openAt = calculateModalTop(faux, cssTop);
-        faux.remove();
+        if(openedWindows.length() === 1){
+          angular.element($window).bind('resize', resizeHandler);
+        }
 
-        var angularDomEl = angular.element('<div modal-window style="visibility: visible; top:' + openAt + 'px;"></div>')
+        modalPos = getModalCenter(modalInstance);
+
+        var angularDomEl = angular.element('<div modal-window></div>')
             .attr({
-                'window-class': modal.windowClass,
+                'style': 'visibility: visible; top:' + modalPos.top + 'px; left: ' + modalPos.left +'px;',
+                'window-class': options.windowClass,
                 'index': openedWindows.length() - 1,
                 'animate': 'animate'
             });
-        angularDomEl.html(modal.content);
+        angularDomEl.html(options.content);
 
-        var modalDomEl = $compile(angularDomEl)(modal.scope);
+        var modalDomEl = $compile(angularDomEl)(options.scope);
         openedWindows.top().value.modalDomEl = modalDomEl;
-        parent.append(modalDomEl);
-        parent.addClass(OPENED_MODAL_CLASS);
+        body.prepend(modalDomEl);
+        body.addClass(OPENED_MODAL_CLASS);
     };
 
     $modalStack.reposition = function(modalInstance) {
         var modalWindow = openedWindows.get(modalInstance).value;
         if (modalWindow) {
             var modalDomEl = modalWindow.modalDomEl;
-            var top = calculateModalTop(modalDomEl, cssTop);
-            modalDomEl.css('top', top + "px");
+            var modalPos = getModalCenter(modalInstance);
+            modalDomEl.css('top', modalPos.top + "px");
+            modalDomEl.css('left', modalPos.left + "px");
         }
     };
 
@@ -396,8 +434,7 @@ angular.module('mm.foundation.modal', ['mm.foundation.transition'])
                         content: tplAndVars[0],
                         backdrop: modalOptions.backdrop,
                         keyboard: modalOptions.keyboard,
-                        windowClass: modalOptions.windowClass,
-                        parent: modalOptions.parent || 'body'
+                        windowClass: modalOptions.windowClass
                     });
 
                 }, function resolveError(reason) {

@@ -93,7 +93,7 @@ describe('$modal', function () {
       },
 
     /**
-     * If you have  <div class="reveal-modal ..." style="... ; mystyle: fred ...">
+     * If you have  <div class="reveal ..." style="... ; mystyle: fred ...">
      *
      *  call toHaveModalOpenWithStyle('mystyle', 'fred')
      *
@@ -106,7 +106,7 @@ describe('$modal', function () {
       toHaveModalOpenWithStyle: function(util, customEqualityTesters) {
 
         function compare(actual, style, expected){
-          var modalDomEls = actual[0].querySelector('body > div.reveal-modal');
+          var modalDomEls = actual[0].querySelector('body > div.reveal');
           var passed = getComputedStyle(modalDomEls)[style] === expected;
           return {
             pass: passed,
@@ -120,7 +120,7 @@ describe('$modal', function () {
       toHaveModalOpenWithContent: function(util, customEqualityTesters) {
 
         function compare(actual, content, selector){
-          var modalDomEls = actual[0].querySelector('body > div.reveal-modal > div');
+          var modalDomEls = actual[0].querySelector('body > div.reveal > div');
           var contentToCompare = selector ? modalDomEls.querySelector(selector) : modalDomEls;
           var passed = getComputedStyle(modalDomEls)['display'] === 'block' &&  contentToCompare.innerHTML == content;
           return {
@@ -135,7 +135,7 @@ describe('$modal', function () {
       toHaveModalsOpen: function(util, customEqualityTesters) {
 
         function compare(actual, noOfModals){
-          var modalDomEls = actual[0].querySelectorAll('body > div.reveal-modal');
+          var modalDomEls = actual[0].querySelectorAll('body > div.reveal');
           var passed = modalDomEls.length === noOfModals;
           return {
             pass: passed
@@ -148,7 +148,7 @@ describe('$modal', function () {
       toHaveBackdrop: function(util, customEqualityTesters) {
 
         function compare(actual){
-          var backdropDomEls = actual[0].querySelectorAll('body > div.reveal-modal-bg');
+          var backdropDomEls = actual[0].querySelectorAll('body > div.reveal-overlay');
 
           var passed = backdropDomEls.length === 1;
           return {
@@ -163,7 +163,7 @@ describe('$modal', function () {
       toHaveModalOpenInOtherParent: function(util, customEqualityTesters) {
 
         function compare(actual, parentSelector){
-          var modalElem = actual[0].querySelectorAll(parentSelector + ' > .reveal-modal');
+          var modalElem = actual[0].querySelectorAll(parentSelector + ' > .reveal');
           var passed = modalElem.length === 1;
           return {
             pass: passed,
@@ -179,17 +179,17 @@ describe('$modal', function () {
   afterEach(function () {
     var body = $document[0].querySelector('body');
 
-    var modals = angular.element(body.querySelectorAll('div.reveal-modal'));
-    var bgs = angular.element(body.querySelectorAll('div.reveal-modal-bg'));
+    var modals = angular.element(body.querySelectorAll('div.reveal'));
+    var bgs = angular.element(body.querySelectorAll('div.reveal-overlay'));
 
     modals.remove();
     bgs.remove();
 
     if (body.classList) {
-      body.classList.remove('modal-open');
+      body.classList.remove('is-reveal-open');
     }
     else {
-      body.className = body.className.replace(new RegExp('(^|\\b)' + 'modal-open'.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
+      body.className = body.className.replace(new RegExp('(^|\\b)' + 'is-reveal-open'.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
     }
 
   });
@@ -304,7 +304,7 @@ describe('$modal', function () {
       var modal = open({template: '<div>Content</div>'});
       expect($document).toHaveModalsOpen(1);
 
-      $document[0].querySelector('body > div.reveal-modal-bg').click();
+      $document[0].querySelector('body > div.reveal-overlay').click();
       $timeout.flush();
       $rootScope.$digest();
 
@@ -583,7 +583,7 @@ describe('$modal', function () {
           backdrop: 'static'
         });
 
-        $document[0].querySelector('body > div.reveal-modal-bg').click();
+        $document[0].querySelector('body > div.reveal-overlay').click();
         $rootScope.$digest();
 
         expect($document).toHaveModalOpenWithContent('Static backdrop', 'div');
@@ -593,7 +593,7 @@ describe('$modal', function () {
       it('should animate backdrop on each modal opening', function () {
 
         var modal = open({ template: '<div>With backdrop</div>' });
-        var backdropEl = angular.element($document[0].querySelector('body > div.reveal-modal-bg'));
+        var backdropEl = angular.element($document[0].querySelector('body > div.reveal-overlay'));
         expect(backdropEl).not.toHaveClass('in');
 
         $timeout.flush();
@@ -603,7 +603,7 @@ describe('$modal', function () {
         waitForBackdropAnimation();
 
         modal = open({ template: '<div>With backdrop</div>' });
-        backdropEl = angular.element($document[0].querySelector('body > div.reveal-modal-bg'));
+        backdropEl = angular.element($document[0].querySelector('body > div.reveal-overlay'));
         expect(backdropEl).not.toHaveClass('in');
 
       });
@@ -617,7 +617,7 @@ describe('$modal', function () {
           windowClass: 'additional'
         });
 
-        expect(angular.element($document[0].querySelector('div.reveal-modal'))).toHaveClass('additional');
+        expect(angular.element($document[0].querySelector('div.reveal'))).toHaveClass('additional');
       });
     });
   });
@@ -655,7 +655,7 @@ describe('$modal', function () {
       var modal1 = open({template: '<div>Modal1</div>'});
       var modal2 = open({template: '<div>Modal2</div>', backdrop: false});
 
-      $document[0].querySelector('body > div.reveal-modal-bg').click();
+      $document[0].querySelector('body > div.reveal-overlay').click();
       $rootScope.$digest();
 
       expect($document).toHaveModalsOpen(2);
@@ -670,22 +670,22 @@ describe('$modal', function () {
       expect($document).toHaveBackdrop();
     });
 
-    it('should add "modal-open" class when a modal gets opened', function () {
+    it('should add "is-reveal-open" class when a modal gets opened', function () {
 
       var body = $document.find('body');
-      expect(body).not.toHaveClass('modal-open');
+      expect(body).not.toHaveClass('is-reveal-open');
 
       var modal1 = open({template: '<div>Content1</div>'});
-      expect(body).toHaveClass('modal-open');
+      expect(body).toHaveClass('is-reveal-open');
 
       var modal2 = open({template: '<div>Content1</div>'});
-      expect(body).toHaveClass('modal-open');
+      expect(body).toHaveClass('is-reveal-open');
 
       dismiss(modal1);
-      expect(body).toHaveClass('modal-open');
+      expect(body).toHaveClass('is-reveal-open');
 
       dismiss(modal2);
-      expect(body).not.toHaveClass('modal-open');
+      expect(body).not.toHaveClass('is-reveal-open');
     });
   });
 });

@@ -32,10 +32,10 @@
 
 // figure {margin-top: 0 }
 
-// img.logo {
-//   margin: 50px auto 50px auto;
-//   width: 275px;
-// }
+img.logo {
+  margin: 50px auto 50px auto;
+  width: 275px;
+}
 
 // /* Some Foundation color overrides */
 
@@ -119,25 +119,13 @@
 //   text-decoration: none;
 // }
 
-// .footer {
-//   text-align: center;
-//   padding: 30px 0;
-//   margin-top: 70px;
-//   border-top: 1px solid #e5e5e5;
-//   background-color: #f5f5f5;
-// }
-
-// .bs-social {
-//   margin-top: 20px;
-//   margin-bottom: 20px;
-//   text-align: center;
-// }
-
-// @media (min-width: 768px) {
-
-//   .bs-social {
-//     text-align: left;
-//   }
+.footer {
+  text-align: center;
+  padding: 30px 0;
+  margin-top: 70px;
+  border-top: 1px solid #e5e5e5;
+  background-color: #f5f5f5;
+}
 
 // }
 
@@ -145,17 +133,6 @@
 //   cursor: pointer;
 // }
 
-// .bs-social-buttons {
-//   display: inline-block;
-//   margin-bottom: 0;
-//   padding-left: 0;
-//   list-style: none;
-// }
-// .bs-social-buttons li {
-//   display: inline-block;
-//   padding: 5px 8px;
-//   line-height: 1;
-// }
 
 // @media (max-width: 767px) {
 
@@ -199,20 +176,20 @@
 //  */
 
 
-// .code pre, .code code {
-//   border: none;
-//   border-top-left-radius: 0;
-//   border-top-right-radius: 0;
-// }
+.code pre, .code code {
+  border: none;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
 
-// .tabs dd.active a {
-//   background-color: #FFF;
-// }
+.tabs dd.active a {
+  background-color: #FFF;
+}
 
-// .code .tabs-content>.content {
-//   padding: 0;
-//   width: 100%;
-// }
+.code .tabs-content>.content {
+  padding: 0;
+  width: 100%;
+}
 
 // /*
 //  * Buttons
@@ -259,11 +236,11 @@
 
 // /* Not enough room on mobile for markup tab, js tab, and plunk btn.
 // And no one cares about plunk button on a phone anyway */
-// @media only screen and (max-device-width: 480px) {
-//   #plunk-btn {
-//     display: none;
-//   }
-// }
+@media only screen and (max-device-width: 480px) {
+  #plunk-btn {
+    display: none;
+  }
+}
 
 // .navbar-nav .dropdown .navbar-brand {
 //   max-width: 100%;

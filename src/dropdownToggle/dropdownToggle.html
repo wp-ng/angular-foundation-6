@@ -1,0 +1,9 @@
+<span ng-click="$ctrl.toggle()" ng-transclude="toggle">Toggle Dropdown</span>
+<div
+    ng-transclude="pane"
+    ng-style="$ctrl.css"
+    ng-class="{'is-open': $ctrl.active}"
+    ng-attr-aria-hidden="$ctrl.active"
+    class="dropdown-pane">
+  Just some junk that needs to be said. Or not. Your choice.
+</div>

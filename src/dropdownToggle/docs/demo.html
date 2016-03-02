@@ -1,27 +1,40 @@
 <div ng-controller="DropdownCtrl">
-  <p>
-    <a dropdown-toggle="#dropdown-example-1">Click me for a dropdown, yo!</a>
-  </p>
-  <ul id="dropdown-example-1" class="f-dropdown">
-    <li ng-repeat="choice in items">
-      <a>{{choice}}</a>
-    </li>
-  </ul>
 
-  <a class="button dropdown" dropdown-toggle="#dropdown-example-2">Dropdowns can also have links!</a>
-  <ul id="dropdown-example-2" class="f-dropdown">
-    <li ng-repeat="(label, url) in linkItems">
-      <a href="{{url}}" target="_blank">{{label}}</a>
-    </li>
-  </ul>
+  <dropdown-toggle style="display: block;">
+    <toggle><a>Click me for a dropdown-toggle, yo!</a></toggle>
+    <pane>
+      <ul class="f-dropdown-toggle">
+        <li ng-repeat="choice in items">
+          <a>{{choice}}</a>
+        </li>
+      </ul>
+    </pane>
+  </dropdown-toggle>
 
-  <a class="button split">
-    Split Button
-    <span dropdown-toggle="#dropdown-example-3"></span>
-  </a>
-  <ul id="dropdown-example-3" class="f-dropdown">
-    <li ng-repeat="choice in items">
-      <a>{{choice}}</a>
-    </li>
-  </ul>
+  <dropdown-toggle style="display: block;">
+    <toggle><a>dropdown-toggles can also have links!</a></toggle>
+    <pane>
+      <ul>
+        <li ng-repeat="(label, url) in linkItems">
+          <a href="{{url}}" target="_blank">{{label}}</a>
+        </li>
+      </ul>
+    </pane>
+  </dropdown-toggle>
+
+  <dropdown-toggle>
+    <toggle>
+      <a class="button split">
+        Split Button
+        <span dropdown-toggle-toggle="#dropdown-toggle-example-3"></span>
+      </a>
+    </toggle>
+    <pane>
+      <ul>
+        <li ng-repeat="choice in items">
+          <a>{{choice}}</a>
+        </li>
+      </ul>
+    </pane>
+  </dropdown-toggle>
 </div>

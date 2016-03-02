@@ -29,11 +29,11 @@ describe("alert", function () {
   function createAlerts() {
     $compile(element)(scope);
     scope.$digest();
-    return angular.element(element[0].querySelectorAll('.alert-box'));
+    return angular.element(element[0].querySelectorAll('.callout'));
   }
 
   function findCloseButton(index) {
-    return angular.element(element[0].querySelectorAll('.close')[index]);
+    return angular.element(element[0].querySelectorAll('.close-button')[index]);
   }
 
   function findContent(index) {
@@ -47,10 +47,10 @@ describe("alert", function () {
 
   it("should use correct classes for different alert types", function () {
     var alerts = createAlerts();
-    expect(matches(alerts[0], '.alert-box.success')).toBe(true);
-    expect(matches(alerts[1], '.alert-box.warning.round')).toBe(true);
-    expect(matches(alerts[2], '.alert-box.info.radius')).toBe(true);
-    expect(matches(alerts[3],'.alert-box')).toBe(true);
+    expect(matches(alerts[0], '.callout.success')).toBe(true);
+    expect(matches(alerts[1], '.callout.warning.round')).toBe(true);
+    expect(matches(alerts[2], '.callout.info.radius')).toBe(true);
+    expect(matches(alerts[3],'.callout')).toBe(true);
   });
 
   it('should show the alert content', function() {

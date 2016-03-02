@@ -1,19 +1,21 @@
 angular.module('mm.foundation.progressbar', ['mm.foundation.transition'])
 
 .constant('progressConfig', {
-  animate: true,
-  max: 100
+    animate: true,
+    max: 100
 })
 
-.controller('ProgressController', ['$scope', '$attrs', 'progressConfig', '$transition', function($scope, $attrs, progressConfig, $transition) {
+.controller('ProgressController', function($scope, $attrs, progressConfig, $transition) {
+   'ngInject';
     var self = this,
         bars = [],
         max = angular.isDefined($attrs.max) ? $scope.$parent.$eval($attrs.max) : progressConfig.max,
         animate = angular.isDefined($attrs.animate) ? $scope.$parent.$eval($attrs.animate) : progressConfig.animate;
 
     this.addBar = function(bar, element) {
-        var oldValue = 0, index = bar.$parent.$index;
-        if ( angular.isDefined(index) &&  bars[index] ) {
+        var oldValue = 0,
+            index = bar.$parent.$index;
+        if (angular.isDefined(index) && bars[index]) {
             oldValue = bars[index].value;
         }
         bars.push(bar);
@@ -37,9 +39,14 @@ angular.module('mm.foundation.progressbar', ['mm.foundation.transition'])
 
         if (animate) {
             element.css('width', this.getPercentage(oldValue) + '%');
-            $transition(element, {width: percent + '%'});
+            $transition(element, {
+                width: percent + '%'
+            });
         } else {
-            element.css({'transition': 'none', 'width': percent + '%'});
+            element.css({
+                'transition': 'none',
+                'width': percent + '%'
+            });
         }
     };
 
@@ -50,9 +57,10 @@ angular.module('mm.foundation.progressbar', ['mm.foundation.transition'])
     this.getPercentage = function(value) {
         return Math.round(100 * value / max);
     };
-}])
+})
 
 .directive('progress', function() {
+    'ngInject';
     return {
         restrict: 'EA',
         replace: true,
@@ -61,11 +69,12 @@ angular.module('mm.foundation.progressbar', ['mm.foundation.transition'])
         require: 'progress',
         scope: {},
         template: '<div class="progress" ng-transclude></div>'
-        //templateUrl: 'template/progressbar/progress.html' // Works in AngularJS 1.2
+            //templateUrl: 'template/progressbar/progress.html' // Works in AngularJS 1.2
     };
 })
 
 .directive('bar', function() {
+    'ngInject';
     return {
         restrict: 'EA',
         replace: true,

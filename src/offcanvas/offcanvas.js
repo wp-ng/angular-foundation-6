@@ -1,13 +1,14 @@
 angular.module("mm.foundation.offcanvas", [])
-    .directive('offCanvasWrap', ['$window', function ($window) {
+    .directive('offCanvasWrap', function($window) {
+        'ngInject';
         return {
             scope: {},
             restrict: 'C',
-            link: function ($scope, element, attrs) {
+            link: function($scope, element, attrs) {
                 var win = angular.element($window);
                 var sidebar = $scope.sidebar = element;
 
-                $scope.hide = function () {
+                $scope.hide = function() {
                     sidebar.removeClass('move-left');
                     sidebar.removeClass('move-right');
                 };
@@ -34,48 +35,52 @@ angular.module("mm.foundation.offcanvas", [])
                 };
             }]
         };
-    }])
-    .directive('leftOffCanvasToggle', [function () {
+    })
+    .directive('leftOffCanvasToggle', function() {
+        'ngInject';
         return {
             require: '^offCanvasWrap',
             restrict: 'C',
-            link: function ($scope, element, attrs, offCanvasWrap) {
-                element.on('click', function () {
+            link: function($scope, element, attrs, offCanvasWrap) {
+                element.on('click', function() {
                     offCanvasWrap.leftToggle();
                 });
             }
         };
-    }])
-    .directive('rightOffCanvasToggle', [function () {
+    })
+    .directive('rightOffCanvasToggle', function() {
+        'ngInject';
         return {
             require: '^offCanvasWrap',
             restrict: 'C',
-            link: function ($scope, element, attrs, offCanvasWrap) {
-                element.on('click', function () {
+            link: function($scope, element, attrs, offCanvasWrap) {
+                element.on('click', function() {
                     offCanvasWrap.rightToggle();
                 });
             }
         };
-    }])
-       .directive('exitOffCanvas', [function () {
+    })
+    .directive('exitOffCanvas', function() {
+        'ngInject';
         return {
             require: '^offCanvasWrap',
             restrict: 'C',
-            link: function ($scope, element, attrs, offCanvasWrap) {
-                element.on('click', function () {
+            link: function($scope, element, attrs, offCanvasWrap) {
+                element.on('click', function() {
                     offCanvasWrap.hide();
                 });
             }
         };
-    }])
-    .directive('offCanvasList', [function () {
+    })
+    .directive('offCanvasList', function() {
+        'ngInject';
         return {
             require: '^offCanvasWrap',
             restrict: 'C',
-            link: function ($scope, element, attrs, offCanvasWrap) {
-                element.on('click', function () {
+            link: function($scope, element, attrs, offCanvasWrap) {
+                element.on('click', function() {
                     offCanvasWrap.hide();
                 });
             }
         };
-    }]);
+    });

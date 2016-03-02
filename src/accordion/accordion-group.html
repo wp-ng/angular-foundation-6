@@ -1,4 +1,4 @@
-<dd>
-  <a ng-click="isOpen = !isOpen" ng-class="{ active: isOpen }"  accordion-transclude="heading">{{heading}}</a>
-  <div class="content" ng-class="{ active: isOpen }" ng-transclude></div>
-</dd>
+<li class="accordion-item" ng-class="{ 'is-active': $ctrl.isOpen }">
+  <a ng-click="$ctrl.isOpen = !$ctrl.isOpen" class="accordion-title" accordion-transclude>{{$ctrl.heading}}</a>
+  <div class="accordion-content" ng-style="{display: $ctrl.isOpen ? 'block' : 'none'}" ng-transclude></div>
+</li>

@@ -1,7 +1,8 @@
 angular.module("mm.foundation.mediaQueries", [])
-    .factory('matchMedia', ['$document', '$window', function($document, $window) {
+    .factory('matchMedia', function($document, $window) {
+        'ngInject';
         // MatchMedia for IE <= 9
-        return $window.matchMedia || (function matchMedia(doc, undefined){
+        return $window.matchMedia || (function matchMedia(doc, undefined) {
             var bool,
                 docElem = doc.documentElement,
                 refNode = docElem.firstElementChild || docElem.firstChild,
@@ -14,7 +15,7 @@ angular.module("mm.foundation.mediaQueries", [])
             fakeBody.style.background = "none";
             fakeBody.appendChild(div);
 
-            return function (q) {
+            return function(q) {
                 div.innerHTML = "&shy;<style media=\"" + q + "\"> #mq-test-1 { width: 42px; }</style>";
                 docElem.insertBefore(fakeBody, refNode);
                 bool = div.offsetWidth === 42;
@@ -26,8 +27,9 @@ angular.module("mm.foundation.mediaQueries", [])
             };
 
         }($document[0]));
-    }])
-    .factory('mediaQueries', ['$document', 'matchMedia', function($document, matchMedia) {
+    })
+    .factory('mediaQueries', function($document, matchMedia) {
+        'ngInject';
         var head = angular.element($document[0].querySelector('head'));
         head.append('<meta class="foundation-mq-topbar" />');
         head.append('<meta class="foundation-mq-small" />');
@@ -37,23 +39,23 @@ angular.module("mm.foundation.mediaQueries", [])
         var regex = /^[\/\\'"]+|(;\s?})+|[\/\\'"]+$/g;
         var queries = {
             topbar: getComputedStyle(head[0].querySelector('meta.foundation-mq-topbar')).fontFamily.replace(regex, ''),
-            small : getComputedStyle(head[0].querySelector('meta.foundation-mq-small')).fontFamily.replace(regex, ''),
-            medium : getComputedStyle(head[0].querySelector('meta.foundation-mq-medium')).fontFamily.replace(regex, ''),
-            large : getComputedStyle(head[0].querySelector('meta.foundation-mq-large')).fontFamily.replace(regex, '')
+            small: getComputedStyle(head[0].querySelector('meta.foundation-mq-small')).fontFamily.replace(regex, ''),
+            medium: getComputedStyle(head[0].querySelector('meta.foundation-mq-medium')).fontFamily.replace(regex, ''),
+            large: getComputedStyle(head[0].querySelector('meta.foundation-mq-large')).fontFamily.replace(regex, '')
         };
 
         return {
-            topbarBreakpoint: function () {
+            topbarBreakpoint: function() {
                 return !matchMedia(queries.topbar).matches;
             },
-            small: function () {
+            small: function() {
                 return matchMedia(queries.small).matches;
             },
-            medium: function () {
+            medium: function() {
                 return matchMedia(queries.medium).matches;
             },
-            large: function () {
+            large: function() {
                 return matchMedia(queries.large).matches;
             }
         };
-    }]);
+    });

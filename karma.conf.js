@@ -20,7 +20,7 @@ config.set({
 
   // list of files to exclude
   exclude: [
-    'src/**/demo.js'
+    'src/**/demo.js',
   ],
 
   browsers: [
@@ -92,7 +92,7 @@ config.set({
   jspm: {
       // Edit this to your needs
       serveFiles: ['jspm_packages/**/*.js'],
-      loadFiles: expand(['src/**/*.html', 'src/**/*.js', '!src/**/demo.js']),
+      loadFiles: expand(['src/**/*.html', 'src/**/*.js', '!src/**/demo.js', '!src/_*/**']),
       config: "config.js",
       packages: "jspm_packages/"
   }

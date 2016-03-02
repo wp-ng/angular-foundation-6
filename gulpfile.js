@@ -1,5 +1,6 @@
 'use strict';
 var gulp = require('gulp');
+var sass = require('gulp-sass');
 var ngAnnotate = require('gulp-ng-annotate');
 var uglify = require('gulp-uglify');
 var templateCache = require('gulp-angular-templatecache');
@@ -26,6 +27,9 @@ var shell = require('shelljs');
 var changed = require('gulp-changed');
 var connect = require('gulp-connect');
 var open = require('gulp-open');
+var postcss = require('gulp-postcss');
+var autoprefixer = require('autoprefixer-core');
+var ngAnnotate = require('gulp-ng-annotate');
 
 var base = path.join(__dirname, 'src');
 var watchedFiles = [
@@ -155,6 +159,9 @@ function findModules(){
       filter: 'isDirectory', cwd: '.'
     }, 'src/*').forEach(function(dir) {
       var moduleName = dir.split('/')[1];
+      if(moduleName[0] === '_'){
+        return;
+      }
       if(buildModules.length && buildModules.indexOf(moduleName) === -1){
         return;
       }
@@ -227,7 +234,11 @@ function build(fileName, opts){
 
     sq.done();
 
-    var s = sq.pipe(concat(fileName));
+    var s = sq.pipe(concat(fileName)).pipe(ngAnnotate({
+        add: true,
+        single_quotes: true,
+    }));
+
     if(opts.minify){
         s = s.pipe(uglify(uglifySettings));
     }
@@ -286,13 +297,22 @@ gulp.task('demo', function() {
             ngversion: jspmVersion(pkg.jspm.dependencies['angular']),
             nglegacyversion: jspmVersion(pkg.jspm.dependencies['angular-legacy']),
             //fdversion: '6.0.5',
-            fdversion: '5.5.2',
+            fdversion: '6.2.0',
             faversion: '4.3.0',
         }));
 
-    var assets = gulp.src('./misc/demo/assets/**', {base: './misc/demo/'});
+    var assets = gulp.src(['./misc/demo/assets/**', '!./misc/demo/assets/*.scss'], {base: './misc/demo/'});
 
-    return merge(assets, html).pipe(gulp.dest('./dist'));
+    var css = gulp.src('./misc/demo/assets/demo.scss', {base: './misc/demo/'})
+        .pipe(sass({includePaths: []}))
+        .pipe(postcss([
+            autoprefixer({
+                browsers: ['last 2 version'],
+                cascade: false
+            })
+        ]));
+
+    return merge(assets, html, css).pipe(gulp.dest('./dist'));
 });
 
 

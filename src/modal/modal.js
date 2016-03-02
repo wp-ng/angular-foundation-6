@@ -218,11 +218,8 @@ angular.module('mm.foundation.modal', ['mm.foundation.transition'])
 
     function getModalCenter(modalInstance){
 
-      var options = openedWindows.get(modalInstance);
-
-      // Create a faux modal div to compute the correct position
-      var faux = angular.element('<div class="reveal without-overlay ' + modal.windowClass + '" style="z-index:-1; display: block;"></div>');
-      body.prepend(faux[0]);
+      var options = modalInstance.options;
+      var el = options.modalDomEl;
 
       var windowWidth = window.innerWidth
       || document.documentElement.clientWidth
@@ -232,8 +229,8 @@ angular.module('mm.foundation.modal', ['mm.foundation.transition'])
       || document.documentElement.clientHeight
       || document.body.clientHeight;
 
-      var width = faux[0].offsetWidth;
-      var height = faux[0].offsetHeight;
+      var width = el[0].offsetWidth;
+      var height = el[0].offsetHeight;
 
       var left = parseInt((windowWidth - width) / 2, 10);
       var top;
@@ -243,7 +240,6 @@ angular.module('mm.foundation.modal', ['mm.foundation.transition'])
         top = parseInt((windowHeight - height) / 4, 10);
       }
 
-      faux.remove();
       return {top: top, left: left};
     }
 
@@ -276,28 +272,49 @@ angular.module('mm.foundation.modal', ['mm.foundation.transition'])
             backdropScope = $rootScope.$new(true);
             backdropScope.index = currBackdropIndex;
             backdropDomEl = $compile('<div modal-backdrop></div>')(backdropScope);
-            body.prepend(backdropDomEl);
         }
 
         if(openedWindows.length() === 1){
           angular.element($window).bind('resize', resizeHandler);
         }
 
-        modalPos = getModalCenter(modalInstance);
+        var savedAnimate = options.scope.animate;
+        options.scope.animate = false;
 
-        var angularDomEl = angular.element('<div modal-window></div>')
-            .attr({
-                'style': 'visibility: visible; top:' + modalPos.top + 'px; left: ' + modalPos.left +'px;',
-                'window-class': options.windowClass,
-                'index': openedWindows.length() - 1,
-                'animate': 'animate'
-            });
-        angularDomEl.html(options.content);
+        var modalDomEl = angular.element('<div modal-window></div>').attr({
+            'style': 'visibility: visible; z-index: -1; display: block;',
+            'window-class': options.windowClass,
+            'index': openedWindows.length() - 1,
+            'animate': 'animate'
+        });
+        modalDomEl.html(options.content);
+        modalDomEl = $compile(modalDomEl)(options.scope);
 
-        var modalDomEl = $compile(angularDomEl)(options.scope);
-        openedWindows.top().value.modalDomEl = modalDomEl;
-        body.prepend(modalDomEl);
-        body.addClass(OPENED_MODAL_CLASS);
+        $timeout(function(){
+          // let the directives kick in
+          options.scope.$apply();
+
+          openedWindows.top().value.modalDomEl = modalDomEl;
+
+          // Attach, measure, remove
+          body.prepend(modalDomEl);
+          modalPos = getModalCenter(modalInstance, true);
+          modalDomEl.detach();
+
+          // set animations to what it was
+          options.scope.animate = savedAnimate;
+
+          modalDomEl.attr({
+              'style': 'visibility: visible; top:' + modalPos.top + 'px; left: ' + modalPos.left +'px; display: block;',
+          });
+
+          options.scope.$apply();
+
+          body.prepend(backdropDomEl);
+          body.prepend(modalDomEl);
+          body.addClass(OPENED_MODAL_CLASS);
+        })
+
     };
 
     $modalStack.reposition = function(modalInstance) {

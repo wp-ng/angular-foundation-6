@@ -2,9 +2,9 @@ angular.module('foundationDemoApp').controller('ModalDemoCtrl', function ($scope
 
   $scope.items = ['item1', 'item2', 'item3'];
 
-  for(var i = 0; i < 40; i++){
-    $scope.items.push('item ' + i);
-  }
+  // for(var i = 0; i < 40; i++){
+  //   $scope.items.push('item ' + i);
+  // }
 
   $scope.open = function () {
 

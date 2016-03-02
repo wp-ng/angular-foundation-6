@@ -1,4 +1,6 @@
-<div class='alert-box' ng-class='(type || "")'>
+<div class="callout" ng-class='(type || "")'>
   <span ng-transclude></span>
-  <a ng-show='closeable' class='close' ng-click='close()'>&times;</a>
+  <button ng-click="close()" ng-show="closeable" class="close-button" aria-label="Close alert" type="button">
+      <span aria-hidden="true">&times;</span>
+  </button>
 </div>

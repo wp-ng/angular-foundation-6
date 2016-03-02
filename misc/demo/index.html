@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Angular directives for Foundation</title>
+  <title>Angular directives for Foundation 6</title>
   <meta name="description" content="AngularJS (Angular) native
   directives for Foundation. Small footprint (5kB gzipped!),
   no 3rd party JS dependencies (jQuery, Foundation JS) required!
@@ -162,33 +162,25 @@
             <div class="columns medium-12">
               <pre><code data-language="css">.fade {
   opacity: 0;
-  -webkit-transition: opacity .15s linear;
-          transition: opacity .15s linear;
+  transition: opacity .15s linear;
 }
 .fade.in {
   opacity: 1;
 }
 
-.reveal-modal.fade {
-  -webkit-transition: -webkit-transform .3s ease-out;
-     -moz-transition:    -moz-transform .3s ease-out;
-       -o-transition:      -o-transform .3s ease-out;
-          transition:         transform .3s ease-out;
-  -webkit-transform: translate(0, -25%);
-      -ms-transform: translate(0, -25%);
-          transform: translate(0, -25%);
+.reveal.fade {
+  transition: transform .3s ease-out;
+  transform: translate(0, -25%);
 }
-.reveal-modal.in {
-  -webkit-transform: translate(0, 0);
-      -ms-transform: translate(0, 0);
-          transform: translate(0, 0);
+.reveal.in {
+  transform: translate(0, 0);
 }
 
-.reveal-modal-bg.fade {
+.reveal-bg.fade {
   filter: alpha(opacity=0);
   opacity: 0;
 }
-.reveal-modal-bg.in {
+.reveal-bg.in {
   filter: alpha(opacity=50);
   opacity: .5;
 }</code></pre>
@@ -249,6 +241,6 @@
   </div>
 </script>
 
-<script src="assets/smoothscroll-angular-custom.js"></script>
+<!-- <script src="assets/smoothscroll-angular-custom.js"></script> -->
 </body>
 </html>

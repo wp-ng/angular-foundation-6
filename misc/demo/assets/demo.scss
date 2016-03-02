@@ -301,38 +301,38 @@
 //   width: 30%;
 // }
 
-// .reveal-modal {
+// .reveal {
 //   outline: 0;
 // }
 
-// /**
-//  * Animations
-//  */
-// .fade {
-//   opacity: 0;
-//   transition: opacity .15s linear;
-// }
-// .fade.in {
-//   opacity: 1;
-// }
+/**
+ * Animations
+ */
+.fade {
+  opacity: 0;
+  transition: opacity .15s linear;
+}
+.fade.in {
+  opacity: 1;
+}
 
-// .reveal-modal.fade {
-//   transition:         transform .3s ease-out;
-//   transform: translate(0, -25%);
-// }
-// .reveal-modal.in {
-//   transform: translate(0, 0);
-// }
+.reveal.fade {
+  transition: transform .3s ease-out;
+  transform: translate(0, -25%);
+}
+.reveal.in {
+  transform: translate(0, 0);
+}
 
-// .reveal-modal-bg.fade {
-//   filter: alpha(opacity=0);
-//   opacity: 0;
-// }
-// .reveal-modal-bg.in {
-//   filter: alpha(opacity=50);
-//   opacity: .5;
-// }
+.reveal-bg.fade {
+  filter: alpha(opacity=0);
+  opacity: 0;
+}
+.reveal-bg.in {
+  filter: alpha(opacity=50);
+  opacity: .5;
+}
 
-// .alert-box {
-//   background-color: #5592BB;
-// }
+.alert-box {
+  background-color: #5592BB;
+}

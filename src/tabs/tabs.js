@@ -10,8 +10,8 @@ angular.module('mm.foundation.tabs', [])
 
 .controller('TabsetController', function TabsetCtrl($scope) {
     'ngInject';
-    var ctrl = this,
-        tabs = ctrl.tabs = $scope.tabs = [];
+    var ctrl = this;
+    var tabs = ctrl.tabs = $scope.tabs = [];
 
     if (angular.isUndefined($scope.openOnLoad)) {
         $scope.openOnLoad = true;

@@ -89,12 +89,12 @@ We are always looking for the quality contributions! Please check the [CONTRIBUT
 Not specifying any modules will build all modules. Check the `gulpfile.js` file for other tasks that are defined for this project.
 
 #### TDD
-* Run test: `grunt watch`
+* Run test: `gulp watch`
 
 This will start Karma server and will continously watch files in the project, executing tests upon every change.
 
 #### Test coverage
-Add the `--coverage` option (e.g. `grunt test --coverage`, `grunt test-legacy --coverage`) to see reports on the test coverage. These coverage reports are found in the coverage folder.
+Add the `--coverage` option (e.g. `gulp test --coverage`, `gulp test-legacy --coverage`) to see reports on the test coverage. These coverage reports are found in the coverage folder.
 
 ### Customize templates
 

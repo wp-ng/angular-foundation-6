@@ -30,6 +30,7 @@ var open = require('gulp-open');
 var postcss = require('gulp-postcss');
 var autoprefixer = require('autoprefixer-core');
 var ngAnnotate = require('gulp-ng-annotate');
+var babel = require('gulp-babel');
 
 var base = path.join(__dirname, 'src');
 var watchedFiles = [
@@ -234,7 +235,11 @@ function build(fileName, opts){
 
     sq.done();
 
-    var s = sq.pipe(concat(fileName)).pipe(ngAnnotate({
+    var s = sq.pipe(concat(fileName))
+    .pipe(babel({
+        presets: ['es2015']
+      }))
+    .pipe(ngAnnotate({
         add: true,
         single_quotes: true,
     }));

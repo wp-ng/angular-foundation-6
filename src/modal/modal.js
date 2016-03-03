@@ -144,11 +144,11 @@ angular.module('mm.foundation.modal', ['mm.foundation.transition'])
         }
     });
 
-    function resizeHandler(){
-      var opened = openedWindows.keys();
-      for (var i = 0; i < opened.length; i++) {
-          $modalStack.reposition(opened[i]);
-      }
+    function resizeHandler() {
+        var opened = openedWindows.keys();
+        for (var i = 0; i < opened.length; i++) {
+            $modalStack.reposition(opened[i]);
+        }
     }
 
 
@@ -163,9 +163,9 @@ angular.module('mm.foundation.modal', ['mm.foundation.transition'])
         removeAfterAnimate(modalWindow.modalDomEl, modalWindow.modalScope, 300, function() {
             modalWindow.modalScope.$destroy();
             checkRemoveBackdrop();
-            if(openedWindows.length() === 0){
-              body.removeClass(OPENED_MODAL_CLASS);
-              angular.element($window).unbind('resize', resizeHandler);
+            if (openedWindows.length() === 0) {
+                body.removeClass(OPENED_MODAL_CLASS);
+                angular.element($window).unbind('resize', resizeHandler);
             }
         });
     }
@@ -216,31 +216,30 @@ angular.module('mm.foundation.modal', ['mm.foundation.transition'])
     }
 
 
-    function getModalCenter(modalInstance){
+    function getModalCenter(modalInstance) {
 
-      var options = modalInstance.options;
-      var el = options.modalDomEl;
+        var options = modalInstance.options;
+        var el = options.modalDomEl;
 
-      var windowWidth = window.innerWidth
-      || document.documentElement.clientWidth
-      || document.body.clientWidth;
+        var windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
 
-      var windowHeight = window.innerHeight
-      || document.documentElement.clientHeight
-      || document.body.clientHeight;
+        var windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
-      var width = el[0].offsetWidth;
-      var height = el[0].offsetHeight;
+        var width = el[0].offsetWidth;
+        var height = el[0].offsetHeight;
 
-      var left = parseInt((windowWidth - width) / 2, 10);
-      var top;
-      if (height > windowHeight) {
-        top = parseInt(Math.min(100, windowHeight / 10), 10);
-      } else {
-        top = parseInt((windowHeight - height) / 4, 10);
-      }
+        var left = parseInt((windowWidth - width) / 2, 10);
+        var top;
+        if (height > windowHeight) {
+            top = parseInt(Math.min(100, windowHeight / 10), 10);
+        } else {
+            top = parseInt((windowHeight - height) / 4, 10);
+        }
 
-      return {top: top, left: left};
+        return {
+            top: top,
+            left: left
+        };
     }
 
 
@@ -274,8 +273,8 @@ angular.module('mm.foundation.modal', ['mm.foundation.transition'])
             backdropDomEl = $compile('<div modal-backdrop></div>')(backdropScope);
         }
 
-        if(openedWindows.length() === 1){
-          angular.element($window).bind('resize', resizeHandler);
+        if (openedWindows.length() === 1) {
+            angular.element($window).bind('resize', resizeHandler);
         }
 
         var savedAnimate = options.scope.animate;
@@ -290,30 +289,30 @@ angular.module('mm.foundation.modal', ['mm.foundation.transition'])
         modalDomEl.html(options.content);
         modalDomEl = $compile(modalDomEl)(options.scope);
 
-        $timeout(function(){
-          // let the directives kick in
-          options.scope.$apply();
+        return $timeout(function() {
+            // let the directives kick in
+            options.scope.$apply();
 
-          openedWindows.top().value.modalDomEl = modalDomEl;
+            openedWindows.top().value.modalDomEl = modalDomEl;
 
-          // Attach, measure, remove
-          body.prepend(modalDomEl);
-          modalPos = getModalCenter(modalInstance, true);
-          modalDomEl.detach();
+            // Attach, measure, remove
+            body.prepend(modalDomEl);
+            var modalPos = getModalCenter(modalInstance, true);
+            modalDomEl.detach();
 
-          // set animations to what it was
-          options.scope.animate = savedAnimate;
+            // set animations to what it was
+            options.scope.animate = savedAnimate;
 
-          modalDomEl.attr({
-              'style': 'visibility: visible; top:' + modalPos.top + 'px; left: ' + modalPos.left +'px; display: block;',
-          });
+            modalDomEl.attr({
+                'style': `visibility: visible; top: ${modalPos.top} px; left: ${modalPos.left} px; display: block;`,
+            });
 
-          options.scope.$apply();
+            options.scope.$apply();
 
-          body.prepend(backdropDomEl);
-          body.prepend(modalDomEl);
-          body.addClass(OPENED_MODAL_CLASS);
-        })
+            body.prepend(backdropDomEl);
+            body.prepend(modalDomEl);
+            body.addClass(OPENED_MODAL_CLASS);
+        });
 
     };
 
@@ -322,8 +321,8 @@ angular.module('mm.foundation.modal', ['mm.foundation.transition'])
         if (modalWindow) {
             var modalDomEl = modalWindow.modalDomEl;
             var modalPos = getModalCenter(modalInstance);
-            modalDomEl.css('top', modalPos.top + "px");
-            modalDomEl.css('left', modalPos.left + "px");
+            modalDomEl.css('top', modalPos.top + 'px');
+            modalDomEl.css('left', modalPos.left + 'px');
         }
     };
 
@@ -428,7 +427,8 @@ angular.module('mm.foundation.modal', ['mm.foundation.transition'])
                     modalScope.$close = modalInstance.close;
                     modalScope.$dismiss = modalInstance.dismiss;
 
-                    var ctrlInstance, ctrlLocals = {};
+                    var ctrlInstance;
+                    var ctrlLocals = {};
                     var resolveIter = 1;
 
                     //controllers
@@ -445,7 +445,7 @@ angular.module('mm.foundation.modal', ['mm.foundation.transition'])
                         }
                     }
 
-                    $modalStack.open(modalInstance, {
+                    return $modalStack.open(modalInstance, {
                         scope: modalScope,
                         deferred: modalResultDeferred,
                         content: tplAndVars[0],

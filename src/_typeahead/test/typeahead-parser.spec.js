@@ -1,4 +1,14 @@
+import angular from "angular";
+import mocks from "angular-mocks";
+
+import "src/typeahead/typeahead.js"
+import "src/typeahead/typeahead-match.html.js"
+import "src/typeahead/typeahead-popup.html.js"
+
 describe('syntax parser', function () {
+
+  var inject = mocks.inject;
+  var module = mocks.module;
 
   var typeaheadParser, scope, filterFilter;
 

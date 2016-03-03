@@ -1,4 +1,12 @@
+import angular from "angular";
+import mocks from "angular-mocks";
+
+import "src/buttons/buttons.js"
+
 describe('buttons', function () {
+
+  var inject = mocks.inject;
+  var module = mocks.module;
 
   var $scope, $compile;
 

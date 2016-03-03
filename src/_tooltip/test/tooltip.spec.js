@@ -1,8 +1,18 @@
+import angular from "angular";
+import mocks from "angular-mocks";
+
+import "src/tooltip/tooltip.js"
+import "src/tooltip/tooltip-popup.html.js"
+
 describe('tooltip', function() {
-  var elm,
-      elmBody,
-      scope,
-      elmScope;
+
+  var inject = mocks.inject;
+  var module = mocks.module;
+
+  var elm;
+  var elmBody;
+  var scope;
+  var elmScope;
 
   // load the tooltip code
   beforeEach(module('mm.foundation.tooltip'));

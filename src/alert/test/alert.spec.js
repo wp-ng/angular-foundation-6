@@ -1,6 +1,15 @@
+import angular from "angular";
+import mocks from "angular-mocks";
+import "src/alert/alert.js"
+import "src/alert/alert.html.js"
+
 describe("alert", function () {
 
-  var scope, $compile;
+  var inject = mocks.inject;
+  var module = mocks.module;
+
+  var scope;
+  var $compile;
   var element;
 
   beforeEach(module('mm.foundation.alert'));

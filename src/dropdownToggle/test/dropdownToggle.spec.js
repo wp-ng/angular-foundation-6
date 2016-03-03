@@ -1,5 +1,16 @@
+import angular from "angular";
+import mocks from "angular-mocks";
+import "src/position/position.js"
+import "src/mediaQueries/mediaQueries.js"
+import "src/dropdownToggle/dropdownToggle.js"
+import "src/dropdownToggle/dropdownToggle.html.js"
+
 describe('dropdownToggle', function() {
-  var $compile, $rootScope, $document, $location, $window, elm, toggleElm, targetElm;
+
+  var inject = mocks.inject;
+  var module = mocks.module;
+
+  var $compile, $rootScope, $document, $location, $window, elm, toggleElm, targetElm, $scope;
 
   beforeEach(module('template/dropdownToggle/dropdownToggle.html'));
 

@@ -1,11 +1,21 @@
+import angular from "angular";
+import mocks from "angular-mocks";
+
+import "src/tour/tour.js"
+import "src/tour/tour.html.js"
+
 describe('tour', function() {
-  var $window,
-      $timeout,
-      $compile,
-      $tour,
-      localStorage,
-      elm,
-      scope;
+
+  var inject = mocks.inject;
+  var module = mocks.module;
+
+  var $window;
+  var $timeout;
+  var $compile;
+  var $tour;
+  var localStorage;
+  var elm;
+  var scope;
 
   beforeEach(function() {
     module('mm.foundation.tour');

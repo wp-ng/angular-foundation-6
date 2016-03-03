@@ -1,4 +1,14 @@
+import angular from "angular";
+import mocks from "angular-mocks";
+
+import "src/popover/popover.js"
+import "src/popover/popover.html.js"
+
 describe('popover', function() {
+
+  var inject = mocks.inject;
+  var module = mocks.module;
+
   var elm,
       elmBody,
       scope,

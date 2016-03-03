@@ -1,4 +1,13 @@
+import angular from "angular";
+import mocks from "angular-mocks";
+
+import "src/tooltip/tooltip.js"
+import "src/tooltip/tooltip-popup.html.js"
+
 describe('tooltip directive', function () {
+
+  var inject = mocks.inject;
+  var module = mocks.module;
 
   var $rootScope, $compile, $document, $timeout;
 

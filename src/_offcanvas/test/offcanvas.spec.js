@@ -1,4 +1,13 @@
+import angular from "angular";
+import mocks from "angular-mocks";
+
+import "src/offcanvas/offcanvas.js"
+
 describe('offcanvas directive', function () {
+
+  var inject = mocks.inject;
+  var module = mocks.module;
+
   var $rootScope, element;
   beforeEach(module('mm.foundation.offcanvas'));
   beforeEach(inject(function(_$compile_, _$rootScope_) {

@@ -378,7 +378,7 @@ gulp.task('tdd', function(done) {
     new KarmaServer(config, done).start();
 });
 
-gulp.task('test', ['test-current', 'test-legacy'], function(done){
+gulp.task('test', ['test-current', /*'test-legacy'*/], function(done){
     done();
 });
 

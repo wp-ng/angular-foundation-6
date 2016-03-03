@@ -160,7 +160,7 @@ angular.module('mm.foundation.modal', ['mm.foundation.transition'])
         openedWindows.remove(modalInstance);
 
         //remove window DOM element
-        removeAfterAnimate(modalWindow.modalDomEl, modalWindow.modalScope, 300, function() {
+        removeAfterAnimate(modalWindow.modalDomEl, modalWindow.modalScope, /*300*/0, function() {
             modalWindow.modalScope.$destroy();
             checkRemoveBackdrop();
             if (openedWindows.length() === 0) {
@@ -174,7 +174,7 @@ angular.module('mm.foundation.modal', ['mm.foundation.transition'])
         //remove backdrop if no longer needed
         if (backdropDomEl && backdropIndex() == -1) {
             var backdropScopeRef = backdropScope;
-            removeAfterAnimate(backdropDomEl, backdropScope, 150, function() {
+            removeAfterAnimate(backdropDomEl, backdropScope, /*150*/0, function() {
                 backdropScopeRef.$destroy();
                 backdropScopeRef = null;
             });
@@ -304,7 +304,7 @@ angular.module('mm.foundation.modal', ['mm.foundation.transition'])
             options.scope.animate = savedAnimate;
 
             modalDomEl.attr({
-                'style': `visibility: visible; top: ${modalPos.top} px; left: ${modalPos.left} px; display: block;`,
+                'style': `visibility: visible; top: ${modalPos.top}px; left: ${modalPos.left}px; display: block;`,
             });
 
             options.scope.$apply();

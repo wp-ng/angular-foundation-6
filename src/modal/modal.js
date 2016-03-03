@@ -142,20 +142,20 @@ angular.module('mm.foundation.modal', [])
         var body = $document.find('body').eq(0);
         var modalWindow = openedWindows.get(modalInstance).value;
 
-        //clean up the stack
+        // clean up the stack
         openedWindows.remove(modalInstance);
 
-        //remove window DOM element
+        // remove window DOM element
         $animate.leave(modalWindow.modalDomEl);
         checkRemoveBackdrop();
         if (openedWindows.length() === 0) {
-            body.removeClass(OPENED_MODAL_CLASS);
+            $animate.removeClass(body, OPENED_MODAL_CLASS);
             angular.element($window).unbind('resize', resizeHandler);
         }
     }
 
     function checkRemoveBackdrop() {
-        //remove backdrop if no longer needed
+        // remove backdrop if no longer needed
         if (backdropDomEl && backdropIndex() === -1) {
             var backdropScopeRef = backdropScope;
 
@@ -193,7 +193,6 @@ angular.module('mm.foundation.modal', [])
             left: left
         };
     }
-
 
     $document.bind('keydown', function(evt) {
         var modal;
@@ -252,8 +251,15 @@ angular.module('mm.foundation.modal', [])
                 'style': `visibility: visible; top: ${modalPos.top}px; left: ${modalPos.left}px; display: block;`,
             });
 
-            body.addClass(OPENED_MODAL_CLASS);
-            return $q.all([$animate.enter(backdropDomEl, body), $animate.enter(modalDomEl, body)]);
+            var promises = [];
+
+            if(backdropDomEl){
+                promises.push($animate.enter(backdropDomEl, body));
+            }
+            promises.push($animate.enter(modalDomEl, body));
+            promises.push($animate.addClass(body, OPENED_MODAL_CLASS));
+
+            return $q.all();
         });
 
     };

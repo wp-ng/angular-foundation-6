@@ -1,4 +1,18 @@
+import angular from "angular";
+import mocks from "angular-mocks";
+
+import "src/topbar/topbar.js"
+import "src/topbar/top-bar.html.js"
+import "src/topbar/has-dropdown.html.js"
+import "src/topbar/toggle-top-bar.html.js"
+import "src/topbar/top-bar-section.html.js"
+import "src/topbar/top-bar-dropdown.html.js"
+
 describe('topbar directive', function() {
+    
+  var inject = mocks.inject;
+  var module = mocks.module;
+
   var $rootScope, $document, $compile, $window, element, containerElement;
 
   beforeEach(function() {

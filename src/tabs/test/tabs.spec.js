@@ -1,7 +1,19 @@
+import angular from "angular";
+import mocks from "angular-mocks";
+
+import "src/tabs/tabs.js"
+import "src/tabs/tab.html.js"
+import "src/tabs/tabset.html.js"
+
 describe('tabs', function() {
+
+    var inject = mocks.inject;
+    var module = mocks.module;
+
     beforeEach(module('mm.foundation.tabs', 'template/tabs/tabset.html', 'template/tabs/tab.html'));
 
-    var elm, scope;
+    var elm;
+    var scope;
 
     function titles() {
         return angular.element(elm[0].querySelectorAll('ul.tabs li'));

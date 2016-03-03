@@ -1,4 +1,14 @@
+import angular from "angular";
+import mocks from "angular-mocks";
+
+import "src/typeahead/typeahead.js"
+import "src/typeahead/typeahead-match.html.js"
+import "src/typeahead/typeahead-popup.html.js"
+
 describe('typeahead tests', function () {
+
+  var inject = mocks.inject;
+  var module = mocks.module;
 
   var $scope, $compile, $document, $timeout;
   var changeInputValueTo;

@@ -1,5 +1,12 @@
+import angular from "angular";
+import mocks from "angular-mocks";
+
+import "src/transition/transition.js"
 
 describe('$transition', function() {
+
+  var inject = mocks.inject;
+  var module = mocks.module;
 
   // Work out if we are running IE
   var ie = (function(){

@@ -10,7 +10,16 @@ config.set({
   frameworks: ['jspm', 'jasmine'],
 
   preprocessors: {
-      'src/**/*': ['generic']
+      'src/**/*': ['generic', 'babel'],
+      // 'src/**/*.js': ['generic', 'babel']
+  },
+
+  'babelPreprocessor': {
+    options: {
+      sourceMap: 'inline',
+      plugins: ["transform-es2015-modules-systemjs"],
+      presets: ['es2015'],
+    }
   },
 
   // list of files / patterns to load in the browser
@@ -58,11 +67,6 @@ config.set({
   // if true, it capture browsers, run tests and exit
   singleRun: false,
 
-  imports: 'var angular = require("angular");' +
-            'var mocks = require("angular-mocks");' +
-            'var inject = mocks.inject;' +
-            'var module = mocks.module;',
-
   genericPreprocessor: {
     rules: [{
       match: "src/**/*.html",
@@ -71,7 +75,7 @@ config.set({
           return content.replace(/\\/g, '\\\\').replace(/'/g, '\\\'').replace(/\r?\n/g, '\\n\' +\n    \'');
         };
 
-        var template = config.imports +
+        var template = 'import angular from "angular";\n' + 
             'angular.module(\'%s\', []).run([\'$templateCache\', function($templateCache) {\n' +
             '  $templateCache.put(\'%s\',\n    \'%s\');\n' +
             '}]);\n';
@@ -81,25 +85,20 @@ config.set({
         var htmlPath = filepath.replace('src/', 'template/');
 
         file.path = file.originalPath + '.js';
+        file.originalPath = file.path;
         try {
           done(util.format(template, htmlPath, htmlPath, escapeContent(content)));
         } catch (e) {
           log.error('%s\n  at %s', e.message, file.originalPath);
         }
       }
-    }, {
-      match: "src/**/*.spec.js",
-      process: function (content, file, done, log) {
-        content = config.imports + content;
-        done(content);
-      }
     }]
   },
 
   jspm: {
       // Edit this to your needs
-      serveFiles: ['jspm_packages/**/*.js'],
-      loadFiles: expand(['src/**/*.html', 'src/**/*.js', '!src/**/demo.js', '!src/_*/**']),
+      serveFiles: ['jspm_packages/**/*.js', 'src/**/*.html', 'src/**/*.js'],
+      loadFiles: expand(['src/**/*.spec.js', '!src/_*/**']),
       config: "config.js",
       packages: "jspm_packages/"
   }

@@ -1,4 +1,14 @@
+import angular from "angular";
+import mocks from "angular-mocks";
+
+import "src/rating/rating.js"
+import "src/rating/rating.html.js"
+
 describe('rating directive', function () {
+
+  var inject = mocks.inject;
+  var module = mocks.module;
+
   var $rootScope, element;
   beforeEach(module('mm.foundation.rating'));
   beforeEach(module('template/rating/rating.html'));

@@ -1,5 +1,17 @@
+import angular from "angular";
+import mocks from "angular-mocks";
+
+import "src/modal/modal.js"
+import "src/transition/transition.js"
+import "src/modal/window.html.js"
+import "src/modal/backdrop.html.js"
+
 describe('$modal', function() {
-    var $rootScope, $document, $compile, $templateCache, $timeout, $q, $window, $provide;
+
+    var inject = mocks.inject;
+    var module = mocks.module;
+
+    var $rootScope, $document, $compile, $templateCache, $timeout, $q, $window, $provide, $controllerProvider;
     var $modal, $modalProvider;
     var mockWindow, mockComputedStyle;
 

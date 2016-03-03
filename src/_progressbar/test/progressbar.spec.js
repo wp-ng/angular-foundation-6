@@ -1,4 +1,15 @@
+import angular from "angular";
+import mocks from "angular-mocks";
+
+import "src/progressbar/progressbar.js"
+import "src/progressbar/progress.html.js"
+import "src/progressbar/bar.html.js"
+
 describe('progressbar directive', function () {
+
+  var inject = mocks.inject;
+  var module = mocks.module;
+
   var $rootScope, element;
   beforeEach(module('mm.foundation.progressbar'));
   beforeEach(module('template/progressbar/progressbar.html', 'template/progressbar/progress.html', 'template/progressbar/bar.html'));

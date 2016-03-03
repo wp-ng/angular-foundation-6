@@ -1,4 +1,15 @@
+import angular from "angular";
+import mocks from "angular-mocks";
+
+import "src/modal/modal.js"
+import "src/transition/transition.js"
+import "src/modal/window.html.js"
+import "src/modal/backdrop.html.js"
+
 describe('stacked map', function() {
+
+    var inject = mocks.inject;
+    var module = mocks.module;
 
     var stackedMap;
 

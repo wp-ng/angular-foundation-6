@@ -39,6 +39,7 @@
     "karma-jspm": "^2.0.2",
     "lodash": "^3.10.1",
     "merge-stream": "^1.0.0",
+    "motion-ui": "^1.2.2",
     "node-markdown": "^0.1.1",
     "run-sequence": "^1.1.5",
     "semver": "~2.2.0",

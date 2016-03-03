@@ -1,4 +1,4 @@
-angular.module('mm.foundation.modal', ['mm.foundation.transition'])
+angular.module('mm.foundation.modal', [])
 
 /**
  * A helper, internal data structure that acts as a map but also allows getting / removing
@@ -66,16 +66,9 @@ angular.module('mm.foundation.modal', ['mm.foundation.transition'])
         templateUrl: 'template/modal/backdrop.html',
         link: function(scope) {
 
-            scope.animate = false;
-
-            //trigger CSS transitions
-            $timeout(function() {
-                scope.animate = true;
-            });
-
             scope.close = function(evt) {
                 var modal = $modalStack.getTop();
-                if (modal && modal.value.backdrop && modal.value.backdrop != 'static' && (evt.target === evt.currentTarget)) {
+                if (modal && modal.value.backdrop && modal.value.backdrop !== 'static' && (evt.target === evt.currentTarget)) {
                     evt.preventDefault();
                     evt.stopPropagation();
                     $modalStack.dismiss(modal.key, 'backdrop click');
@@ -90,8 +83,7 @@ angular.module('mm.foundation.modal', ['mm.foundation.transition'])
     return {
         restrict: 'EA',
         scope: {
-            index: '@',
-            animate: '='
+            index: '@'
         },
         replace: true,
         transclude: true,
@@ -100,9 +92,6 @@ angular.module('mm.foundation.modal', ['mm.foundation.transition'])
             scope.windowClass = attrs.windowClass || '';
 
             $timeout(function() {
-                // trigger CSS transitions
-                scope.animate = true;
-
                 // If the modal contains any autofocus elements refocus onto the first one
                 if (element[0].querySelectorAll('[autofocus]').length > 0) {
                     element[0].querySelectorAll('[autofocus]')[0].focus();
@@ -115,15 +104,12 @@ angular.module('mm.foundation.modal', ['mm.foundation.transition'])
     };
 })
 
-.factory('$modalStack', function($window, $transition, $timeout, $document, $compile, $rootScope, $$stackedMap) {
+.factory('$modalStack', function($window, $timeout, $document, $compile, $rootScope, $$stackedMap, $animate) {
 
     var body = $document.find('body').eq(0);
-
     var OPENED_MODAL_CLASS = 'is-reveal-open';
-
     var backdropDomEl;
     var backdropScope;
-    var cssTop;
     var openedWindows = $$stackedMap.createNew();
     var $modalStack = {};
 
@@ -160,8 +146,7 @@ angular.module('mm.foundation.modal', ['mm.foundation.transition'])
         openedWindows.remove(modalInstance);
 
         //remove window DOM element
-        removeAfterAnimate(modalWindow.modalDomEl, modalWindow.modalScope, /*300*/0, function() {
-            modalWindow.modalScope.$destroy();
+        $animate.leave(modalWindow.modalDomEl).then(function() {
             checkRemoveBackdrop();
             if (openedWindows.length() === 0) {
                 body.removeClass(OPENED_MODAL_CLASS);
@@ -172,9 +157,10 @@ angular.module('mm.foundation.modal', ['mm.foundation.transition'])
 
     function checkRemoveBackdrop() {
         //remove backdrop if no longer needed
-        if (backdropDomEl && backdropIndex() == -1) {
+        if (backdropDomEl && backdropIndex() === -1) {
             var backdropScopeRef = backdropScope;
-            removeAfterAnimate(backdropDomEl, backdropScope, /*150*/0, function() {
+
+            $animate.leave(backdropDomEl).then(function() {
                 backdropScopeRef.$destroy();
                 backdropScopeRef = null;
             });
@@ -182,39 +168,6 @@ angular.module('mm.foundation.modal', ['mm.foundation.transition'])
             backdropScope = undefined;
         }
     }
-
-    function removeAfterAnimate(domEl, scope, emulateTime, done) {
-        // Closing animation
-        scope.animate = false;
-
-        var transitionEndEventName = $transition.transitionEndEventName;
-        if (transitionEndEventName) {
-            // transition out
-            var timeout = $timeout(afterAnimating, emulateTime);
-
-            domEl.bind(transitionEndEventName, function() {
-                $timeout.cancel(timeout);
-                afterAnimating();
-                scope.$apply();
-            });
-        } else {
-            // Ensure this call is async
-            $timeout(afterAnimating, 0);
-        }
-
-        function afterAnimating() {
-            if (afterAnimating.done) {
-                return;
-            }
-            afterAnimating.done = true;
-
-            domEl.remove();
-            if (done) {
-                done();
-            }
-        }
-    }
-
 
     function getModalCenter(modalInstance) {
 
@@ -277,14 +230,10 @@ angular.module('mm.foundation.modal', ['mm.foundation.transition'])
             angular.element($window).bind('resize', resizeHandler);
         }
 
-        var savedAnimate = options.scope.animate;
-        options.scope.animate = false;
-
         var modalDomEl = angular.element('<div modal-window></div>').attr({
             'style': 'visibility: visible; z-index: -1; display: block;',
             'window-class': options.windowClass,
-            'index': openedWindows.length() - 1,
-            'animate': 'animate'
+            'index': openedWindows.length() - 1
         });
         modalDomEl.html(options.content);
         modalDomEl = $compile(modalDomEl)(options.scope);
@@ -300,17 +249,12 @@ angular.module('mm.foundation.modal', ['mm.foundation.transition'])
             var modalPos = getModalCenter(modalInstance, true);
             modalDomEl.detach();
 
-            // set animations to what it was
-            options.scope.animate = savedAnimate;
-
             modalDomEl.attr({
                 'style': `visibility: visible; top: ${modalPos.top}px; left: ${modalPos.left}px; display: block;`,
             });
 
-            options.scope.$apply();
-
-            body.prepend(backdropDomEl);
-            body.prepend(modalDomEl);
+            $animate.enter(backdropDomEl, body);
+            $animate.enter(modalDomEl, body);
             body.addClass(OPENED_MODAL_CLASS);
         });
 

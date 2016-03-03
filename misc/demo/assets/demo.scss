@@ -1,3 +1,5 @@
+@import 'motion-ui';
+
 // body {
 //   opacity: 1;
 //   transition: opacity 1s ease;
@@ -285,29 +287,51 @@ img.logo {
 /**
  * Animations
  */
-.fade {
-  opacity: 0;
-  transition: opacity .15s linear;
-}
-.fade.in {
-  opacity: 1;
+// .fade {
+//   opacity: 1;
+//   transition: opacity .15s linear;
+// }
+// .fade.enter {
+//   opacity: 0;
+// }
+
+// .reveal.fade {
+//   transition: transform .3s ease-out;
+//   transform: translate(0, -25%);
+// }
+// .reveal.enter {
+//   transform: translate(0, 0);
+// }
+
+// .reveal-bg.fade {
+//   filter: alpha(opacity=1);
+//   opacity: 1;
+// }
+// .reveal-bg.enter {
+//   filter: alpha(opacity=50);
+//   opacity: .5;
+// }
+
+.reveal.ng-enter {
+  @include mui-slide(
+    $state: in, // Specify in or out
+    $direction: left, // Can be top, right, bottom, or left
+    $fade: true, // If true, the element fades simultaneously
+    $duration: 0.5s,
+    $timing: easeIn,
+    $delay: 0.25s
+  );
 }
 
-.reveal.fade {
-  transition: transform .3s ease-out;
-  transform: translate(0, -25%);
-}
-.reveal.in {
-  transform: translate(0, 0);
-}
-
-.reveal-bg.fade {
-  filter: alpha(opacity=0);
-  opacity: 0;
-}
-.reveal-bg.in {
-  filter: alpha(opacity=50);
-  opacity: .5;
+.reveal.ng-leave {
+  @include mui-slide(
+    $state: out, // Specify in or out
+    $direction: left, // Can be top, right, bottom, or left
+    $fade: true, // If true, the element fades simultaneously
+    $duration: 0.5s,
+    $timing: easeIn,
+    $delay: 0.25s
+  );
 }
 
 .alert-box {

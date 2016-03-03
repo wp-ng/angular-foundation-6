@@ -1,11 +1,11 @@
-angular.module('mm.foundation.progressbar', ['mm.foundation.transition'])
+angular.module('mm.foundation.progressbar', [])
 
 .constant('progressConfig', {
     animate: true,
     max: 100
 })
 
-.controller('ProgressController', function($scope, $attrs, progressConfig, $transition) {
+.controller('ProgressController', function($scope, $attrs, progressConfig, $animate) {
    'ngInject';
     var self = this,
         bars = [],
@@ -39,9 +39,10 @@ angular.module('mm.foundation.progressbar', ['mm.foundation.transition'])
 
         if (animate) {
             element.css('width', this.getPercentage(oldValue) + '%');
-            $transition(element, {
-                width: percent + '%'
-            });
+            $animate.animate(element, {'width': this.getPercentage(oldValue) + '%'}, {width: percent + '%'});
+            // $transition(element, {
+            //     width: percent + '%'
+            // });
         } else {
             element.css({
                 'transition': 'none',

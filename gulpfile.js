@@ -9,7 +9,7 @@ var path = require('path');
 var template = require('gulp-template');
 var expand = require('glob-expand');
 var fs = require('fs');
-var hl = require("highlight").Highlight;
+var hljs = require("highlight.js");
 var _ = require('lodash');
 var concat = require('gulp-concat');
 var Streamqueue = require('streamqueue');
@@ -112,7 +112,7 @@ function findModule(name, modules, foundModules) {
         dependencies: dependenciesForModule(name),
         docs: {
             md: expand("src/" + name + "/docs/*.md")
-                .map(fileContents).map(h1).join("\n"),
+                .map(fileContents).map(hljs.highlightAuto).join("\n"),
             js: expand("src/" + name + "/docs/*.js")
                 .map(fileContents).join("\n"),
             html: expand("src/" + name + "/docs/*.html")
@@ -227,7 +227,7 @@ function build(fileName, opts){
         }
     });
 
-    var srcModules = _.pluck(modules, 'moduleName').map(function(m){return '"'+ m + '"';});
+    var srcModules = _.map(modules, 'moduleName').map(function(m){return '"'+ m + '"';});
     var fakeFileStream2 = source('mm.foundation.js');
     fakeFileStream2.write('angular.module("mm.foundation", [' + srcModules + ']);');
     sq.queue(fakeFileStream2.pipe(vinylBuffer()));

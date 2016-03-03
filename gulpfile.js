@@ -9,7 +9,7 @@ var path = require('path');
 var template = require('gulp-template');
 var expand = require('glob-expand');
 var fs = require('fs');
-var markdown = require('node-markdown').Markdown;
+var hl = require("highlight").Highlight;
 var _ = require('lodash');
 var concat = require('gulp-concat');
 var Streamqueue = require('streamqueue');
@@ -112,7 +112,7 @@ function findModule(name, modules, foundModules) {
         dependencies: dependenciesForModule(name),
         docs: {
             md: expand("src/" + name + "/docs/*.md")
-                .map(fileContents).map(markdown).join("\n"),
+                .map(fileContents).map(h1).join("\n"),
             js: expand("src/" + name + "/docs/*.js")
                 .map(fileContents).join("\n"),
             html: expand("src/" + name + "/docs/*.html")

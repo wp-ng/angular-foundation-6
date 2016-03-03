@@ -104,7 +104,7 @@ angular.module('mm.foundation.modal', [])
     };
 })
 
-.factory('$modalStack', function($window, $timeout, $document, $compile, $rootScope, $$stackedMap, $animate) {
+.factory('$modalStack', function($window, $timeout, $document, $compile, $rootScope, $$stackedMap, $animate, $q) {
 
     var body = $document.find('body').eq(0);
     var OPENED_MODAL_CLASS = 'is-reveal-open';
@@ -252,10 +252,8 @@ angular.module('mm.foundation.modal', [])
                 'style': `visibility: visible; top: ${modalPos.top}px; left: ${modalPos.left}px; display: block;`,
             });
 
-            $animate.enter(backdropDomEl, body);
-            $animate.enter(modalDomEl, body);
             body.addClass(OPENED_MODAL_CLASS);
-            options.scope.$apply();
+            return $q.all([$animate.enter(backdropDomEl, body), $animate.enter(modalDomEl, body)]);
         });
 
     };
@@ -314,12 +312,14 @@ angular.module('mm.foundation.modal', [])
             var $modal = {};
 
             function getTemplatePromise(options) {
-                return options.template ? $q.when(options.template) :
-                    $http.get(options.templateUrl, {
-                        cache: $templateCache
-                    }).then(function(result) {
-                        return result.data;
-                    });
+                if(options.template){
+                    return $q.when(options.template);
+                }
+                return $http.get(options.templateUrl, {
+                    cache: $templateCache
+                }).then(function(result) {
+                    return result.data;
+                });
             }
 
             function getResolvePromises(resolves) {
@@ -332,12 +332,12 @@ angular.module('mm.foundation.modal', [])
                 return promisesArr;
             }
 
-            $modal.open = function(modalOptions) {
+            $modal.open = function(modalOpts) {
 
                 var modalResultDeferred = $q.defer();
                 var modalOpenedDeferred = $q.defer();
 
-                //prepare an instance of a modal to be injected into controllers and returned to a caller
+                // prepare an instance of a modal to be injected into controllers and returned to a caller
                 var modalInstance = {
                     result: modalResultDeferred.promise,
                     opened: modalOpenedDeferred.promise,
@@ -352,11 +352,11 @@ angular.module('mm.foundation.modal', [])
                     }
                 };
 
-                //merge and clean up options
-                modalOptions = angular.extend({}, $modalProvider.options, modalOptions);
+                // merge and clean up options
+                var modalOptions = angular.extend({}, $modalProvider.options, modalOpts);
                 modalOptions.resolve = modalOptions.resolve || {};
 
-                //verify options
+                // verify options
                 if (!modalOptions.template && !modalOptions.templateUrl) {
                     throw new Error('One of template or templateUrl options is required.');
                 }
@@ -365,8 +365,7 @@ angular.module('mm.foundation.modal', [])
                     $q.all([getTemplatePromise(modalOptions)].concat(getResolvePromises(modalOptions.resolve)));
 
 
-                templateAndResolvePromise.then(function resolveSuccess(tplAndVars) {
-
+                var openedPromise = templateAndResolvePromise.then(function resolveSuccess(tplAndVars) {
                     var modalScope = (modalOptions.scope || $rootScope).$new();
                     modalScope.$close = modalInstance.close;
                     modalScope.$dismiss = modalInstance.dismiss;
@@ -375,7 +374,7 @@ angular.module('mm.foundation.modal', [])
                     var ctrlLocals = {};
                     var resolveIter = 1;
 
-                    //controllers
+                    // controllers
                     if (modalOptions.controller) {
                         ctrlLocals.$scope = modalScope;
                         ctrlLocals.$modalInstance = modalInstance;
@@ -402,7 +401,7 @@ angular.module('mm.foundation.modal', [])
                     modalResultDeferred.reject(reason);
                 });
 
-                templateAndResolvePromise.then(function() {
+                openedPromise.then(function() {
                     modalOpenedDeferred.resolve(true);
                 }, function() {
                     modalOpenedDeferred.reject(false);

@@ -23,6 +23,13 @@ config.set({
     'src/**/demo.js',
   ],
 
+  customLaunchers: {
+    Chrome_travis_ci: {
+      base: 'Chrome',
+      flags: ['--no-sandbox']
+    }
+  },
+
   browsers: [
     'Chrome'
   ],
@@ -32,10 +39,10 @@ config.set({
   reporters: ['progress'],
 
   // web server port
-  port: 9018,
+  port: 9876,
 
   // cli runner port
-  runnerPort: 9100,
+  // runnerPort: 9100,
 
   // enable / disable colors in the output (reporters and logs)
   colors: true,

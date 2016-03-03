@@ -335,7 +335,7 @@ gulp.task('test-current', function(done) {
         config.reporters = ['progress', 'coverage'];
     }
     if(process.env.TRAVIS){
-        config.browsers = ['Firefox'];
+        config.browsers = ['Chrome_travis_ci', 'Firefox'];
     }
     new KarmaServer(config, done).start();
 });

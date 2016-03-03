@@ -149,10 +149,7 @@
         <section id="animations">
           <div class="page-header">
             <h1>Animations</h1>
-            <p>Foundation includes animations in its JavaScript files but
-            the components above don't use Foundation's JavaScript.
-            You can use the official Angular module ngAnimate in your project
-            or simple CSS animations like the example below.</p>
+            <p>Animations are supported via ngAnimate. This can be used in conjuction with Zurb's <a href="https://github.com/zurb/motion-ui">MotionUI library.</a></p>
           </div>
           <div class="row">
             <div class="columns medium-12">
@@ -161,29 +158,44 @@
           <hr>
           <div class="row code">
             <div class="columns medium-12">
-              <pre><code data-language="css">.fade {
-  opacity: 0;
-  transition: opacity .15s linear;
-}
-.fade.in {
-  opacity: 1;
+              <pre><code data-language="scss">$motion-ui-classes: (
+  chain: true,
+  prefix: 'ng-',
+  active: '-active',
+);
+
+@import 'motion-ui';
+
+.reveal-overlay {
+    @include mui-fade($state: in);
 }
 
-.reveal.fade {
-  transition: transform .3s ease-out;
-  transform: translate(0, -25%);
-}
-.reveal.in {
-  transform: translate(0, 0);
+.reveal-overlay {
+    @include mui-fade(
+        $state: out,
+        $from: 1,
+        $to: 0
+    );
 }
 
-.reveal-bg.fade {
-  filter: alpha(opacity=0);
-  opacity: 0;
+.reveal {
+    @include mui-slide(
+        $state: in, // Specify in or out
+        $direction: down, // Can be top, right, bottom, or left
+        $fade: true, // If true, the element fades simultaneously
+        $duration: 0.25s,
+        $timing: cubic-bezier,
+        $delay: 0s
+    );
 }
-.reveal-bg.in {
-  filter: alpha(opacity=50);
-  opacity: .5;
+
+.reveal {
+    @include mui-zoom(
+        $state: out,
+        $from: 1,
+        $to: 0,
+        $duration: 0.25s
+    );
 }</code></pre>
             </div>
           </div>

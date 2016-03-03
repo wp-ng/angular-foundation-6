@@ -9,7 +9,7 @@ var path = require('path');
 var template = require('gulp-template');
 var expand = require('glob-expand');
 var fs = require('fs');
-var hljs = require("highlight.js");
+var marked = require('marked');
 var _ = require('lodash');
 var concat = require('gulp-concat');
 var Streamqueue = require('streamqueue');
@@ -19,7 +19,6 @@ var conventionalChangelog = require('gulp-conventional-changelog');
 var rename = require('gulp-rename');
 var chmod = require('gulp-chmod');
 var KarmaServer = require('karma').Server;
-var jshint = require('gulp-jshint');
 var runSequence = require('run-sequence');
 var argv = require('yargs').argv;
 var bump = require('gulp-bump');
@@ -29,22 +28,22 @@ var connect = require('gulp-connect');
 var open = require('gulp-open');
 var postcss = require('gulp-postcss');
 var autoprefixer = require('autoprefixer-core');
-var ngAnnotate = require('gulp-ng-annotate');
 var babel = require('gulp-babel');
+var eslint = require('gulp-eslint');
 
 var base = path.join(__dirname, 'src');
 var watchedFiles = [
     '!src/**/*spec.js',
     'src/**/*.js',
     'src/**/*.html',
-    'docs/**/*.html',
+    'misc/**/*',
     'gulpfile.js'
 ];
 
 
 var buildModules = [];
 if (argv.modules) {
-    buildModules = argv.modules.split(",");
+    buildModules = argv.modules.split(',');
 }
 
 var uglifySettings = {
@@ -79,8 +78,8 @@ var uglifySettings = {
 
 var pkg = require('./package.json');
 
-//Common mm.foundation module containing all modules for src and templates
-//findModule: Adds a given module to config
+// Common mm.foundation module containing all modules for src and templates
+// findModule: Adds a given module to config
 
 function fileContents(fname) {
     return fs.readFileSync(fname, {
@@ -110,16 +109,16 @@ function findModule(name, modules, foundModules) {
         name: name,
         moduleName: 'mm.foundation.' + name,
         displayName: ucwords(breakup(name, ' ')),
-        srcFiles: expand("src/" + name + "/*.js"),
-        tplFiles: expand("src/" + name + "/*.html"),
+        srcFiles: expand('src/' + name + '/*.js'),
+        tplFiles: expand('src/' + name + '/*.html'),
         dependencies: dependenciesForModule(name),
         docs: {
-            md: expand("src/" + name + "/docs/*.md")
-                .map(fileContents).map(hljs.highlightAuto).join("\n"),
-            js: expand("src/" + name + "/docs/*.js")
-                .map(fileContents).join("\n"),
-            html: expand("src/" + name + "/docs/*.html")
-                .map(fileContents).join("\n")
+            md: expand('src/' + name + '/docs/*.md')
+                .map(fileContents).map(function(content){return marked(content);}).join('\n'),
+            js: expand('src/' + name + '/docs/*.js')
+                .map(fileContents).join('\n'),
+            html: expand('src/' + name + '/docs/*.html')
+                .map(fileContents).join('\n')
         }
     };
     module.dependencies.forEach(function(name) {
@@ -134,9 +133,9 @@ function dependenciesForModule(name) {
     expand('src/' + name + '/*.js')
         .map(fileContents)
         .forEach(function(contents) {
-            //var contents = String(buffer);
-            //Strategy: find where module is declared,
-            //and from there get everything inside the [] and split them by comma
+            // var contents = String(buffer);
+            // Strategy: find where module is declared,
+            // and from there get everything inside the [] and split them by comma
             var moduleDeclIndex = contents.indexOf('angular.module(');
             var depArrayStart = contents.indexOf('[', moduleDeclIndex);
             var depArrayEnd = contents.indexOf(']', depArrayStart);
@@ -186,10 +185,9 @@ function findModules() {
     return modules;
 }
 
-////////////
 
 function build(fileName, opts) {
-    opts = opts || {};
+    var options = opts || {};
 
     var modules = findModules();
 
@@ -217,11 +215,11 @@ function build(fileName, opts) {
     fakeFileStream.end();
 
     modules.forEach(function(module) {
-        if (!opts.skipSource) {
+        if (!options.skipSource) {
             sq.queue(gulp.src(module.srcFiles));
         }
 
-        if (!opts.skipTemplates && module.tplFiles.length) {
+        if (!options.skipTemplates && module.tplFiles.length) {
             var s = gulp.src(module.tplFiles)
                 .pipe(templateCache(
                     'templates.js', {
@@ -236,7 +234,9 @@ function build(fileName, opts) {
         }
     });
 
-    var srcModules = _.map(modules, 'moduleName').map(function(m){return '"'+ m + '"';});
+    var srcModules = _.map(modules, 'moduleName').map(function(m) {
+        return '"' + m + '"';
+    });
     var fakeFileStream2 = source('mm.foundation.js');
     fakeFileStream2.write('angular.module("mm.foundation", [' + srcModules + ']);');
     sq.queue(fakeFileStream2.pipe(vinylBuffer()));
@@ -253,7 +253,7 @@ function build(fileName, opts) {
             single_quotes: true,
         }));
 
-    if (opts.minify) {
+    if (options.minify) {
         s = s.pipe(uglify(uglifySettings));
     }
     return s;
@@ -261,20 +261,9 @@ function build(fileName, opts) {
 
 gulp.task('lint', function() {
     return gulp.src(['gulpfile.js', 'src/**/*.js'])
-        .pipe(jshint({
-            curly: true,
-            immed: true,
-            newcap: true,
-            noarg: true,
-            sub: true,
-            boss: true,
-            eqnull: true,
-            node: true,
-            globals: {
-                angular: true
-            }
-        }))
-        .pipe(jshint.reporter('default'));
+        .pipe(eslint());
+        // .pipe(eslint.format());
+        // .pipe(eslint.failAfterError());
 });
 
 gulp.task('enforce', function() {
@@ -282,7 +271,6 @@ gulp.task('enforce', function() {
         .pipe(rename('commit-msg'))
         .pipe(chmod(755))
         .pipe(gulp.dest('./.git/hooks'));
-
 });
 
 gulp.task('changelog', function() {
@@ -300,7 +288,7 @@ gulp.task('demo', function() {
     });
 
     function jspmVersion(str) {
-        return str.split("@")[1].replace(/^[^0-9\.]/g, '');
+        return str.split('@')[1].replace(/^[^0-9\.]/g, '');
     }
 
     // read package.json
@@ -320,17 +308,17 @@ gulp.task('demo', function() {
     });
 
     var css = gulp.src('./misc/demo/assets/demo.scss', {
-            base: './misc/demo/'
+        base: './misc/demo/'
+    })
+    .pipe(sass({
+        includePaths: ['./node_modules/motion-ui/src']
+    }))
+    .pipe(postcss([
+        autoprefixer({
+            browsers: ['last 2 version'],
+            cascade: false
         })
-        .pipe(sass({
-            includePaths: ['./node_modules/motion-ui/src']
-        }))
-        .pipe(postcss([
-            autoprefixer({
-                browsers: ['last 2 version'],
-                cascade: false
-            })
-        ]));
+    ]));
 
     return merge(assets, html, css).pipe(gulp.dest('./dist'));
 });
@@ -349,8 +337,8 @@ gulp.task('test-current', function(done) {
         };
         config.reporters = ['progress', 'coverage'];
     }
-    if(process.env.TRAVIS){
-        config.browsers = [/*'Chrome_travis_ci',*/ 'Firefox'];
+    if (process.env.TRAVIS) {
+        config.browsers = [ /*'Chrome_travis_ci',*/ 'Firefox'];
     }
     new KarmaServer(config, done).start();
 });
@@ -392,7 +380,7 @@ gulp.task('tdd', function(done) {
     new KarmaServer(config, done).start();
 });
 
-gulp.task('test', ['test-current', /*'test-legacy'*/], function(done){
+gulp.task('test', ['test-current', /*'test-legacy'*/ ], function(done) {
     done();
 });
 

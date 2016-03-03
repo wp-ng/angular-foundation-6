@@ -1,4 +1,3 @@
-@import 'motion-ui';
 
 // body {
 //   opacity: 1;
@@ -303,36 +302,69 @@ img.logo {
 //   transform: translate(0, 0);
 // }
 
-// .reveal-bg.fade {
+// .reveal-overlay.fade {
 //   filter: alpha(opacity=1);
 //   opacity: 1;
 // }
-// .reveal-bg.enter {
+// .reveal-overlay.ng-enter {
 //   filter: alpha(opacity=50);
 //   opacity: .5;
 // }
 
-.reveal.ng-enter {
-  @include mui-slide(
-    $state: in, // Specify in or out
-    $direction: left, // Can be top, right, bottom, or left
-    $fade: true, // If true, the element fades simultaneously
-    $duration: 0.5s,
-    $timing: easeIn,
-    $delay: 0.25s
-  );
+$motion-ui-classes: (
+  chain: true,
+  prefix: 'ng-',
+  active: '-active',
+);
+
+@import 'motion-ui';
+
+.reveal-overlay {
+    @include mui-fade($state: in);
 }
 
-.reveal.ng-leave {
-  @include mui-slide(
-    $state: out, // Specify in or out
-    $direction: left, // Can be top, right, bottom, or left
-    $fade: true, // If true, the element fades simultaneously
-    $duration: 0.5s,
-    $timing: easeIn,
-    $delay: 0.25s
-  );
+.reveal-overlay {
+    @include mui-fade(
+        $state: out,
+        $from: 1,
+        $to: 0
+    );
 }
+
+.reveal {
+    @include mui-slide(
+        $state: in, // Specify in or out
+        $direction: down, // Can be top, right, bottom, or left
+        $fade: true, // If true, the element fades simultaneously
+        $duration: 0.25s,
+        $timing: cubic-bezier,
+        $delay: 0s
+    );
+}
+
+.reveal {
+    // @include mui-hinge(
+    //     $state: out,
+    //     $duration: 0.5s
+    // );
+    @include mui-zoom(
+        $state: out,
+        $from: 1,
+        $to: 0,
+        $duration: 0.25s
+    );
+}
+
+// .reveal {
+//   @include mui-slide(
+//     $state: out, // Specify in or out
+//     $direction: down, // Can be up, right, down, or left
+//     $fade: true, // If true, the element fades simultaneously
+//     $duration: 0.25s,
+//     $timing: cubic-bezier,
+//     $delay: 0s
+//   );
+// }
 
 .alert-box {
   background-color: #5592BB;

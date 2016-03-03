@@ -146,13 +146,12 @@ angular.module('mm.foundation.modal', [])
         openedWindows.remove(modalInstance);
 
         //remove window DOM element
-        $animate.leave(modalWindow.modalDomEl).then(function() {
-            checkRemoveBackdrop();
-            if (openedWindows.length() === 0) {
-                body.removeClass(OPENED_MODAL_CLASS);
-                angular.element($window).unbind('resize', resizeHandler);
-            }
-        });
+        $animate.leave(modalWindow.modalDomEl);
+        checkRemoveBackdrop();
+        if (openedWindows.length() === 0) {
+            body.removeClass(OPENED_MODAL_CLASS);
+            angular.element($window).unbind('resize', resizeHandler);
+        }
     }
 
     function checkRemoveBackdrop() {
@@ -256,6 +255,7 @@ angular.module('mm.foundation.modal', [])
             $animate.enter(backdropDomEl, body);
             $animate.enter(modalDomEl, body);
             body.addClass(OPENED_MODAL_CLASS);
+            options.scope.$apply();
         });
 
     };

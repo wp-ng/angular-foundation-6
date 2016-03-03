@@ -2,7 +2,7 @@
   "env": {
     "node": true,
     "browser": true,
-    "es6": true,
+    "es6": true
   },
   "ecmaFeatures": {
     "modules": true,
@@ -135,7 +135,7 @@
     "no-lonely-if": 1,               // http://eslint.org/docs/rules/no-lonely-if
     "no-mixed-spaces-and-tabs": 1,   // http://eslint.org/docs/rules/no-mixed-spaces-and-tabs
     "no-multiple-empty-lines": [2, { // http://eslint.org/docs/rules/no-multiple-empty-lines
-      "max": 2 
+      "max": 2
       }],
     "no-nested-ternary": 2,          // http://eslint.org/docs/rules/no-nested-ternary
     "no-new-object": 2,              // http://eslint.org/docs/rules/no-new-object

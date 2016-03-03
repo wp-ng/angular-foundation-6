@@ -2,7 +2,6 @@ import angular from "angular";
 import mocks from "angular-mocks";
 
 import "src/modal/modal.js"
-import "src/transition/transition.js"
 import "src/modal/window.html.js"
 import "src/modal/backdrop.html.js"
 

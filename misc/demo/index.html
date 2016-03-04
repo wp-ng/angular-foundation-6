@@ -25,7 +25,7 @@
     }
   </script>
 
-  <link href="https://cdn.rawgit.com/zurb/foundation-sites/develop/dist/foundation.min.css" rel="stylesheet"/>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.2.0/foundation.min.css" rel="stylesheet"/>
   <!-- <link href="//cdnjs.cloudflare.com/ajax/libs/foundation/<%= fdversion %>/css/foundation.min.css" rel="stylesheet"/> -->
   <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/<%= faversion %>/css/font-awesome.min.css" rel="stylesheet"/>
   <link rel="stylesheet" href="assets/rainbow.css"/>
@@ -43,7 +43,7 @@
     </ul>
 
     <top-bar-section>
-      <ul class="right">
+      <ul class="float-right">
         <li><a href="#getting_started">Getting started</a></li>
         <li has-dropdown>
           <a href="#">Directives</a>
@@ -123,10 +123,10 @@
                 <%= module.docs.md %>
               </div>
             </div>
-            <hr>
+            <!-- <hr> -->
             <div class="row code">
               <div class="columns medium-12" ng-controller="PlunkerCtrl">
-                <div class="right">
+                <div class="float-right">
                   <button class="button secondary" id="plunk-btn" ng-click="edit('<%= ngversion%>', '<%= fdversion %>', '<%= pkg.version%>', '<%= module.name %>')"><i class="fa fa-edit"></i> Edit in plunker</button>
                 </div>
                 <tabset>
@@ -155,7 +155,7 @@
             <div class="columns medium-12">
             </div>
           </div>
-          <hr>
+          <!-- <hr> -->
           <div class="row code">
             <div class="columns medium-12">
               <pre><code data-language="scss">$motion-ui-classes: (

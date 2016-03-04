@@ -14,5 +14,11 @@
   </script>
 
   <button class="button" ng-click="open()">Open me!</button>
+  <button class="button" ng-click="open('', false)">No backdrop</button>
+  <button class="button" ng-click="open('', true, 40)">Overflow</button>
+  <button class="button" ng-click="open('tiny')">Tiny</button>
+  <button class="button" ng-click="open('small')">Small</button>
+  <button class="button" ng-click="open('large')">Large</button>
+  <button class="button" ng-click="open('full')">Fullscreen</button>
   <div ng-show="selected">Selection from a modal: {{ selected }}</div>
 </div>

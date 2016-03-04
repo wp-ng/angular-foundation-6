@@ -237,9 +237,13 @@ angular.module('mm.foundation.modal', [])
             angular.element($window).bind('resize', resizeHandler);
         }
 
+        var classes = [];
+        options.windowClass &&  classes.push(options.windowClass);
+        options.size && classes.push(options.size);
+
         var modalDomEl = angular.element('<div modal-window></div>').attr({
             'style': 'visibility: visible; z-index: -1; display: block;',
-            'window-class': options.windowClass,
+            'window-class': classes.join(' '),
             'index': openedWindows.length() - 1
         });
         modalDomEl.html(options.content);
@@ -422,7 +426,8 @@ angular.module('mm.foundation.modal', [])
                         content: tplAndVars[0],
                         backdrop: modalOptions.backdrop,
                         keyboard: modalOptions.keyboard,
-                        windowClass: modalOptions.windowClass
+                        windowClass: modalOptions.windowClass,
+                        size: modalOptions.size
                     });
 
                 }, function resolveError(reason) {

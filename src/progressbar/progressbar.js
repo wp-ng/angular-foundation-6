@@ -6,7 +6,7 @@ angular.module('mm.foundation.progressbar', [])
 })
 
 .controller('ProgressController', function($scope, $attrs, progressConfig, $animate) {
-   'ngInject';
+    'ngInject';
     var self = this,
         bars = [],
         max = angular.isDefined($attrs.max) ? $scope.$parent.$eval($attrs.max) : progressConfig.max,
@@ -39,7 +39,11 @@ angular.module('mm.foundation.progressbar', [])
 
         if (animate) {
             element.css('width', this.getPercentage(oldValue) + '%');
-            $animate.animate(element, {'width': this.getPercentage(oldValue) + '%'}, {width: percent + '%'});
+            $animate.animate(element, {
+                'width': this.getPercentage(oldValue) + '%'
+            }, {
+                width: percent + '%'
+            });
             // $transition(element, {
             //     width: percent + '%'
             // });

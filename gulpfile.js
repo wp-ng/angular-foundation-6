@@ -35,6 +35,7 @@ var base = path.join(__dirname, 'src');
 var watchedFiles = [
     '!src/**/*spec.js',
     'src/**/*.js',
+    'src/**/*.md',
     'src/**/*.html',
     'misc/**/*',
     'gulpfile.js'

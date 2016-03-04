@@ -1,14 +1,17 @@
 angular.module('foundationDemoApp').controller('ModalDemoCtrl', function($scope, $modal, $log) {
 
-    $scope.items = ['item1', 'item2', 'item3'];
 
-    // for(var i = 0; i < 10; i++){
-    //   $scope.items.push('item ' + i);
-    // }
+    $scope.open = function(size, backdrop, itemCount) {
 
-    $scope.open = function() {
+        $scope.items = [];
 
-        var modalInstance = $modal.open({
+        var count = itemCount || 3;
+
+        for(var i = 0; i < count; i++){
+            $scope.items.push('item ' + i);
+        }
+
+        var params = {
             templateUrl: 'myModalContent.html',
             controller: 'ModalInstanceCtrl',
             resolve: {
@@ -16,7 +19,17 @@ angular.module('foundationDemoApp').controller('ModalDemoCtrl', function($scope,
                     return $scope.items;
                 }
             }
-        });
+        };
+
+        if(angular.isDefined(size)){
+            params.size = size;
+        }
+
+        if(angular.isDefined(backdrop)){
+            params.backdrop = backdrop;
+        }
+
+        var modalInstance = $modal.open(params);
 
         modalInstance.result.then(function(selectedItem) {
             $scope.selected = selectedItem;

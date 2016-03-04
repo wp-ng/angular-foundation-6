@@ -122,8 +122,17 @@ angular.module('mm.foundation.modal', [])
 
     function resizeHandler() {
         var opened = openedWindows.keys();
+        var fixedPositiong = true;
         for (var i = 0; i < opened.length; i++) {
-            $modalStack.reposition(opened[i]);
+            var modalPos = $modalStack.reposition(opened[i]);
+            if(modalPos && modalPos.position !== 'fixed'){
+                fixedPositiong = false;
+            }
+        }
+        if(fixedPositiong){
+            body.addClass(OPENED_MODAL_CLASS);
+        } else {
+            body.removeClass(OPENED_MODAL_CLASS);
         }
     }
 
@@ -138,7 +147,7 @@ angular.module('mm.foundation.modal', [])
         $animate.leave(modalWindow.modalDomEl);
         checkRemoveBackdrop();
         if (openedWindows.length() === 0) {
-            $animate.removeClass(body, OPENED_MODAL_CLASS);
+            body.removeClass(OPENED_MODAL_CLASS);
             angular.element($window).unbind('resize', resizeHandler);
         }
     }
@@ -253,7 +262,7 @@ angular.module('mm.foundation.modal', [])
             }
             promises.push($animate.enter(modalDomEl, body));
             if(modalPos.position === 'fixed'){
-                promises.push($animate.addClass(body, OPENED_MODAL_CLASS));
+                body.addClass(OPENED_MODAL_CLASS);
             }
 
             return $q.all(promises).then(function(){
@@ -278,10 +287,7 @@ angular.module('mm.foundation.modal', [])
             modalDomEl.css('top', modalPos.top + 'px');
             modalDomEl.css('left', modalPos.left + 'px');
             modalDomEl.css('position', modalPos.position);
-
-            if(modalPos.position === 'fixed'){
-                $animate.removeClass(body, OPENED_MODAL_CLASS);
-            }
+            return modalPos;
         }
     };
 
@@ -364,9 +370,9 @@ angular.module('mm.foundation.modal', [])
                     dismiss: function(reason) {
                         $modalStack.dismiss(modalInstance, reason);
                     },
-                    reposition: function() {
-                        $modalStack.reposition(modalInstance);
-                    }
+                    // reposition: function() {
+                    //     $modalStack.reposition(modalInstance);
+                    // }
                 };
 
                 // merge and clean up options

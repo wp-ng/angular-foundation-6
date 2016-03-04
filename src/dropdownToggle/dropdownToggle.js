@@ -16,8 +16,6 @@ function DropdownToggleController($scope, $attrs, mediaQueries, $element, $posit
         var dropdown = angular.element($element[0].querySelector('.dropdown-pane'));
         var dropdownTrigger = angular.element($element[0].querySelector('toggle *:first-child'));
 
-        console.log(dropdownTrigger, $element[0]);
-
         // var dropdownWidth = dropdown.prop('offsetWidth');
         var triggerPosition = $position.position(dropdownTrigger);
 

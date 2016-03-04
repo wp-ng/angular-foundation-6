@@ -4,8 +4,8 @@ There are no settings. You simply need to include the foundation off canvas CSS 
 
 The off canvas module expects the use of several nested elements with the following classes:
 
-- `off-canvas-wrap`: The most outter page wrapper.
-- `inner-wrap`: Second page wrapper nested directly inside off-canvas-wrap.
+- `off-canvas-wrapper`: The most outter page wrapper.
+- `inner-wrapper`: Second page wrapper nested directly inside off-canvas-wrapper.
 - `left-off-canvas-toggle`: Wraps the left off canvas menu.
 - `right-off-canvas-toggle`: Wraps the right off canvas menu.
 - `exit-off-canvas`: Occludes the main page content when an off canvas menu is visible. Hides the menu when clicked.

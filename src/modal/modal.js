@@ -172,7 +172,6 @@ angular.module('mm.foundation.modal', [])
         var el = options.modalDomEl;
 
         var windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-
         var windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 
         var width = el[0].offsetWidth;
@@ -186,13 +185,22 @@ angular.module('mm.foundation.modal', [])
             top = parseInt((windowHeight - height) / 4, 10);
         }
 
-        var fitsWindow = windowHeight > top + height;
+        var fitsWindow = windowHeight >= top + height; // ALwats fits on mobile
 
-        return {
-            top: fitsWindow ? top : top + options.scrollY,
-            left: left,
-            position: fitsWindow ? 'fixed' : 'absolute'
-        };
+        var modalPos = options.modalPos = options.modalPos || {};
+
+        if(modalPos.windowHeight !== windowHeight){
+            modalPos.scrollY = $window.pageYOffset || 0;
+        }
+
+        if(modalPos.position !== 'fixed'){
+            modalPos.top = fitsWindow ? top : top + modalPos.scrollY;
+        }
+        modalPos.left = left;
+        modalPos.position = fitsWindow ? 'fixed' : 'absolute';
+        modalPos.windowHeight = windowHeight;
+
+        return modalPos;
     }
 
     $document.bind('keydown', function(evt) {
@@ -241,10 +249,7 @@ angular.module('mm.foundation.modal', [])
             // let the directives kick in
             options.scope.$apply();
 
-            var scrollY = $window.pageYOffset || 0;
-
             openedWindows.top().value.modalDomEl = modalDomEl;
-            openedWindows.top().value.scrollY = scrollY;
 
             // Attach, measure, remove
             body.prepend(modalDomEl);

@@ -312,7 +312,7 @@ gulp.task('demo', function() {
         base: './misc/demo/'
     })
     .pipe(sass({
-        includePaths: ['./node_modules/motion-ui/src']
+        includePaths: ['./node_modules/motion-ui/src', './node_modules/foundation-sites/scss']
     }))
     .pipe(postcss([
         autoprefixer({

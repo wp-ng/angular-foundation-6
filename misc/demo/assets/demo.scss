@@ -318,6 +318,7 @@ $motion-ui-classes: (
 );
 
 @import 'motion-ui';
+@import 'foundation';
 
 .reveal-overlay {
     @include mui-fade($state: in);
@@ -369,3 +370,12 @@ $motion-ui-classes: (
 .alert-box {
   background-color: #5592BB;
 }
+
+
+
+// ABIDE
+
+.ng-submitted .ng-invalid, .ng-touched.ng-invalid {
+  @include form-input-error();
+}
+

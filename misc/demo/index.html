@@ -33,27 +33,6 @@
   <link rel="author" href="https://github.com/circlingthesun/angular-foundation-6/graphs/contributors">
 </head>
 <body class="ng-cloak" ng-controller="MainCtrl">
-<div class="off-canvas-wrapper">
-<div class="off-canvas-wrapper-inner">
-
-<!-- <div class="title-bar">
-    <div class="title-bar-left">
-        <a class="left-off-canvas-toggle menu-icon" ><span></span></a>
-        <span class="title-bar-title">Foundation</span>
-    </div>
-
-    <div class="title-bar-right">
-        <a class="right-off-canvas-toggle menu-icon" ><span></span></a>
-    </div> -->
-
-</div>
-
-<div class="off-canvas position-left">
-    left
-    <ul class="off-canvas-list">
-        <li><a href="#">Left Sidebar</a></li>
-    </ul>
-</div>
 
 <!-- <div class="fixed">
   <top-bar scrolltop="false">
@@ -106,6 +85,9 @@
           <div class="page-header">
             <h1>Getting started</h1>
           </div>
+
+          <alert type="'warning'">Please note that this port of Angular Foundation is a work in progress. Not all components have been ported to Foundation for Sites 6.</alert>
+
           <h3>Dependencies</h3>
           <p>
             This repository contains a set of <strong>native AngularJS directives</strong> based on
@@ -133,10 +115,13 @@
         <% demoModules.forEach(function(module) { %>
           <section class="demo" id="<%= module.name %>">
             <div class="page-header">
-              <h1><%= module.displayName %><small>
-                (<a target="_blank" href="https://github.com/circlingthesun/angular-foundation-6/tree/master/src/<%= module.name %>">mm.foundation.<%= module.name %></a>)
-              </small></h1>
+              <h1><%= module.displayName %>
+                <small>
+                  (<a target="_blank" href="https://github.com/circlingthesun/angular-foundation-6/tree/master/src/<%= module.name %>">mm.foundation.<%= module.name %></a>)
+                </small>
+              </h1>
             </div>
+            <hr>
             <div class="row">
               <div class="columns medium-6 show-grid">
                 <%= module.docs.html %>
@@ -149,7 +134,9 @@
             <div class="row code">
               <div class="columns medium-12" ng-controller="PlunkerCtrl">
                 <div class="float-right">
-                  <button class="button secondary" id="plunk-btn" ng-click="edit('<%= ngversion%>', '<%= fdversion %>', '<%= pkg.version%>', '<%= module.name %>')"><i class="fa fa-edit"></i> Edit in plunker</button>
+                  <button class="button secondary" id="plunk-btn" ng-click="edit('<%= ngversion%>', '<%= fdversion %>', '<%= pkg.version%>', '<%= module.name %>')">
+                    <i class="fa fa-edit"></i> Edit in plunker
+                  </button>
                 </div>
                 <tabset>
                   <tab heading="Markup">
@@ -276,7 +263,6 @@
   </div>
 </script>
 
-</div>
 </div>
 </body>
 </html>

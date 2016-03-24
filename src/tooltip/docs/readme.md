@@ -1,5 +1,5 @@
 A lightweight, extensible directive for fancy tooltip creation. The tooltip
-directive supports multiple placements, optional transition animation, and more.
+directive supports multiple placements, and more.
 
 There are two versions of the tooltip: `tooltip` and `tooltip-html-unsafe`. The
 former takes text only and will escape any HTML provided. The latter takes
@@ -12,7 +12,6 @@ will display:
 
 - `tooltip-placement`: Where to place it? Defaults to "top", but also accepts
   "bottom", "left", "right".
-- `tooltip-animation`: Should it fade in and out? Defaults to "true".
 - `tooltip-popup-delay`: For how long should the user have to have the mouse
   over the element before the tooltip shows (in milliseconds)? Defaults to 0.
 - `tooltip-trigger`: What should trigger a show of the tooltip?
@@ -42,12 +41,11 @@ methods are available:
 - `setTriggers( obj )`: Extends the default trigger mappings mentioned above
   with mappings of your own. E.g. `{ 'openTrigger': 'closeTrigger' }`.
 - `options( obj )`: Provide a set of defaults for certain tooltip and popover
-  attributes. Currently supports 'placement', 'animation', 'popupDelay', and
+  attributes. Currently supports 'placement', 'popupDelay', and
   `appendToBody`. Here are the defaults:
 
   <pre>
   placement: 'top',
-  animation: true,
   popupDelay: 0,
   appendToBody: false
   </pre>

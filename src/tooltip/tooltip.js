@@ -14,7 +14,6 @@ angular.module('mm.foundation.tooltip', ['mm.foundation.position', 'mm.foundatio
     // The default options tooltip and popover.
     var defaultOptions = {
         placement: 'top',
-        animation: true,
         popupDelay: 0
     };
 
@@ -65,7 +64,7 @@ angular.module('mm.foundation.tooltip', ['mm.foundation.position', 'mm.foundatio
      * Returns the actual instance of the $tooltip service.
      * TODO support multiple triggers
      */
-    this.$get = function($window, $compile, $timeout, $parse, $document, $position, $interpolate) {
+    this.$get = function($window, $compile, $timeout, $parse, $document, $position, $interpolate, $animate) {
         'ngInject';
         return function $tooltip(type, prefix, defaultTriggerShow) {
             var options = angular.extend({}, defaultOptions, globalOptions);
@@ -102,7 +101,6 @@ angular.module('mm.foundation.tooltip', ['mm.foundation.position', 'mm.foundatio
                 'title="' + startSym + 'tt_title' + endSym + '" ' +
                 'content="' + startSym + 'tt_content' + endSym + '" ' +
                 'placement="' + startSym + 'tt_placement' + endSym + '" ' +
-                'animation="tt_animation" ' +
                 'is-open="tt_isOpen"' +
                 '>' +
                 '</div>';
@@ -110,7 +108,7 @@ angular.module('mm.foundation.tooltip', ['mm.foundation.position', 'mm.foundatio
             return {
                 restrict: 'EA',
                 scope: true,
-                compile: function(tElem, tAttrs) {
+                compile: function(tElem) {
                     var tooltipLinker = $compile(template);
 
                     return function link(scope, element, attrs) {
@@ -123,10 +121,10 @@ angular.module('mm.foundation.tooltip', ['mm.foundation.position', 'mm.foundatio
                         var hasEnableExp = angular.isDefined(attrs[prefix + 'Enable']);
 
                         var positionTooltip = function() {
-                            var position,
-                                ttWidth,
-                                ttHeight,
-                                ttPosition;
+                            var position;
+                            var ttWidth;
+                            var ttHeight;
+                            var ttPosition;
                             // Get the position of the directive element.
                             position = appendToBody ? $position.offset(element) : $position.position(element);
 
@@ -225,15 +223,17 @@ angular.module('mm.foundation.tooltip', ['mm.foundation.position', 'mm.foundatio
                             tooltip.css({
                                 top: 0,
                                 left: 0,
-                                display: 'block'
                             });
 
                             // Now we add it to the DOM because need some info about it. But it's not
                             // visible yet anyway.
                             if (appendToBody) {
-                                $document.find('body').append(tooltip);
+                                // $document.find('body').append(tooltip);
+                                // $document.find('body')
+                                $animate.enter(tooltip, $document.find('body'));
                             } else {
-                                element.after(tooltip);
+                                $animate.enter(tooltip, element.parent(), element);
+                                // element.after(tooltip);
                             }
 
                             positionTooltip();
@@ -254,15 +254,7 @@ angular.module('mm.foundation.tooltip', ['mm.foundation.position', 'mm.foundatio
 
                             //if tooltip is going to be shown after delay, we must cancel this
                             $timeout.cancel(popupTimeout);
-
-                            // And now we remove it from the DOM. However, if we have animation, we
-                            // need to wait for it to expire beforehand.
-                            // FIXME: this is a placeholder for a port of the transitions library.
-                            if (scope.tt_animation) {
-                                transitionTimeout = $timeout(removeTooltip, 500);
-                            } else {
-                                removeTooltip();
-                            }
+                            removeTooltip();
                         }
 
                         function createTooltip() {
@@ -270,7 +262,7 @@ angular.module('mm.foundation.tooltip', ['mm.foundation.position', 'mm.foundatio
                             if (tooltip) {
                                 removeTooltip();
                             }
-                            tooltip = tooltipLinker(scope, function() {});
+                            tooltip = tooltipLinker(scope, () => {});
 
                             // Get contents rendered into the tooltip
                             scope.$digest();
@@ -278,7 +270,8 @@ angular.module('mm.foundation.tooltip', ['mm.foundation.position', 'mm.foundatio
 
                         function removeTooltip() {
                             if (tooltip) {
-                                tooltip.remove();
+                                $animate.leave(tooltip);
+                                // tooltip.remove();
                                 tooltip = null;
                             }
                         }
@@ -350,8 +343,6 @@ angular.module('mm.foundation.tooltip', ['mm.foundation.position', 'mm.foundatio
                             hasRegisteredTriggers = true;
                         });
 
-                        var animation = scope.$eval(attrs[prefix + 'Animation']);
-                        scope.tt_animation = angular.isDefined(animation) ? !!animation : options.animation;
 
                         attrs.$observe(prefix + 'AppendToBody', function(val) {
                             appendToBody = angular.isDefined(val) ? $parse(val)(scope) : appendToBody;
@@ -391,7 +382,6 @@ angular.module('mm.foundation.tooltip', ['mm.foundation.position', 'mm.foundatio
         scope: {
             content: '@',
             placement: '@',
-            animation: '&',
             isOpen: '&'
         },
         templateUrl: 'template/tooltip/tooltip-popup.html'
@@ -410,7 +400,6 @@ angular.module('mm.foundation.tooltip', ['mm.foundation.position', 'mm.foundatio
         scope: {
             content: '@',
             placement: '@',
-            animation: '&',
             isOpen: '&'
         },
         templateUrl: 'template/tooltip/tooltip-html-unsafe-popup.html'

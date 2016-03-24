@@ -320,6 +320,24 @@ $motion-ui-classes: (
 @import 'motion-ui';
 @import 'foundation';
 
+.tooltip {
+    @include mui-fade(
+      $state: in,
+      $duration: 0.25s,
+      $delay: 0s
+    );
+}
+
+.tooltip {
+    @include mui-fade(
+        $state: out,
+        $from: 1,
+        $to: 0,
+        $duration: 0.25s,
+        $delay: 0s
+    );
+}
+
 .reveal-overlay {
     @include mui-fade($state: in);
 }

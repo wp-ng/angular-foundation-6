@@ -3,6 +3,8 @@ angular.module('mm.foundation.offcanvas', [])
     'ngInject';
     return {
         scope: {},
+        bindToController: {disableAutoClose: '='},
+        controllerAs: 'vm',
         restrict: 'C',
         controller: function($scope, $element) {
             'ngInject';
@@ -11,17 +13,27 @@ angular.module('mm.foundation.offcanvas', [])
             var left = angular.element($element[0].querySelector('.position-left'));
             var right = angular.element($element[0].querySelector('.position-right'));
             var inner = angular.element($element[0].querySelector('.off-canvas-wrapper-inner'));
+            // var overlay = angular.element(); js-off-canvas-exit
+            var exitOverlay = angular.element('<div class="js-off-canvas-exit"></div>');
+            inner.append(exitOverlay);
+
+            exitOverlay.on('click', function() {
+                $ctrl.hide();
+            });
 
             $ctrl.leftToggle = function() {
                 inner && inner.toggleClass('is-off-canvas-open');
                 inner && inner.toggleClass('is-open-left');
                 left && left.toggleClass('is-open');
+                exitOverlay.addClass('is-visible');
+                // is-visible
             };
 
             $ctrl.rightToggle = function() {
                 inner && inner.toggleClass('is-off-canvas-open');
                 inner && inner.toggleClass('is-open-right');
                 right && right.toggleClass('is-open');
+                exitOverlay.addClass('is-visible');
             };
 
             $ctrl.hide = function() {
@@ -30,6 +42,7 @@ angular.module('mm.foundation.offcanvas', [])
                 left && left.removeClass('is-open');
                 right && right.removeClass('is-open');
                 inner && inner.removeClass('is-off-canvas-open');
+                exitOverlay.removeClass('is-visible');
             };
 
             var win = angular.element($window);
@@ -45,7 +58,7 @@ angular.module('mm.foundation.offcanvas', [])
 .directive('leftOffCanvasToggle', function() {
     'ngInject';
     return {
-        require: '^offCanvasWrapper',
+        require: '^^offCanvasWrapper',
         restrict: 'C',
         link: function($scope, element, attrs, offCanvasWrapper) {
             element.on('click', function() {
@@ -57,7 +70,7 @@ angular.module('mm.foundation.offcanvas', [])
 .directive('rightOffCanvasToggle', function() {
     'ngInject';
     return {
-        require: '^offCanvasWrapper',
+        require: '^^offCanvasWrapper',
         restrict: 'C',
         link: function($scope, element, attrs, offCanvasWrapper) {
             element.on('click', function() {
@@ -66,26 +79,28 @@ angular.module('mm.foundation.offcanvas', [])
         }
     };
 })
-.directive('exitOffCanvas', function() {
+.directive('offCanvas', function() {
     'ngInject';
     return {
-        require: '^offCanvasWrapper',
+        require: {'offCanvasWrapper': '^^offCanvasWrapper'},
         restrict: 'C',
-        link: function($scope, element, attrs, offCanvasWrap) {
-            element.on('click', function() {
-                offCanvasWrap.hide();
-            });
-        }
+        bindToController: {},
+        scope: {},
+        controllerAs: 'vm',
+        controller: function() {}
     };
 })
-.directive('offCanvasList', function() {
+.directive('li', function() {
     'ngInject';
     return {
-        require: '^offCanvasWrapper',
-        restrict: 'C',
-        link: function($scope, element, attrs, offCanvasWrap) {
+        require: '?^^offCanvas',
+        restrict: 'E',
+        link: function($scope, element, attrs, offCanvas) {
+            if(!offCanvas || offCanvas.offCanvasWrapper.disableAutoClose){
+                return;
+            }
             element.on('click', function() {
-                offCanvasWrap.hide();
+                offCanvas.offCanvasWrapper.hide();
             });
         }
     };

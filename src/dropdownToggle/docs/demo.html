@@ -3,7 +3,7 @@
   <dropdown-toggle style="display: block;">
     <toggle><p><a>Click me for a dropdown-toggle, yo!</a></p></toggle>
     <pane>
-      <ul class="f-dropdown-toggle">
+      <ul class="menu vertical">
         <li ng-repeat="choice in items">
           <a>{{choice}}</a>
         </li>
@@ -16,7 +16,7 @@
       <a class="dropdown button">dropdown-toggles can also have links!</a>
     </toggle>
     <pane>
-      <ul>
+      <ul class="menu vertical">
         <li ng-repeat="(label, url) in linkItems">
           <a href="{{url}}" target="_blank">{{label}}</a>
         </li>
@@ -33,7 +33,7 @@
         </a>
       </toggle>
       <pane>
-        <ul>
+        <ul class="menu vertical">
           <li ng-repeat="choice in items">
             <a>{{choice}}</a>
           </li>

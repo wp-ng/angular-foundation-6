@@ -298,7 +298,7 @@ gulp.task('demo', function() {
             pkg: pkg,
             demoModules: demoModules,
             ngversion: jspmVersion(pkg.jspm.dependencies['angular']),
-            nglegacyversion: jspmVersion(pkg.jspm.dependencies['angular-legacy']),
+            nglegacyversion: jspmVersion(pkg.jspm.devDependencies['angular-legacy']),
             //fdversion: '6.0.5',
             fdversion: '6.2.0',
             faversion: '4.3.0',

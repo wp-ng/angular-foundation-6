@@ -20,6 +20,7 @@ angular.module('mm.foundation.dropdownMenu', [])
     return {
         require: {dropdownMenu: '?^^dropdownMenu'},
         bindToController: true,
+        scope: {},
         restrict: 'E',
         controllerAs: 'vm',
         controller: function($element){

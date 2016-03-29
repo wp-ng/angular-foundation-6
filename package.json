@@ -1,6 +1,6 @@
 {
   "name": "angular-foundation-6",
-  "version": "0.9.5",
+  "version": "0.9.6",
   "homepage": "http://circlingthesun.github.io/angular-foundation-6/",
   "repository": {
     "type": "git",
@@ -59,11 +59,12 @@
   "license": "MIT",
   "jspm": {
     "dependencies": {
-      "angular": "github:angular/bower-angular@1.5.0",
-      "angular-legacy": "github:angular/bower-angular@1.5.0",
-      "angular-mocks": "github:angular/bower-angular-mocks@1.5.0",
-      "angular-mocks-legacy": "github:angular/bower-angular-mocks@1.5.0"
+      "angular": "github:angular/bower-angular@^1.5.3"
     },
-    "devDependencies": {}
+    "devDependencies": {
+      "angular-legacy": "github:angular/bower-angular@^1.5.3",
+      "angular-mocks": "github:angular/bower-angular-mocks@^1.5.3",
+      "angular-mocks-legacy": "github:angular/bower-angular-mocks@^1.5.3"
+    }
   }
 }

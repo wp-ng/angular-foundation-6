@@ -8,13 +8,13 @@ System.config({
   },
 
   map: {
-    "angular": "github:angular/bower-angular@1.5.0",
-    "angular-legacy": "github:angular/bower-angular@1.5.0",
-    "angular-mocks": "github:angular/bower-angular-mocks@1.5.0",
-    "angular-mocks-legacy": "github:angular/bower-angular-mocks@1.5.0",
+    "angular": "github:angular/bower-angular@1.5.3",
+    "angular-legacy": "github:angular/bower-angular@1.5.3",
+    "angular-mocks": "github:angular/bower-angular-mocks@1.5.3",
+    "angular-mocks-legacy": "github:angular/bower-angular-mocks@1.5.3",
     "jquery": "github:components/jquery@2.1.4",
-    "github:angular/bower-angular-mocks@1.5.0": {
-      "angular": "github:angular/bower-angular@1.5.0"
+    "github:angular/bower-angular-mocks@1.5.3": {
+      "angular": "github:angular/bower-angular@1.5.3"
     }
   }
 });

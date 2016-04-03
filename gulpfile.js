@@ -24,12 +24,12 @@ var argv = require('yargs').argv;
 var bump = require('gulp-bump');
 var shell = require('shelljs');
 var changed = require('gulp-changed');
-var connect = require('gulp-connect');
-var open = require('gulp-open');
 var postcss = require('gulp-postcss');
 var autoprefixer = require('autoprefixer-core');
 var babel = require('gulp-babel');
 var eslint = require('gulp-eslint');
+var browserSync = require('browser-sync').create();
+var history = require('connect-history-api-fallback');
 
 var base = path.join(__dirname, 'src');
 var watchedFiles = [
@@ -260,21 +260,21 @@ function build(fileName, opts) {
     return s;
 }
 
-gulp.task('lint', function() {
+gulp.task('lint', () => {
     return gulp.src(['gulpfile.js', 'src/**/*.js'])
         .pipe(eslint());
         // .pipe(eslint.format());
         // .pipe(eslint.failAfterError());
 });
 
-gulp.task('enforce', function() {
+gulp.task('enforce', () => {
     return gulp.src('./misc/validate-commit-msg.js')
         .pipe(rename('commit-msg'))
         .pipe(chmod(755))
         .pipe(gulp.dest('./.git/hooks'));
 });
 
-gulp.task('changelog', function() {
+gulp.task('changelog', () => {
     return gulp.src('./CHANGELOG.md')
         .pipe(conventionalChangelog({
             preset: 'angular'
@@ -282,7 +282,7 @@ gulp.task('changelog', function() {
         .pipe(gulp.dest('./'));
 });
 
-gulp.task('demo', function() {
+gulp.task('demo', () => {
     var modules = findModules();
     var demoModules = modules.filter(function(module) {
         return module.docs.md && module.docs.js && module.docs.html;
@@ -326,7 +326,7 @@ gulp.task('demo', function() {
 
 
 // Test
-gulp.task('test-current', function(done) {
+gulp.task('test-current', (done) => {
     var config = {
         configFile: __dirname + '/karma.conf.js',
         singleRun: true
@@ -344,7 +344,7 @@ gulp.task('test-current', function(done) {
     new KarmaServer(config, done).start();
 });
 
-gulp.task('test-legacy', function(done) {
+gulp.task('test-legacy', (done) => {
     var config = {
         configFile: __dirname + '/karma.conf.js',
         singleRun: true,
@@ -366,7 +366,7 @@ gulp.task('test-legacy', function(done) {
     new KarmaServer(config, done).start();
 });
 
-gulp.task('tdd', function(done) {
+gulp.task('tdd', (done) => {
     var config = {
         configFile: __dirname + '/karma.conf.js',
         //background: true
@@ -381,12 +381,12 @@ gulp.task('tdd', function(done) {
     new KarmaServer(config, done).start();
 });
 
-gulp.task('test', ['test-current', /*'test-legacy'*/ ], function(done) {
+gulp.task('test', ['test-current', /*'test-legacy'*/ ], (done) => {
     done();
 });
 
 // Develop
-gulp.task('build', ['lint'], function() {
+gulp.task('build', ['lint'], () => {
     return merge(
             build('mm-foundation-tpls-' + pkg.version + '.js'),
             build('mm-foundation-' + pkg.version + '.js', {
@@ -405,7 +405,7 @@ gulp.task('build', ['lint'], function() {
         .pipe(gulp.dest('dist'));
 });
 
-gulp.task('bump', function() {
+gulp.task('bump', () => {
     return gulp.src('./package.json')
         .pipe(bump({
             type: 'minor'
@@ -413,7 +413,7 @@ gulp.task('bump', function() {
         .pipe(gulp.dest('./'));
 });
 
-gulp.task('bump-snapshot', function() {
+gulp.task('bump-snapshot', () => {
     return gulp.src('./package.json')
         .pipe(bump({
             type: 'prerelease',
@@ -422,12 +422,12 @@ gulp.task('bump-snapshot', function() {
         .pipe(gulp.dest('./'));
 });
 
-gulp.task('publish', ['enforce'], function(done) {
+gulp.task('publish', ['enforce'], (done) => {
     shell.exec('git commit package.json -m "chore(release): v%version% :shipit:"');
     shell.exec('git tag %version%');
 });
 
-gulp.task('release', function(done) {
+gulp.task('release', (done) => {
     // ### Release
     // * Bump up version number in `package.json`
     // * Commit the version change with the following message: `chore(release): [version number]`
@@ -443,37 +443,27 @@ gulp.task('release', function(done) {
     runSequence('test', 'build', 'demo', done);
 });
 
-gulp.task('server:connect', function() {
-    connect.server({
-        livereload: true,
-        fallback: 'dist/index.html',
-        host: 'localhost',
+gulp.task('server:connect', () => {
+    browserSync.init({
         port: 8080,
-        root: ['dist/', '.']
+        server: './dist/',
+        // browser: ["google-chrome"/*, "firefox"*/],
+        middleware: [ history() ]
     });
 });
 
-gulp.task('server:reload', function() {
-    return gulp.src(watchedFiles)
-        .pipe(connect.reload());
+gulp.task('server:reload', () => {
+    browserSync.reload();
 });
 
-gulp.task('refresh', function(callback) {
+gulp.task('refresh', (callback) => {
     runSequence(['build', 'demo'], 'server:reload', callback);
 });
 
-gulp.task('watch', function() {
+gulp.task('watch', () => {
     gulp.watch(watchedFiles, ['refresh']);
 });
 
-gulp.task('opendemo', function(callback) {
-    gulp.src(__filename)
-        .pipe(open({
-            uri: 'http://localhost:8080'
-        }));
-    callback();
-});
-
-gulp.task('default', function(callback) {
-    runSequence(['build', 'demo'], 'server:connect', 'watch', 'opendemo', 'tdd', callback);
+gulp.task('default', (callback) => {
+    runSequence(['build', 'demo'], 'server:connect', 'watch', 'tdd', callback);
 });

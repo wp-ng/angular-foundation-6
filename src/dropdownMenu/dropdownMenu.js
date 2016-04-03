@@ -1,5 +1,5 @@
 angular.module('mm.foundation.dropdownMenu', [])
-.directive('dropdownMenu', function($compile) {
+.directive('dropdownMenu', ($compile) => {
     'ngInject';
     return {
         bindToController: {
@@ -18,64 +18,56 @@ angular.module('mm.foundation.dropdownMenu', [])
 })
 .directive('li', () => {
     return {
-        require: {dropdownMenu: '?^^dropdownMenu'},
-        bindToController: true,
-        scope: {},
+        require: '?^^dropdownMenu',
         restrict: 'E',
-        controllerAs: 'vm',
-        controller: function($element){
-            'ngInject';
-            var vm = this;
-            vm.$onInit = () => {
-                if(!vm.dropdownMenu){
-                    return;
+        link: function($scope, $element, $attrs, dropdownMenu){
+            if(!dropdownMenu){
+                return;
+            }
+
+            let ulChild = null;
+            let children = $element[0].children;
+
+            for(let i = 0; i < children.length; i++){
+                let child = angular.element(children[i]);
+                if(child[0].nodeName === 'UL' && child.hasClass('menu')){
+                    ulChild = child;
+                }
+            }
+
+            let topLevel = $element.parent()[0].hasAttribute('dropdown-menu');
+            if(!topLevel){
+                $element.addClass('is-submenu-item');
+            }
+
+            if(ulChild){
+                ulChild.addClass('is-dropdown-submenu menu submenu vertical');
+                $element.addClass('is-dropdown-submenu-parent opens-right');
+
+                if(topLevel){
+                    ulChild.addClass('first-sub');
                 }
 
-                let ulChild = null;
-                let children = $element[0].children;
 
-                for(let i = 0; i < children.length; i++){
-                    let child = angular.element(children[i]);
-                    if(child[0].nodeName === 'UL' && child.hasClass('menu')){
-                        ulChild = child;
-                    }
-                }
-
-                let topLevel = $element.parent()[0].hasAttribute('dropdown-menu');
-                if(!topLevel){
-                    $element.addClass('is-submenu-item');
-                }
-
-                if(ulChild){
-                    ulChild.addClass('is-dropdown-submenu menu submenu vertical');
-                    $element.addClass('is-dropdown-submenu-parent opens-right');
-
-                    if(topLevel){
-                        ulChild.addClass('first-sub');
-                    }
-
-
-                    if(!vm.dropdownMenu.disableHover){
-                        $element.on('mouseenter', () => {
-                            ulChild.addClass('js-dropdown-active');
-                            $element.addClass('is-active');
-
-                        });
-                    }
-
-                    $element.on('click', () => {
+                if(!dropdownMenu.disableHover){
+                    $element.on('mouseenter', () => {
                         ulChild.addClass('js-dropdown-active');
                         $element.addClass('is-active');
-                        // $element.attr('data-is-click', 'true');
-                    });
 
-                    $element.on('mouseleave', () => {
-                        ulChild.removeClass('js-dropdown-active');
-                        $element.removeClass('is-active');
                     });
                 }
 
-            };
+                $element.on('click', () => {
+                    ulChild.addClass('js-dropdown-active');
+                    $element.addClass('is-active');
+                    // $element.attr('data-is-click', 'true');
+                });
+
+                $element.on('mouseleave', () => {
+                    ulChild.removeClass('js-dropdown-active');
+                    $element.removeClass('is-active');
+                });
+            }
         }
     };
 });

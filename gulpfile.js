@@ -30,6 +30,7 @@ var babel = require('gulp-babel');
 var eslint = require('gulp-eslint');
 var browserSync = require('browser-sync').create();
 var history = require('connect-history-api-fallback');
+var semver = require('semver');
 
 var base = path.join(__dirname, 'src');
 var watchedFiles = [
@@ -406,25 +407,22 @@ gulp.task('build', ['lint'], () => {
 });
 
 gulp.task('bump', () => {
-    return gulp.src('./package.json')
+    var newVer = semver.inc(pkg.version, 'patch');
+    pkg.version = newVer;
+    return gulp.src(['./bower.json', './package.json'])
         .pipe(bump({
-            type: 'minor'
+            version: newVer
         }))
         .pipe(gulp.dest('./'));
 });
 
-gulp.task('bump-snapshot', () => {
-    return gulp.src('./package.json')
-        .pipe(bump({
-            type: 'prerelease',
-            preid: 'SNAPSHOT'
-        }))
-        .pipe(gulp.dest('./'));
-});
 
 gulp.task('publish', ['enforce'], (done) => {
     shell.exec('git commit package.json -m "chore(release): v%version% :shipit:"');
     shell.exec('git tag %version%');
+    shell.exec('git subtree push --prefix dist origin gh-pages');
+    shell.exec('git push --follow-tags');
+    shell.exec('npm publish');
 });
 
 gulp.task('release', (done) => {
@@ -440,7 +438,10 @@ gulp.task('release', (done) => {
     // * switch back to the `main branch` and modify `package.json` to bump up version for the next iteration
     // * commit (`chore(release): starting [version number]`) and push
     // * publish NPM, Bower and NuGet packages
-    runSequence('test', 'build', 'demo', done);
+
+    // git subtree push --prefix dist origin gh-pages
+    // npm publish
+    runSequence('test', 'build', 'bump', 'demo', 'publish', done);
 });
 
 gulp.task('server:connect', () => {

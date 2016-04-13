@@ -418,7 +418,7 @@ gulp.task('bump', () => {
 
 
 gulp.task('publish', ['enforce'], (done) => {
-    shell.exec(`git commit package.json -m "chore(release): v${pkg.version} :shipit:"`);
+    shell.exec(`git commit -a -m "chore(release): v${pkg.version} :shipit:"`);
     shell.exec(`git tag v${pkg.version}`);
     shell.exec('git subtree push --prefix dist origin gh-pages');
     shell.exec('git push');

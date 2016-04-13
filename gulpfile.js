@@ -388,15 +388,15 @@ gulp.task('test', ['test-current', /*'test-legacy'*/ ], (done) => {
 // Develop
 gulp.task('build', ['lint'], () => {
     return merge(
-            build('mm-foundation-tpls-' + pkg.version + '.js'),
-            build('mm-foundation-' + pkg.version + '.js', {
+            build('angular-foundation.js'),
+            build('angular-foundation-no-tpls.js', {
                 skipSource: false,
                 skipTemplates: true
             }),
-            build('mm-foundation-tpls-' + pkg.version + '.min.js', {
+            build('angular-foundation.min.js', {
                 minify: true
             }),
-            build('mm-foundation-' + pkg.version + '.min.js', {
+            build('angular-foundation-no-tpls.min.js', {
                 skipSource: false,
                 skipTemplates: true,
                 minify: true

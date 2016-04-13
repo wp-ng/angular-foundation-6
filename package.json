@@ -2,6 +2,7 @@
   "name": "angular-foundation-6",
   "version": "0.9.12",
   "homepage": "http://circlingthesun.github.io/angular-foundation-6/",
+  "main": "dist/angular-foundation-6.js",
   "repository": {
     "type": "git",
     "url": "git://github.com/circlingthesun/angular-foundation-6.git"

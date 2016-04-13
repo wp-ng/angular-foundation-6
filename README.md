@@ -11,9 +11,14 @@ Do you want to see this in action? Visit http://circlingthesun.github.io/angular
 ## Installation
 
 Installation is easy as angular-foundation-6 has minimal dependencies - only the AngularJS and Foundation's CSS are required.
-After downloading dependencies (or better yet, referencing them from your favourite CDN) you need to download build version of this project. All the files and their purposes are described here:
-https://github.com/circlingthesun/angular-foundation-6/tree/gh-pages
-Don't worry, if you are not sure which file to take, opt for `mm-foundation-tpls-[version].min.js`.
+After downloading dependencies (or better yet, referencing them from your favourite CDN) you need to download build version of this project.
+
+Angular Foundation comes in several flavors:
+
+* `angular-foundation.js` **with** templates
+* `angular-foundation-no-tpls.js` **without** templates
+* `angular-foundation.min.js` minified **with** templates
+* `angular-foundation-no-tpls.min.js` minified **without** templates
 
 When you are done downloading all the dependencies and project files the only remaining part is to add dependencies on the `mm.foundation` AngularJS module:
 
@@ -115,7 +120,7 @@ If you want to override more templates it makes sense to store them as individua
 For people using Grunt as the build tool it can be easily done using the `grunt-html2js` plugin. You can also configure your own template url.
 Let's have a look:
 
-Your own template url is `views/partials/mm-foundation-tpls/alert/alert.html`.
+Your own template url is `views/partials/angular-foundation-6-tpls/alert/alert.html`.
 
 Add "html2js" task to your Gruntfile
 ```
@@ -124,12 +129,12 @@ html2js: {
     base: '.',
     module: 'ui-templates',
     rename: function (modulePath) {
-      var moduleName = modulePath.replace('app/views/partials/mm-foundation-tpls/', '').replace('.html', '');
+      var moduleName = modulePath.replace('app/views/partials/angular-foundation-tpls/', '').replace('.html', '');
       return 'template' + '/' + moduleName + '.html';
     }
   },
   main: {
-    src: ['app/views/partials/mm-foundation-tpls/**/*.html'],
+    src: ['app/views/partials/angular-foundation-tpls/**/*.html'],
     dest: '.tmp/ui-templates.js'
   }
 }

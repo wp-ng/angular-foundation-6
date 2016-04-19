@@ -1,6 +1,6 @@
 {
   "name": "angular-foundation-6",
-  "version": "0.9.16",
+  "version": "0.9.17",
   "homepage": "http://circlingthesun.github.io/angular-foundation-6/",
   "main": "dist/angular-foundation-6.js",
   "repository": {
@@ -58,6 +58,7 @@
     "yargs": "^3.31.0"
   },
   "license": "MIT",
+  "jspmNodeConversion": false,
   "jspm": {
     "dependencies": {
       "angular": "github:angular/bower-angular@^1.5.3"

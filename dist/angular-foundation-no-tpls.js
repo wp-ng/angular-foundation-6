@@ -4,7 +4,7 @@
  * angular-foundation-6
  * http://circlingthesun.github.io/angular-foundation-6/
 
- * Version: 0.9.17 - 2016-04-19
+ * Version: 0.9.18 - 2016-04-23
  * License: MIT
  * (c) 
  */
@@ -842,13 +842,13 @@ angular.module('mm.foundation.modal', [])
                     },
                     dismiss: function dismiss(reason) {
                         $modalStack.dismiss(modalInstance, reason);
+                    },
+                    reposition: function reposition() {
+                        $modalStack.reposition(modalInstance);
                     }
                 };
 
                 // merge and clean up options
-                // reposition: function() {
-                //     $modalStack.reposition(modalInstance);
-                // }
                 var modalOptions = angular.extend({}, $modalProvider.options, modalOpts);
                 modalOptions.resolve = modalOptions.resolve || {};
 

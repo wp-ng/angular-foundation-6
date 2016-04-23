@@ -379,9 +379,9 @@ angular.module('mm.foundation.modal', [])
                     dismiss: function(reason) {
                         $modalStack.dismiss(modalInstance, reason);
                     },
-                    // reposition: function() {
-                    //     $modalStack.reposition(modalInstance);
-                    // }
+                    reposition: function() {
+                        $modalStack.reposition(modalInstance);
+                    }
                 };
 
                 // merge and clean up options

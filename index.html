@@ -423,7 +423,8 @@
     middle: true,
     right: false
   };
-});</code></pre>
+});
+</code></pre>
                             </div>
                           </tab>
                         </tabset>
@@ -441,7 +442,8 @@
     middle: true,
     right: false
   };
-});</script>
+});
+</script>
                 
                   <section class="demo" id="dropdownMenu">
                     <div class="page-header">
@@ -913,6 +915,7 @@ Creating custom modals is straightforward: create a partial view, its controller
 <ul>
 <li><code>close(result)</code> - a method that can be used to close a modal, passing a result</li>
 <li><code>dismiss(reason)</code> - a method that can be used to dismiss a modal, passing a reason</li>
+<li><code>reposition()</code> - recalculates and positions the top position of the modal</li>
 <li><code>result</code> - a promise that is resolved when a modal is closed and rejected when a modal is dismissed</li>
 <li><code>opened</code> - a promise that is resolved when a modal gets opened after downloading content&#39;s template and resolving all variables</li>
 </ul>

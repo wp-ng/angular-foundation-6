@@ -4,7 +4,7 @@
  * angular-foundation-6
  * http://circlingthesun.github.io/angular-foundation-6/
 
- * Version: 0.9.19 - 2016-04-24
+ * Version: 0.9.20 - 2016-04-24
  * License: MIT
  * (c) 
  */
@@ -211,7 +211,7 @@ angular.module('mm.foundation.bindHtml', []).directive('bindHtmlUnsafe', functio
 });
 
 angular.module('mm.foundation.buttons', []).constant('buttonConfig', {
-    activeClass: 'active',
+    activeClass: 'hollow',
     toggleEvent: 'click'
 }).controller('ButtonsController', ['buttonConfig', function (buttonConfig) {
     this.activeClass = buttonConfig.activeClass;
@@ -228,12 +228,12 @@ angular.module('mm.foundation.buttons', []).constant('buttonConfig', {
 
             //model -> UI
             ngModelCtrl.$render = function () {
-                element.toggleClass(buttonsCtrl.activeClass, angular.equals(ngModelCtrl.$modelValue, scope.$eval(attrs.btnRadio)));
+                element.toggleClass(buttonsCtrl.activeClass, !angular.equals(ngModelCtrl.$modelValue, scope.$eval(attrs.btnRadio)));
             };
 
             //ui->model
             element.bind(buttonsCtrl.toggleEvent, function () {
-                if (!element.hasClass(buttonsCtrl.activeClass)) {
+                if (element.hasClass(buttonsCtrl.activeClass)) {
                     scope.$apply(function () {
                         ngModelCtrl.$setViewValue(scope.$eval(attrs.btnRadio));
                         ngModelCtrl.$render();
@@ -267,13 +267,13 @@ angular.module('mm.foundation.buttons', []).constant('buttonConfig', {
 
             //model -> UI
             ngModelCtrl.$render = function () {
-                element.toggleClass(buttonsCtrl.activeClass, angular.equals(ngModelCtrl.$modelValue, getTrueValue()));
+                element.toggleClass(buttonsCtrl.activeClass, angular.equals(ngModelCtrl.$modelValue, getFalseValue()));
             };
 
             //ui->model
             element.bind(buttonsCtrl.toggleEvent, function () {
                 scope.$apply(function () {
-                    ngModelCtrl.$setViewValue(element.hasClass(buttonsCtrl.activeClass) ? getFalseValue() : getTrueValue());
+                    ngModelCtrl.$setViewValue(element.hasClass(buttonsCtrl.activeClass) ? getTrueValue() : getFalseValue());
                     ngModelCtrl.$render();
                 });
             });

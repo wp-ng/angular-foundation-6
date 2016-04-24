@@ -4,7 +4,7 @@
  * angular-foundation-6
  * http://circlingthesun.github.io/angular-foundation-6/
 
- * Version: 0.9.18 - 2016-04-23
+ * Version: 0.9.19 - 2016-04-24
  * License: MIT
  * (c) 
  */
@@ -667,7 +667,8 @@ angular.module('mm.foundation.modal', [])
             top = parseInt((windowHeight - height) / 4, 10);
         }
 
-        var fitsWindow = windowHeight >= top + height; // ALwats fits on mobile
+        // var fitsWindow = windowHeight >= top + height; // Alwats fits on mobile
+        var fitsWindow = false; // Disable annying fixed positing
 
         var modalPos = options.modalPos = options.modalPos || {};
 

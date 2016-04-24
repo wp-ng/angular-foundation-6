@@ -4,7 +4,7 @@
  * angular-foundation-6
  * http://circlingthesun.github.io/angular-foundation-6/
 
- * Version: 0.9.20 - 2016-04-24
+ * Version: 0.9.21 - 2016-04-24
  * License: MIT
  * (c) 
  */
@@ -217,12 +217,12 @@ angular.module('mm.foundation.buttons', []).constant('buttonConfig', {
 
             //model -> UI
             ngModelCtrl.$render = function () {
-                element.toggleClass(buttonsCtrl.activeClass, !angular.equals(ngModelCtrl.$modelValue, scope.$eval(attrs.btnRadio)));
+                element.toggleClass(buttonsCtrl.activeClass, angular.equals(ngModelCtrl.$modelValue, scope.$eval(attrs.btnRadio)));
             };
 
             //ui->model
             element.bind(buttonsCtrl.toggleEvent, function () {
-                if (element.hasClass(buttonsCtrl.activeClass)) {
+                if (!element.hasClass(buttonsCtrl.activeClass)) {
                     scope.$apply(function () {
                         ngModelCtrl.$setViewValue(scope.$eval(attrs.btnRadio));
                         ngModelCtrl.$render();
@@ -256,13 +256,13 @@ angular.module('mm.foundation.buttons', []).constant('buttonConfig', {
 
             //model -> UI
             ngModelCtrl.$render = function () {
-                element.toggleClass(buttonsCtrl.activeClass, angular.equals(ngModelCtrl.$modelValue, getFalseValue()));
+                element.toggleClass(buttonsCtrl.activeClass, angular.equals(ngModelCtrl.$modelValue, getTrueValue()));
             };
 
             //ui->model
             element.bind(buttonsCtrl.toggleEvent, function () {
                 scope.$apply(function () {
-                    ngModelCtrl.$setViewValue(element.hasClass(buttonsCtrl.activeClass) ? getTrueValue() : getFalseValue());
+                    ngModelCtrl.$setViewValue(element.hasClass(buttonsCtrl.activeClass) ? getFalseValue() : getTrueValue());
                     ngModelCtrl.$render();
                 });
             });

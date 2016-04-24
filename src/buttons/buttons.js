@@ -1,7 +1,7 @@
 angular.module('mm.foundation.buttons', [])
 
 .constant('buttonConfig', {
-    activeClass: 'active',
+    activeClass: 'hollow',
     toggleEvent: 'click'
 })
 
@@ -21,12 +21,12 @@ angular.module('mm.foundation.buttons', [])
 
             //model -> UI
             ngModelCtrl.$render = function() {
-                element.toggleClass(buttonsCtrl.activeClass, angular.equals(ngModelCtrl.$modelValue, scope.$eval(attrs.btnRadio)));
+                element.toggleClass(buttonsCtrl.activeClass, !angular.equals(ngModelCtrl.$modelValue, scope.$eval(attrs.btnRadio)));
             };
 
             //ui->model
             element.bind(buttonsCtrl.toggleEvent, function() {
-                if (!element.hasClass(buttonsCtrl.activeClass)) {
+                if (element.hasClass(buttonsCtrl.activeClass)) {
                     scope.$apply(function() {
                         ngModelCtrl.$setViewValue(scope.$eval(attrs.btnRadio));
                         ngModelCtrl.$render();
@@ -61,13 +61,13 @@ angular.module('mm.foundation.buttons', [])
 
             //model -> UI
             ngModelCtrl.$render = function() {
-                element.toggleClass(buttonsCtrl.activeClass, angular.equals(ngModelCtrl.$modelValue, getTrueValue()));
+                element.toggleClass(buttonsCtrl.activeClass, angular.equals(ngModelCtrl.$modelValue, getFalseValue()));
             };
 
             //ui->model
             element.bind(buttonsCtrl.toggleEvent, function() {
                 scope.$apply(function() {
-                    ngModelCtrl.$setViewValue(element.hasClass(buttonsCtrl.activeClass) ? getFalseValue() : getTrueValue());
+                    ngModelCtrl.$setViewValue(element.hasClass(buttonsCtrl.activeClass) ? getTrueValue() : getFalseValue());
                     ngModelCtrl.$render();
                 });
             });

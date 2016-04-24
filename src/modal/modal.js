@@ -185,7 +185,8 @@ angular.module('mm.foundation.modal', [])
             top = parseInt((windowHeight - height) / 4, 10);
         }
 
-        var fitsWindow = windowHeight >= top + height; // ALwats fits on mobile
+        // var fitsWindow = windowHeight >= top + height; // Alwats fits on mobile
+        var fitsWindow = false; // Disable annying fixed positing
 
         var modalPos = options.modalPos = options.modalPos || {};
 

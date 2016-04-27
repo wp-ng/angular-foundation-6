@@ -9,7 +9,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
  * angular-foundation-6
  * http://circlingthesun.github.io/angular-foundation-6/
 
- * Version: 0.9.24 - 2016-04-27
+ * Version: 0.9.25 - 2016-04-27
  * License: MIT
  * (c) 
  */
@@ -723,13 +723,14 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
         var el = options.modalDomEl;
         var body = $document.find('body').eq(0);
 
-        var windowWidth = $window.innerWidth || $document.documentElement.clientWidth || body.clientWidth;
-        var windowHeight = $window.innerHeight || $document.documentElement.clientHeight || body.clientHeight;
+        var windowWidth = body.clientWidth || $document[0].documentElement.clientWidth;
+        var windowHeight = body.clientHeight || $document[0].documentElement.clientHeight;
 
         var width = el[0].offsetWidth;
         var height = el[0].offsetHeight;
 
         var left = parseInt((windowWidth - width) / 2, 10);
+
         var top = void 0;
         if (height > windowHeight) {
             top = parseInt(Math.min(100, windowHeight / 10), 10);
@@ -749,6 +750,7 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
         if (modalPos.position !== 'fixed') {
             modalPos.top = fitsWindow ? top : top + modalPos.scrollY;
         }
+
         modalPos.left = left;
         modalPos.position = fitsWindow ? 'fixed' : 'absolute';
         modalPos.windowHeight = windowHeight;

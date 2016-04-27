@@ -167,13 +167,14 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
         const el = options.modalDomEl;
         const body = $document.find('body').eq(0);
 
-        const windowWidth = $window.innerWidth || $document.documentElement.clientWidth || body.clientWidth;
-        const windowHeight = $window.innerHeight || $document.documentElement.clientHeight || body.clientHeight;
+        const windowWidth = body.clientWidth || $document[0].documentElement.clientWidth;
+        const windowHeight = body.clientHeight || $document[0].documentElement.clientHeight;
 
         const width = el[0].offsetWidth;
         const height = el[0].offsetHeight;
 
         const left = parseInt((windowWidth - width) / 2, 10);
+
         let top;
         if (height > windowHeight) {
             top = parseInt(Math.min(100, windowHeight / 10), 10);
@@ -193,6 +194,7 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
         if(modalPos.position !== 'fixed'){
             modalPos.top = fitsWindow ? top : top + modalPos.scrollY;
         }
+
         modalPos.left = left;
         modalPos.position = fitsWindow ? 'fixed' : 'absolute';
         modalPos.windowHeight = windowHeight;

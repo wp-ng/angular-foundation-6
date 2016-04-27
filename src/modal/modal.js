@@ -319,10 +319,10 @@ angular.module('mm.foundation.modal', [])
     };
 
     $modalStack.dismissAll = (reason) => {
-        let topModal = this.getTop();
+        let topModal = $modalStack.getTop();
         while (topModal) {
-            this.dismiss(topModal.key, reason);
-            topModal = this.getTop();
+            $modalStack.dismiss(topModal.key, reason);
+            topModal = $modalStack.getTop();
         }
     };
 
@@ -338,7 +338,7 @@ angular.module('mm.foundation.modal', [])
     let $modalProvider = {
         options: {
             backdrop: true, // can be also false or 'static'
-            keyboard: true
+            keyboard: true,
         },
         $get: function($injector, $rootScope, $q, $http, $templateCache, $controller, $modalStack) {
             'ngInject';

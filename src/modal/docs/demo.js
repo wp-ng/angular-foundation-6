@@ -17,8 +17,8 @@ angular.module('foundationDemoApp').controller('ModalDemoCtrl', function($scope,
             resolve: {
                 items: function() {
                     return $scope.items;
-                }
-            }
+                },
+            },
         };
 
         if(angular.isDefined(size)){
@@ -46,7 +46,7 @@ angular.module('foundationDemoApp').controller('ModalInstanceCtrl', function($sc
 
     $scope.items = items;
     $scope.selected = {
-        item: $scope.items[0]
+        item: $scope.items[0];
     };
 
     $scope.reposition = function() {
@@ -60,4 +60,6 @@ angular.module('foundationDemoApp').controller('ModalInstanceCtrl', function($sc
     $scope.cancel = function() {
         $modalInstance.dismiss('cancel');
     };
+
+
 });

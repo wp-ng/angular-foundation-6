@@ -2,7 +2,7 @@
   <script type="text/ng-template" id="myModalContent.html">
     <h3>I'm a modal!</h3>
     <ul>
-      <li ng-repeat="item in items">
+      <li ng-repeat="item in items track by $index">
         <a ng-click="selected.item = item">{{ item }}</a>
       </li>
     </ul>

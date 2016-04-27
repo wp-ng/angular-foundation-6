@@ -181,7 +181,7 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
         }
 
         // let fitsWindow = windowHeight >= top + height; // Alwats fits on mobile
-        const fitsWindow = mediaQueries.getCurrentSize() === 'small'; // Disable annoying fixed positing for higher breakpoints
+        const fitsWindow = mediaQueries.getCurrentSize() === 'small' || (windowHeight >= top + height); // Disable annoying fixed positing for higher breakpoints
 
         const modalPos = options.modalPos = options.modalPos || {};
 
@@ -222,7 +222,7 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
         };
         openedWindows.add(modalInstance, modalInstance.options);
 
-        let currBackdropIndex = backdropIndex();
+        const currBackdropIndex = backdropIndex();
 
         if (currBackdropIndex >= 0 && !backdropDomEl) {
             backdropScope = $rootScope.$new(true);
@@ -283,9 +283,12 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
                 body.addClass(OPENED_MODAL_CLASS);
             }
 
+            // Watch for modal resize
+            // This allows for scrolling
+            options.scope.$watch(() => modalDomEl[0].offsetHeight, resizeHandler);
+
             return $q.all(promises);
         });
-
     };
 
     $modalStack.reposition = (modalInstance) => {

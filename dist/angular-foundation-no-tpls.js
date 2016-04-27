@@ -4,7 +4,7 @@
  * angular-foundation-6
  * http://circlingthesun.github.io/angular-foundation-6/
 
- * Version: 0.9.22 - 2016-04-27
+ * Version: 0.9.23 - 2016-04-27
  * License: MIT
  * (c) 
  */
@@ -783,10 +783,10 @@ angular.module('mm.foundation.modal', [])
     };
 
     $modalStack.dismissAll = function (reason) {
-        var topModal = undefined.getTop();
+        var topModal = $modalStack.getTop();
         while (topModal) {
-            undefined.dismiss(topModal.key, reason);
-            topModal = undefined.getTop();
+            $modalStack.dismiss(topModal.key, reason);
+            topModal = $modalStack.getTop();
         }
     };
 

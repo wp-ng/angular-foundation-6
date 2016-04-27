@@ -175,10 +175,8 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
 
         const left = parseInt((windowWidth - width) / 2, 10);
 
-        let top;
-        if (height > windowHeight) {
-            top = parseInt(Math.min(100, windowHeight / 10), 10);
-        } else {
+        let top = 0;
+        if (height < windowHeight) {
             top = parseInt((windowHeight - height) / 4, 10);
         }
 

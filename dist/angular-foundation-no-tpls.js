@@ -9,7 +9,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
  * angular-foundation-6
  * http://circlingthesun.github.io/angular-foundation-6/
 
- * Version: 0.9.25 - 2016-04-27
+ * Version: 0.9.26 - 2016-04-27
  * License: MIT
  * (c) 
  */
@@ -715,10 +715,8 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
 
         var left = parseInt((windowWidth - width) / 2, 10);
 
-        var top = void 0;
-        if (height > windowHeight) {
-            top = parseInt(Math.min(100, windowHeight / 10), 10);
-        } else {
+        var top = 0;
+        if (height < windowHeight) {
             top = parseInt((windowHeight - height) / 4, 10);
         }
 

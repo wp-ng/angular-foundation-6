@@ -1,15 +1,15 @@
-import angular from "angular";
-import "angular-animate";
-import mocks from "angular-mocks";
+import angular from 'angular';
+import 'angular-animate';
+import mocks from 'angular-mocks';
 
-import "src/modal/modal.js"
-import "src/modal/window.html.js"
-import "src/modal/backdrop.html.js"
+import 'src/mediaQueries/mediaQueries.js';
+import 'src/modal/modal.js';
+import 'src/modal/window.html.js';
+import 'src/modal/backdrop.html.js';
 
 describe('$modal', () => {
-
-    let inject = mocks.inject;
-    let module = mocks.module;
+    const inject = mocks.inject;
+    const module = mocks.module;
 
     let $rootScope;
     let $document;
@@ -27,9 +27,9 @@ describe('$modal', () => {
     let $animate;
 
     let triggerKeyDown = (element, keyCode) => {
-        let evt = {
+        const evt = {
             type: 'keydown',
-            which: keyCode
+            which: keyCode,
         };
         element.triggerHandler(evt);
     };
@@ -48,18 +48,22 @@ describe('$modal', () => {
         $provide.value('$document', mockdocument);
 
         mockComputedStyle = {
-            top: 0
+            top: 0,
         };
 
         mockWindow = {
-            location: "val",
+            location: 'val',
             document: mockdocument,
             pageYOffset: 4,
             this_is_a_mock_window: true,
-            getComputedStyle: jasmine.createSpy("$window.getComputedStyle").and.returnValue(mockComputedStyle)
+            getComputedStyle:
+                jasmine.createSpy('$window.getComputedStyle').and.returnValue(mockComputedStyle),
+            innerWidth: 1024,
+            innerHeight: 800,
+            addEventListener: angular.noop,
+            removeEventListener: angular.noop,
         };
         $provide.value('$window', mockWindow);
-
     }));
 
     beforeEach(inject((_$rootScope_, _$document_, _$compile_, _$templateCache_, _$timeout_, _$q_, _$modal_, _$window_, _$animate_) => {
@@ -72,10 +76,6 @@ describe('$modal', () => {
         $modal = _$modal_;
         $animate = _$animate_;
         $window = _$window_;
-        $window.innerWidth = 1024;
-        $window.innerHeight = 800;
-        $window.addEventListener = angular.noop;
-        $window.removeEventListener = angular.noop;
     }));
 
     beforeEach(inject(($rootScope) => {

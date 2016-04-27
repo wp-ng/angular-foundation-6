@@ -1,4 +1,4 @@
-angular.module('mm.foundation.modal', [])
+angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
 
 /**
  * A helper, internal data structure that acts as a map but also allows getting / removing
@@ -13,8 +13,8 @@ angular.module('mm.foundation.modal', [])
             return {
                 add: (key, value) => {
                     stack.push({
-                        key: key,
-                        value: value
+                        key,
+                        value,
                     });
                 },
                 get: (key) => {
@@ -60,7 +60,7 @@ angular.module('mm.foundation.modal', [])
         templateUrl: 'template/modal/backdrop.html',
         link: (scope) => {
             scope.close = (evt) => {
-                let modal = $modalStack.getTop();
+                const modal = $modalStack.getTop();
                 if (modal && modal.value.backdrop && modal.value.backdrop !== 'static' && (evt.target === evt.currentTarget)) {
                     evt.preventDefault();
                     evt.stopPropagation();
@@ -87,13 +87,13 @@ angular.module('mm.foundation.modal', [])
     };
 })
 
-.factory('$modalStack', ($window, $timeout, $document, $compile, $rootScope, $$stackedMap, $animate, $q) => {
+.factory('$modalStack', ($window, $timeout, $document, $compile, $rootScope, $$stackedMap, $animate, $q, mediaQueries) => {
     'ngInject';
     const OPENED_MODAL_CLASS = 'is-reveal-open';
     let backdropDomEl;
     let backdropScope;
-    let openedWindows = $$stackedMap.createNew();
-    let $modalStack = {};
+    const openedWindows = $$stackedMap.createNew();
+    const $modalStack = {};
 
     function backdropIndex() {
         let topBackdropIndex = -1;
@@ -163,18 +163,17 @@ angular.module('mm.foundation.modal', [])
     }
 
     function getModalCenter(modalInstance) {
+        const options = modalInstance.options;
+        const el = options.modalDomEl;
+        const body = $document.find('body').eq(0);
 
-        let options = modalInstance.options;
-        let el = options.modalDomEl;
-        var body = $document.find('body').eq(0);
+        const windowWidth = $window.innerWidth || $document.documentElement.clientWidth || body.clientWidth;
+        const windowHeight = $window.innerHeight || $document.documentElement.clientHeight || body.clientHeight;
 
-        let windowWidth = $window.innerWidth || $document.documentElement.clientWidth || body.clientWidth;
-        let windowHeight = $window.innerHeight || $document.documentElement.clientHeight || body.clientHeight;
+        const width = el[0].offsetWidth;
+        const height = el[0].offsetHeight;
 
-        let width = el[0].offsetWidth;
-        let height = el[0].offsetHeight;
-
-        let left = parseInt((windowWidth - width) / 2, 10);
+        const left = parseInt((windowWidth - width) / 2, 10);
         let top;
         if (height > windowHeight) {
             top = parseInt(Math.min(100, windowHeight / 10), 10);
@@ -183,9 +182,9 @@ angular.module('mm.foundation.modal', [])
         }
 
         // let fitsWindow = windowHeight >= top + height; // Alwats fits on mobile
-        let fitsWindow = false; // Disable annying fixed positing
+        const fitsWindow = mediaQueries.getCurrentSize() === 'small'; // Disable annoying fixed positing for higher breakpoints
 
-        let modalPos = options.modalPos = options.modalPos || {};
+        const modalPos = options.modalPos = options.modalPos || {};
 
         if(modalPos.windowHeight !== windowHeight){
             modalPos.scrollY = $window.pageYOffset || 0;
@@ -265,7 +264,7 @@ angular.module('mm.foundation.modal', [])
             modalDomEl.detach();
 
             modalDomEl.attr({
-                'style': `
+                style: `
                     visibility: visible;
                     top: ${modalPos.top}px;
                     left: ${modalPos.left}px;

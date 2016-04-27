@@ -1,17 +1,19 @@
 'use strict';
 
+AccordionController.$inject = ['$scope', '$attrs', 'accordionConfig'];
+DropdownToggleController.$inject = ['$scope', '$attrs', 'mediaQueries', '$element', '$position'];
+dropdownToggle.$inject = ['$document', '$window', '$location'];
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
 /*
  * angular-foundation-6
  * http://circlingthesun.github.io/angular-foundation-6/
 
- * Version: 0.9.23 - 2016-04-27
+ * Version: 0.9.24 - 2016-04-27
  * License: MIT
  * (c) 
  */
 
-AccordionController.$inject = ['$scope', '$attrs', 'accordionConfig'];
-DropdownToggleController.$inject = ['$scope', '$attrs', 'mediaQueries', '$element', '$position'];
-dropdownToggle.$inject = ['$document', '$window', '$location'];
 function AccordionController($scope, $attrs, accordionConfig) {
     'ngInject';
 
@@ -419,26 +421,25 @@ angular.module('mm.foundation.dropdownToggle', ['mm.foundation.position', 'mm.fo
         $templateCache.put("template/dropdownToggle/dropdownToggle.html", "<span ng-click=\"$ctrl.toggle()\" ng-transclude=\"toggle\">Toggle Dropdown</span>\n<div\n    ng-transclude=\"pane\"\n    ng-style=\"$ctrl.css\"\n    ng-class=\"{\'is-open\': $ctrl.active}\"\n    ng-attr-aria-hidden=\"$ctrl.active\"\n    class=\"dropdown-pane\">\n  Just some junk that needs to be said. Or not. Your choice.\n</div>\n");
     }]);
 })();
-angular.module("mm.foundation.mediaQueries", []).factory('matchMedia', ['$document', '$window', function ($document, $window) {
+angular.module('mm.foundation.mediaQueries', []).factory('matchMedia', ['$document', '$window', function ($document, $window) {
     'ngInject';
     // MatchMedia for IE <= 9
 
-    return $window.matchMedia || function matchMedia(doc, undefined) {
-        var bool,
-            docElem = doc.documentElement,
-            refNode = docElem.firstElementChild || docElem.firstChild,
-
+    return $window.matchMedia || function (doc, undefined) {
+        var bool = void 0;
+        var docElem = doc.documentElement;
+        var refNode = docElem.firstElementChild || docElem.firstChild;
         // fakeBody required for <FF4 when executed in <head>
-        fakeBody = doc.createElement("body"),
-            div = doc.createElement("div");
+        var fakeBody = doc.createElement('body');
+        var div = doc.createElement('div');
 
-        div.id = "mq-test-1";
-        div.style.cssText = "position:absolute;top:-100em";
-        fakeBody.style.background = "none";
+        div.id = 'mq-test-1';
+        div.style.cssText = 'position:absolute;top:-100em';
+        fakeBody.style.background = 'none';
         fakeBody.appendChild(div);
 
         return function (q) {
-            div.innerHTML = "&shy;<style media=\"" + q + "\"> #mq-test-1 { width: 42px; }</style>";
+            div.innerHTML = '&shy;<style media="' + q + '"> #mq-test-1 { width: 42px; }</style>';
             docElem.insertBefore(fakeBody, refNode);
             bool = div.offsetWidth === 42;
             docElem.removeChild(fakeBody);
@@ -451,37 +452,101 @@ angular.module("mm.foundation.mediaQueries", []).factory('matchMedia', ['$docume
 }]).factory('mediaQueries', ['$document', 'matchMedia', function ($document, matchMedia) {
     'ngInject';
 
-    var head = angular.element($document[0].querySelector('head'));
-    head.append('<meta class="foundation-mq-topbar" />');
-    head.append('<meta class="foundation-mq-small" />');
-    head.append('<meta class="foundation-mq-medium" />');
-    head.append('<meta class="foundation-mq-large" />');
+    // Thank you: https://github.com/sindresorhus/query-string
 
-    var regex = /^[\/\\'"]+|(;\s?})+|[\/\\'"]+$/g;
-    var queries = {
-        topbar: getComputedStyle(head[0].querySelector('meta.foundation-mq-topbar')).fontFamily.replace(regex, ''),
-        small: getComputedStyle(head[0].querySelector('meta.foundation-mq-small')).fontFamily.replace(regex, ''),
-        medium: getComputedStyle(head[0].querySelector('meta.foundation-mq-medium')).fontFamily.replace(regex, ''),
-        large: getComputedStyle(head[0].querySelector('meta.foundation-mq-large')).fontFamily.replace(regex, '')
-    };
+    function parseStyleToObject(str) {
+        var styleObject = {};
+
+        if (typeof str !== 'string') {
+            return styleObject;
+        }
+
+        str = str.trim().slice(1, -1); // browsers re-quote string style values
+
+        if (!str) {
+            return styleObject;
+        }
+
+        styleObject = str.split('&').reduce(function (ret, param) {
+            var parts = param.replace(/\+/g, ' ').split('=');
+            var key = parts[0];
+            var val = parts[1];
+            key = decodeURIComponent(key);
+
+            // missing `=` should be `null`:
+            // http://w3.org/TR/2012/WD-url-20120524/#collect-url-parameters
+            val = val === undefined ? null : decodeURIComponent(val);
+
+            if (!ret.hasOwnProperty(key)) {
+                ret[key] = val;
+            } else if (Array.isArray(ret[key])) {
+                ret[key].push(val);
+            } else {
+                ret[key] = [ret[key], val];
+            }
+            return ret;
+        }, {});
+
+        return styleObject;
+    }
+
+    var head = angular.element($document[0].querySelector('head'));
+    head.append('<meta class="foundation-mq" />');
+    var extractedStyles = getComputedStyle(head[0].querySelector('meta.foundation-mq')).fontFamily;
+    var namedQueries = parseStyleToObject(extractedStyles);
+    var queries = [];
+
+    for (var key in namedQueries) {
+        queries.push({
+            name: key,
+            value: 'only screen and (min-width: ' + namedQueries[key] + ')'
+        });
+    }
+
+    // Gets the media query of a breakpoint.
+    function get(size) {
+        for (var i in this.queries) {
+            var query = this.queries[i];
+            if (size === query.name) return query.value;
+        }
+
+        return null;
+    }
+
+    function atLeast(size) {
+        var query = get(size);
+
+        if (query) {
+            return window.matchMedia(query).matches;
+        }
+        return false;
+    }
+
+    // Gets the current breakpoint name by testing every breakpoint and returning the last one to match (the biggest one).
+    function getCurrentSize() {
+        var matched = void 0;
+
+        for (var i = 0; i < queries.length; i++) {
+            var query = queries[i];
+
+            if (matchMedia(query.value).matches) {
+                matched = query;
+            }
+        }
+
+        if ((typeof matched === 'undefined' ? 'undefined' : _typeof(matched)) === 'object') {
+            return matched.name;
+        }
+        return matched;
+    }
 
     return {
-        topbarBreakpoint: function topbarBreakpoint() {
-            return !matchMedia(queries.topbar).matches;
-        },
-        small: function small() {
-            return matchMedia(queries.small).matches;
-        },
-        medium: function medium() {
-            return matchMedia(queries.medium).matches;
-        },
-        large: function large() {
-            return matchMedia(queries.large).matches;
-        }
+        getCurrentSize: getCurrentSize,
+        atLeast: atLeast
     };
 }]);
 
-angular.module('mm.foundation.modal', [])
+angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
 
 /**
  * A helper, internal data structure that acts as a map but also allows getting / removing
@@ -575,7 +640,7 @@ angular.module('mm.foundation.modal', [])
             scope.windowClass = attrs.windowClass || '';
         }
     };
-}).factory('$modalStack', ['$window', '$timeout', '$document', '$compile', '$rootScope', '$$stackedMap', '$animate', '$q', function ($window, $timeout, $document, $compile, $rootScope, $$stackedMap, $animate, $q) {
+}).factory('$modalStack', ['$window', '$timeout', '$document', '$compile', '$rootScope', '$$stackedMap', '$animate', '$q', 'mediaQueries', function ($window, $timeout, $document, $compile, $rootScope, $$stackedMap, $animate, $q, mediaQueries) {
     'ngInject';
 
     var OPENED_MODAL_CLASS = 'is-reveal-open';
@@ -654,7 +719,6 @@ angular.module('mm.foundation.modal', [])
     }
 
     function getModalCenter(modalInstance) {
-
         var options = modalInstance.options;
         var el = options.modalDomEl;
         var body = $document.find('body').eq(0);
@@ -674,7 +738,7 @@ angular.module('mm.foundation.modal', [])
         }
 
         // let fitsWindow = windowHeight >= top + height; // Alwats fits on mobile
-        var fitsWindow = false; // Disable annying fixed positing
+        var fitsWindow = mediaQueries.getCurrentSize() === 'small'; // Disable annoying fixed positing for higher breakpoints
 
         var modalPos = options.modalPos = options.modalPos || {};
 
@@ -752,7 +816,7 @@ angular.module('mm.foundation.modal', [])
             modalDomEl.detach();
 
             modalDomEl.attr({
-                'style': '\n                    visibility: visible;\n                    top: ' + modalPos.top + 'px;\n                    left: ' + modalPos.left + 'px;\n                    display: block;\n                    position: ' + modalPos.position + ';\n                '
+                style: '\n                    visibility: visible;\n                    top: ' + modalPos.top + 'px;\n                    left: ' + modalPos.left + 'px;\n                    display: block;\n                    position: ' + modalPos.position + ';\n                '
             });
 
             var promises = [];

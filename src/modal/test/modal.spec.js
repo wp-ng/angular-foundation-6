@@ -1,43 +1,50 @@
 import angular from "angular";
+import "angular-animate";
 import mocks from "angular-mocks";
 
 import "src/modal/modal.js"
 import "src/modal/window.html.js"
 import "src/modal/backdrop.html.js"
 
-describe('$modal', function() {
+describe('$modal', () => {
 
-    var inject = mocks.inject;
-    var module = mocks.module;
+    let inject = mocks.inject;
+    let module = mocks.module;
 
-    var $rootScope, $document, $compile, $templateCache, $timeout, $q, $window, $provide, $controllerProvider;
-    var $modal, $modalProvider;
-    var mockWindow, mockComputedStyle;
+    let $rootScope;
+    let $document;
+    let $compile;
+    let $templateCache;
+    let $timeout;
+    let $q;
+    let $window;
+    let $provide;
+    let $controllerProvider;
+    let $modal;
+    let $modalProvider;
+    let mockWindow;
+    let mockComputedStyle;
+    let $animate;
 
-    var triggerKeyDown = function(element, keyCode) {
-        var evt = {
+    let triggerKeyDown = (element, keyCode) => {
+        let evt = {
             type: 'keydown',
             which: keyCode
         };
         element.triggerHandler(evt);
     };
 
-    var waitForBackdropAnimation = function() {
-        inject(function($transition) {
-            if ($transition.transitionEndEventName) {
-                $timeout.flush();
-            }
-        });
-    };
+    beforeEach(module('ngAnimate'));
+    beforeEach(module('ngAnimateMock'));
 
     beforeEach(module('mm.foundation.modal'));
     beforeEach(module('template/modal/backdrop.html'));
     beforeEach(module('template/modal/window.html'));
-    beforeEach(module(function(_$controllerProvider_, _$modalProvider_, $provide) {
+    beforeEach(module((_$controllerProvider_, _$modalProvider_, $provide) => {
         $controllerProvider = _$controllerProvider_;
         $modalProvider = _$modalProvider_;
 
-        var mockdocument = angular.element(document);
+        let mockdocument = angular.element(document);
         $provide.value('$document', mockdocument);
 
         mockComputedStyle = {
@@ -55,7 +62,7 @@ describe('$modal', function() {
 
     }));
 
-    beforeEach(inject(function(_$rootScope_, _$document_, _$compile_, _$templateCache_, _$timeout_, _$q_, _$modal_, _$window_) {
+    beforeEach(inject((_$rootScope_, _$document_, _$compile_, _$templateCache_, _$timeout_, _$q_, _$modal_, _$window_, _$animate_) => {
         $rootScope = _$rootScope_;
         $document = _$document_;
         $compile = _$compile_;
@@ -63,50 +70,51 @@ describe('$modal', function() {
         $timeout = _$timeout_;
         $q = _$q_;
         $modal = _$modal_;
+        $animate = _$animate_;
         $window = _$window_;
+        $window.innerWidth = 1024;
+        $window.innerHeight = 800;
+        $window.addEventListener = angular.noop;
+        $window.removeEventListener = angular.noop;
     }));
 
-    beforeEach(inject(function($rootScope) {
+    beforeEach(inject(($rootScope) => {
         jasmine.addMatchers({
-            toBeResolvedWith: function(util, customEqualityTesters) {
-
+            toBeResolvedWith: (util, customEqualityTesters) => {
                 function compare(actual, expected) {
-
-                    var resolved;
-                    actual.then(function(result) {
+                    let resolved;
+                    actual.then((result) => {
                         resolved = result;
                     });
+
                     $rootScope.$digest();
 
-                    var passed = resolved === expected;
                     return {
-                        pass: passed,
-                        message: "Expected '" + angular.mock.dump(actual) + "' to be resolved with '" + expected + "'."
+                        pass: resolved === expected,
+                        message: `Expected '${angular.mock.dump(actual)}' to be resolved with '${expected}' instead of '${angular.mock.dump(resolved)}'.`
                     };
                 }
 
                 return {
-                    compare: compare
+                    compare,
                 };
             },
-            toBeRejectedWith: function(util, customEqualityTesters) {
-
+            toBeRejectedWith: (util, customEqualityTesters) => {
                 function compare(actual, expected) {
-                    var rejected;
-                    actual.then(angular.noop, function(reason) {
+                    let rejected;
+                    actual.then(angular.noop, (reason) => {
                         rejected = reason;
                     });
                     $rootScope.$digest();
 
-                    var passed = rejected === expected;
                     return {
-                        pass: passed,
-                        message: "Expected '" + angular.mock.dump(actual) + "' to be rejected with '" + expected + "'."
+                        pass: rejected === expected,
+                        message: `Expected '${angular.mock.dump(actual)}' to be rejected with '${expected}' not '${angular.mock.dump(rejected)}'.`
                     };
                 }
 
                 return {
-                    compare: compare
+                    compare,
                 };
             },
 
@@ -121,94 +129,90 @@ describe('$modal', function() {
              *
              */
 
-            toHaveModalOpenWithStyle: function(util, customEqualityTesters) {
+            toHaveModalOpenWithStyle: (util, customEqualityTesters) => {
 
                 function compare(actual, style, expected) {
-                    var modalDomEls = actual[0].querySelector('body > div.reveal');
-                    var passed = getComputedStyle(modalDomEls)[style] === expected;
+                    const modalDomEls = actual[0].querySelector('body > div.reveal');
+                    let passed = getComputedStyle(modalDomEls)[style] === expected;
                     return {
                         pass: passed,
-                        message: "Expected '" + angular.mock.dump(modalDomEls) + "' to have a style " + style + " with value " + expected + "."
+                        message: `Expected '${angular.mock.dump(modalDomEls)}' to have a style ${style} with value ${expected}.`
                     };
                 }
 
                 return {
-                    compare: compare
+                    compare,
                 };
             },
 
-            toHaveModalOpenWithContent: function(util, customEqualityTesters) {
+            toHaveModalOpenWithContent: (util, customEqualityTesters) => {
 
                 function compare(actual, content, selector) {
-                    var modalDomEls = actual[0].querySelector('body > div.reveal > div');
-                    var contentToCompare = selector ? modalDomEls.querySelector(selector) : modalDomEls;
-                    var passed = getComputedStyle(modalDomEls)['display'] === 'block' && contentToCompare.innerHTML == content;
+                    const modalDomEls = actual[0].querySelector('body > div.reveal > div');
+                    let contentToCompare = selector ? modalDomEls.querySelector(selector) : modalDomEls;
+                    let passed = getComputedStyle(modalDomEls).display === 'block' && contentToCompare.innerHTML == content;
                     return {
                         pass: passed,
-                        message: "Expected '" + angular.mock.dump(modalDomEls) + "' to be open with '" + content + "'."
+                        message: `Expected '${angular.mock.dump(modalDomEls)}' to be open with '${content}'.`,
                     };
                 }
 
                 return {
-                    compare: compare
+                    compare,
                 };
             },
 
-            toHaveModalsOpen: function(util, customEqualityTesters) {
+            toHaveModalsOpen: (util, customEqualityTesters) => {
 
                 function compare(actual, noOfModals) {
-                    var modalDomEls = actual[0].querySelectorAll('body > div.reveal');
-                    var passed = modalDomEls.length === noOfModals;
+                    const modalDomEls = actual[0].querySelectorAll('body > div.reveal');
                     return {
-                        pass: passed
+                        pass: modalDomEls.length === noOfModals,
                     };
                 }
 
                 return {
-                    compare: compare
+                    compare,
                 };
             },
 
-            toHaveBackdrop: function(util, customEqualityTesters) {
+            toHaveBackdrop: (util, customEqualityTesters) => {
 
                 function compare(actual) {
-                    var backdropDomEls = actual[0].querySelectorAll('body > div.reveal-overlay');
-
-                    var passed = backdropDomEls.length === 1;
+                    let backdropDomEls = actual[0].querySelectorAll('body > div.reveal-overlay');
                     return {
-                        pass: passed,
-                        message: "Expected '" + angular.mock.dump(backdropDomEls) + "' to be a backdrop element'."
+                        pass: backdropDomEls.length === 1,
+                        message: `Expected '${angular.mock.dump(backdropDomEls)}' to be a backdrop element'.`,
                     };
                 }
 
                 return {
-                    compare: compare
+                    compare,
                 };
             },
 
-            toHaveModalOpenInOtherParent: function(util, customEqualityTesters) {
+            // toHaveModalOpenInOtherParent: (util, customEqualityTesters) => {
 
-                function compare(actual, parentSelector) {
-                    var modalElem = actual[0].querySelectorAll(parentSelector + ' > .reveal');
-                    var passed = modalElem.length === 1;
-                    return {
-                        pass: passed,
-                        message: 'Expected modal to be a parent of: ' + parentSelector
-                    };
-                }
+            //     function compare(actual, parentSelector) {
+            //         const modalElem = actual[0].querySelectorAll(parentSelector + ' > .reveal');
+            //         let passed = modalElem.length === 1;
+            //         return {
+            //             pass: passed,
+            //             message: 'Expected modal to be a parent of: ' + parentSelector
+            //         };
+            //     }
 
-                return {
-                    compare: compare
-                };
-            },
+            //     return {
+            //         compare,
+            //     };
+            // },
         });
     }));
 
-    afterEach(function() {
-        var body = $document[0].querySelector('body');
-
-        var modals = angular.element(body.querySelectorAll('div.reveal'));
-        var bgs = angular.element(body.querySelectorAll('div.reveal-overlay'));
+    afterEach(() => {
+        let body = $document[0].querySelector('body');
+        const modals = angular.element(body.querySelectorAll('div.reveal'));
+        let bgs = angular.element(body.querySelectorAll('div.reveal-overlay'));
 
         modals.remove();
         bgs.remove();
@@ -216,592 +220,513 @@ describe('$modal', function() {
         if (body.classList) {
             body.classList.remove('is-reveal-open');
         } else {
-            body.className = body.className.replace(new RegExp('(^|\\b)' + 'is-reveal-open'.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
+            const regex = new RegExp('(^|\\b)' + 'is-reveal-open'.split(' ').join('|') + '(\\b|$)', 'gi');
+            body.className = body.className.replace(regex, ' ');
         }
 
     });
 
     function open(modalOptions) {
-        var modal = $modal.open(modalOptions);
-        return modal.opened.then(function() {
-            $rootScope.$digest();
-            return modal;
-        });
+        const modal = $modal.open(modalOptions);
+        $rootScope.$digest();
+        $timeout.flush();
+        try{
+            $animate.flush();
+        } catch(e){}
+        return modal;
     }
 
     function close(modal, result) {
         modal.close(result);
         $rootScope.$digest();
+        try{
+            $animate.flush();
+        } catch(e){}
     }
 
     function dismiss(modal, reason) {
         modal.dismiss(reason);
-        $timeout.flush();
         $rootScope.$digest();
+        try{
+            $animate.flush();
+        } catch(e){}
     }
 
-    describe('modal invoked with y offsets', function() {
-        it('should create the modal at the correct location based on window y position', function() {
-            $window.pageYOffset = 400;
+    // describe('modal invoked with y offsets', () => {
+    //     it('should create the modal at the correct location based on window y position', () => {
+    //         $window.pageYOffset = 400;
 
-            open({
-                template: '<div>Content</div>'
-            }).then(function() {
-                expect($document).toHaveModalsOpen(1);
-                expect($document).toHaveModalOpenWithStyle('top', '400px');
+    //         const modal = open({
+    //             template: '<div>Content</div>'
+    //         });
+    //         expect($document).toHaveModalsOpen(1);
+    //         expect($document).toHaveModalOpenWithStyle('top', '400px');
+    //     });
+    // });
+
+    describe('basic scenarios with default options', () => {
+        it('should open and dismiss a modal with a minimal set of options', () => {
+            const modal = open({
+                template: '<div>Content</div>',
             });
-        });
-    });
+            expect($document).toHaveModalsOpen(1);
+            expect($document).toHaveModalOpenWithContent('Content', 'div');
+            expect($document).toHaveBackdrop();
 
-    describe('basic scenarios with default options', function() {
+            dismiss(modal, 'closing in test');
 
-        it('should open and dismiss a modal with a minimal set of options', function() {
-            open({
-                template: '<div>Content</div>'
-            }).then(function(modal){
-                expect($document).toHaveModalsOpen(1);
-                expect($document).toHaveModalOpenWithContent('Content', 'div');
-                expect($document).toHaveBackdrop();
-
-                dismiss(modal, 'closing in test');
-
-                expect($document).toHaveModalsOpen(0);
-
-                waitForBackdropAnimation();
-                expect($document).not.toHaveBackdrop();
-            });
+            expect($document).toHaveModalsOpen(0);
+            expect($document).not.toHaveBackdrop();
         });
 
-        it('should not throw an exception on a second dismiss', function() {
-            open({
-                template: '<div>Content</div>'
-            }).then(function(modal){
-                expect($document).toHaveModalsOpen(1);
-                expect($document).toHaveModalOpenWithContent('Content', 'div');
-                expect($document).toHaveBackdrop();
-
-                dismiss(modal, 'closing in test');
-
-                expect($document).toHaveModalsOpen(0);
-
-                dismiss(modal, 'closing in test');
+        it('should not throw an exception on a second dismiss', () => {
+            const modal = open({
+                template: '<div>Content</div>',
             });
+            expect($document).toHaveModalsOpen(1);
+            expect($document).toHaveModalOpenWithContent('Content', 'div');
+            expect($document).toHaveBackdrop();
+
+            dismiss(modal, 'closing in test');
+
+            expect($document).toHaveModalsOpen(0);
+
+            dismiss(modal, 'closing in test');
         });
 
-        it('should not throw an exception on a second close', function() {
-
-            open({
-                template: '<div>Content</div>'
-            }).then(function(modal){
-                expect($document).toHaveModalsOpen(1);
-                expect($document).toHaveModalOpenWithContent('Content', 'div');
-                expect($document).toHaveBackdrop();
-
-                modal.close('closing in test');
-                $timeout.flush();
-                $rootScope.$digest();
-
-                expect($document).toHaveModalsOpen(0);
-
-                modal.close('closing in test');
+        it('should not throw an exception on a second close', () => {
+            const modal = open({
+                template: '<div>Content</div>',
             });
+
+            expect($document).toHaveModalsOpen(1);
+            expect($document).toHaveModalOpenWithContent('Content', 'div');
+            expect($document).toHaveBackdrop();
+
+            modal.close('closing in test');
+
+            expect($document).toHaveModalsOpen(0);
+
+            modal.close('closing in test');
         });
 
-        it('should open a modal from templateUrl', function() {
-
+        it('should open a modal from templateUrl', () => {
             $templateCache.put('content.html', '<div>URL Content</div>');
-            open({
-                templateUrl: 'content.html'
-            }).then(function(modal){
-                expect($document).toHaveModalsOpen(1);
-                expect($document).toHaveModalOpenWithContent('URL Content', 'div');
-                expect($document).toHaveBackdrop();
-
-                dismiss(modal, 'closing in test');
-
-                expect($document).toHaveModalsOpen(0);
-
-                waitForBackdropAnimation();
-                expect($document).not.toHaveBackdrop();
+            const modal = open({
+                templateUrl: 'content.html',
             });
+            expect($document).toHaveModalsOpen(1);
+            expect($document).toHaveModalOpenWithContent('URL Content', 'div');
+            expect($document).toHaveBackdrop();
+
+            dismiss(modal, 'closing in test');
+
+            expect($document).toHaveModalsOpen(0);
+            expect($document).not.toHaveBackdrop();
         });
 
-        it('should support closing on ESC', function() {
-
-            open({
-                template: '<div>Content</div>'
-            }).then(function(modal){
-                expect($document).toHaveModalsOpen(1);
-
-                triggerKeyDown($document, 27);
-                $timeout.flush();
-                $rootScope.$digest();
-
-                expect($document).toHaveModalsOpen(0);
-            });
-        });
-
-        it('should support closing on backdrop click', function() {
-
-            open({
-                template: '<div>Content</div>'
-            }).then(function(modal){
-                expect($document).toHaveModalsOpen(1);
-
-                $document[0].querySelector('body > div.reveal-overlay').click();
-                $timeout.flush();
-                $rootScope.$digest();
-
-                expect($document).toHaveModalsOpen(0);
+        it('should support closing on ESC', () => {
+            const modal = open({
+                template: '<div>Content</div>',
             });
 
+            expect($document).toHaveModalsOpen(1);
+
+            triggerKeyDown($document, 27);
+            // $timeout.flush();
+            $rootScope.$digest();
+
+            expect($document).toHaveModalsOpen(0);
         });
 
-        it('should resolve returned promise on close', function() {
-            open({
-                template: '<div>Content</div>'
-            }).then(function(modal){
-                close(modal, 'closed ok');
-                expect(modal.result).toBeResolvedWith('closed ok');
-            });
-        });
-
-        it('should reject returned promise on dismiss', function() {
-
-            open({
-                template: '<div>Content</div>'
-            }).then(function(modal){
-                dismiss(modal, 'esc');
-                expect(modal.result).toBeRejectedWith('esc');
+        it('should support closing on backdrop click', () => {
+            const modal = open({
+                template: '<div>Content</div>',
             });
 
+            expect($document).toHaveModalsOpen(1);
+
+            $document[0].querySelector('body > div.reveal-overlay').click();
+            // $timeout.flush();
+            $rootScope.$digest();
+
+            expect($document).toHaveModalsOpen(0);
         });
 
-        it('should expose a promise linked to the templateUrl / resolve promises', function() {
-            open({
+        it('should resolve returned promise on close', () => {
+            const modal = open({
+                template: '<div>Content</div>',
+            });
+
+            close(modal, 'closed ok');
+            expect(modal.result).toBeResolvedWith('closed ok');
+        });
+
+        it('should reject returned promise on dismiss', () => {
+            const modal = open({
+                template: '<div>Content</div>',
+            });
+
+            dismiss(modal, 'esc');
+            expect(modal.result).toBeRejectedWith('esc');
+        });
+
+
+        it('should expose a promise linked to the templateUrl / resolve promises', () => {
+            const modal = open({
                 template: '<div>Content</div>',
                 resolve: {
-                    ok: function() {
-                        return $q.when('ok');
-                    }
-                }
-            }).then(function(modal){
-                expect(modal.opened).toBeResolvedWith(true);
+                    ok: () => $q.resolve('ok')
+                },
             });
+
+            expect(modal.opened).toBeResolvedWith(true);
         });
 
-        it('should expose a promise linked to the templateUrl / resolve promises and reject it if needed', function() {
-            open({
+        it('should expose a promise linked to the templateUrl / resolve promises and reject it if needed', () => {
+            const modal = open({
                 template: '<div>Content</div>',
                 resolve: {
-                    ok: function() {
-                        return $q.reject('ko');
-                    }
-                }
-            }).then(function(modal){
-                expect(modal.opened).toBeRejectedWith(false);
+                    ok: () => $q.reject('ko'),
+                },
             });
+
+            expect(modal.opened).toBeRejectedWith(false);
         });
 
-        it('should destroy modal scope on close', function() {
+        it('should destroy modal scope on close', () => {
             expect($rootScope.$$childTail).toEqual(null);
 
-            open({
-                template: '<div>Content</div>'
-            }).then(function(modal){
-                expect($rootScope.$$childTail).not.toEqual(null);
-
-                close(modal, 'closed ok');
-                waitForBackdropAnimation();
-                expect($document).toHaveModalsOpen(0);
-
-                $timeout.flush();
-                expect($rootScope.$$childTail).toEqual(null);
+            const modal = open({
+                template: '<div>Content</div>',
             });
+
+            expect($rootScope.$$childTail).not.toEqual(null);
+            close(modal, 'closed ok');
+            expect($document).toHaveModalsOpen(0);
+            expect($rootScope.$$childTail).toEqual(null);
         });
 
-        describe("$modalInstance.reposition()", function() {
-            it('should re-calculate the modal margin top', function() {
-                $window.pageYOffset = 400;
-                open({
-                    template: '<div>Content</div>'
-                }).then(function(modal){
-                    expect($document).toHaveModalOpenWithStyle('top', '400px');
+        // describe("$modalInstance.reposition()", () => {
+        //     it('should re-calculate the modal margin top', () => {
+        //         $window.pageYOffset = 400;
+        //         const modal = open({
+        //             template: '<div>Content</div>'
+        //         });
 
-                    $window.pageYOffset = 500;
-                    modal.reposition();
-                    expect($document).toHaveModalOpenWithStyle('top', '500px');
-                });
-            });
-        });
+        //         expect($document).toHaveModalOpenWithStyle('top', '400px');
+
+        //         $window.pageYOffset = 500;
+        //         modal.reposition();
+        //         expect($document).toHaveModalOpenWithStyle('top', '500px');
+        //     });
+        // });
     });
 
-    describe('default options can be changed in a provider', function() {
-
-        it('should allow overriding default options in a provider', function() {
+    describe('default options can be changed in a provider', () => {
+        it('should allow overriding default options in a provider', () => {
             $modalProvider.options.backdrop = false;
-            open({
-                template: '<div>Content</div>'
-            }).then(function(modal){
-                expect($document).toHaveModalOpenWithContent('Content', 'div');
-                expect($document).not.toHaveBackdrop();
+            const modal = open({
+                template: '<div>Content</div>',
             });
+
+            expect($document).toHaveModalOpenWithContent('Content', 'div');
+            expect($document).not.toHaveBackdrop();
         });
 
-        it('should accept new objects with default options in a provider', function() {
-
+        it('should accept new objects with default options in a provider', () => {
             $modalProvider.options = {
-                backdrop: false
+                backdrop: false,
             };
-            open({
-                template: '<div>Content</div>'
-            }).then(function(modal){
-                expect($document).toHaveModalOpenWithContent('Content', 'div');
-                expect($document).not.toHaveBackdrop();
+            const modal = open({
+                template: '<div>Content</div>',
             });
+
+            expect($document).toHaveModalOpenWithContent('Content', 'div');
+            expect($document).not.toHaveBackdrop();
         });
     });
 
-    describe('option by option', function() {
-
-        describe('template and templateUrl', function() {
-
-            it('should throw an error if none of template and templateUrl are provided', function() {
-                expect(function() {
-                    open({});
+    describe('option by option', () => {
+        describe('template and templateUrl', () => {
+            it('should throw an error if none of template and templateUrl are provided', () => {
+                expect(() => {
+                    const modal = open({});
                 }).toThrow(new Error('One of template or templateUrl options is required.'));
             });
 
-            it('should not fail if a templateUrl contains leading / trailing white spaces', function() {
+            it('should not fail if a templateUrl contains leading / trailing white spaces', () => {
 
                 $templateCache.put('whitespace.html', '  <div>Whitespaces</div>  ');
-                open({
-                    templateUrl: 'whitespace.html'
-                }).then(function(modal){
-                    expect($document).toHaveModalOpenWithContent('Whitespaces', 'div');
+                const modal = open({
+                    templateUrl: 'whitespace.html',
                 });
-            });
 
+                expect($document).toHaveModalOpenWithContent('Whitespaces', 'div');
+            });
         });
 
-        describe('controller', function() {
-
-            it('should accept controllers and inject modal instances', function() {
-                var TestCtrl = function($scope, $modalInstance) {
+        describe('controller', () => {
+            it('should accept controllers and inject modal instances', () => {
+                let TestCtrl = function($scope, $modalInstance) {
                     $scope.fromCtrl = 'Content from ctrl';
                     $scope.isModalInstance = angular.isObject($modalInstance) && angular.isFunction($modalInstance.close);
                 };
 
-                open({
+                const modal = open({
                     template: '<div>{{fromCtrl}} {{isModalInstance}}</div>',
                     controller: TestCtrl
-                }).then(function(modal){
-                    expect($document).toHaveModalOpenWithContent('Content from ctrl true', 'div');
                 });
 
+                expect($document).toHaveModalOpenWithContent('Content from ctrl true', 'div');
             });
 
-            it('should accept controller-as syntax in `controller` option', function() {
+            it('should accept controller-as syntax in `controller` option', () => {
                 $controllerProvider.register('TestCtrl', function($modalInstance) {
                     this.fromCtrl = 'Content from ctrl';
                     this.isModalInstance = angular.isObject($modalInstance) && angular.isFunction($modalInstance.close);
                 });
 
-                open({
+                const modal = open({
                     template: '<div>{{test.fromCtrl}} {{test.isModalInstance}}</div>',
-                    controller: 'TestCtrl as test'
-                }).then(function(modal){
-                    expect($document).toHaveModalOpenWithContent('Content from ctrl true', 'div');
+                    controller: 'TestCtrl as test',
                 });
+
+                expect($document).toHaveModalOpenWithContent('Content from ctrl true', 'div');
             });
 
-            it('should accept `controllerAs` option', function() {
-                open({
+            it('should accept `controllerAs` option', () => {
+                const modal = open({
                     template: '<div>{{test.fromCtrl}} {{test.isModalInstance}}</div>',
                     controller: function($modalInstance) {
                         this.fromCtrl = 'Content from ctrl';
                         this.isModalInstance = angular.isObject($modalInstance) && angular.isFunction($modalInstance.close);
                     },
-                    controllerAs: 'test'
-                }).then(function(modal){
-                    expect($document).toHaveModalOpenWithContent('Content from ctrl true', 'div');
+                    controllerAs: 'test',
                 });
-            });
 
+                expect($document).toHaveModalOpenWithContent('Content from ctrl true', 'div');
+            });
         });
 
-        describe('resolve', function() {
-
-            var ExposeCtrl = function($scope, value) {
+        describe('resolve', () => {
+            const ExposeCtrl = ($scope, value) => {
                 $scope.value = value;
             };
 
             function modalDefinition(template, resolve) {
                 return {
-                    template: template,
+                    template,
                     controller: ExposeCtrl,
-                    resolve: resolve
+                    resolve,
                 };
             }
 
-            it('should resolve simple values', function() {
+            it('should resolve simple values', () => {
                 open(modalDefinition('<div>{{value}}</div>', {
-                    value: function() {
-                        return 'Content from resolve';
-                    }
-                })).then(function(modal){
-                    expect($document).toHaveModalOpenWithContent('Content from resolve', 'div');
-                });
+                    value: () => 'Content from resolve',
+                }));
+
+                expect($document).toHaveModalOpenWithContent('Content from resolve', 'div');
             });
 
-            it('should delay showing modal if one of the resolves is a promise', function() {
 
-                open(modalDefinition('<div>{{value}}</div>', {
-                    value: function() {
-                        return $timeout(function() {
-                            return 'Promise';
-                        }, 100);
-                    }
-                })).then(function(modal){
-                    expect($document).toHaveModalsOpen(0);
-                    $timeout.flush();
-                    expect($document).toHaveModalOpenWithContent('Promise', 'div');
-                });
+            it('should not open dialog (and reject returned promise) if one of resolve fails', () => {
+                const deferred = $q.defer();
+
+                const modal = open(modalDefinition('<div>{{value}}</div>', {
+                    value: () => deferred.promise,
+                }));
+
+                expect($document).toHaveModalsOpen(0);
+
+                deferred.reject('error in test');
+                $rootScope.$digest();
+
+                expect($document).toHaveModalsOpen(0);
+                expect(modal.result).toBeRejectedWith('error in test');
             });
 
-            it('should not open dialog (and reject returned promise) if one of resolve fails', function() {
-
-                var deferred = $q.defer();
-
-                open(modalDefinition('<div>{{value}}</div>', {
-                    value: function() {
-                        return deferred.promise;
-                    }
-                })).then(function(modal){
-                    expect($document).toHaveModalsOpen(0);
-
-                    deferred.reject('error in test');
-                    $rootScope.$digest();
-
-                    expect($document).toHaveModalsOpen(0);
-                    expect(modal.result).toBeRejectedWith('error in test');
-                });
-            });
-
-            it('should support injection with minification-safe syntax in resolve functions', function() {
+            it('should support injection with minification-safe syntax in resolve functions', () => {
 
                 open(modalDefinition('<div>{{value.id}}</div>', {
-                    value: ['$locale', function(e) {
-                        return e;
-                    }]
-                })).then(function(modal){
-                    expect($document).toHaveModalOpenWithContent('en-us', 'div');
-                });
+                    value: ['$locale', (e) => e],
+                }));
+
+                expect($document).toHaveModalOpenWithContent('en-us', 'div');
             });
 
             //TODO: resolves with dependency injection - do we want to support them?
         });
 
-        describe('scope', function() {
-
-            it('should custom scope if provided', function() {
-                var $scope = $rootScope.$new();
+        describe('scope', () => {
+            it('should custom scope if provided', () => {
+                const $scope = $rootScope.$new();
                 $scope.fromScope = 'Content from custom scope';
-                open({
+                const modal = open({
                     template: '<div>{{fromScope}}</div>',
-                    scope: $scope
-                }).then(function(modal){
-                    expect($document).toHaveModalOpenWithContent('Content from custom scope', 'div');
+                    scope: $scope,
                 });
+
+                expect($document).toHaveModalOpenWithContent('Content from custom scope', 'div');
             });
         });
 
-        describe('parent', function() {
-            beforeEach(function() {
-                $document.find('body').append('<modal><modal>');
-            });
+        // describe('parent', () => {
+        //     beforeEach(() => {
+        //         $document.find('body').append('<modal><modal>');
+        //     });
 
-            it('should use an element other than body as the parent if provided', function() {
-                open({
-                    template: '<div>Parent other than body</div>',
-                    parent: 'modal'
-                }).then(function(modal){
-                    expect($document).toHaveModalOpenInOtherParent('modal');
-                });
-            });
+        //     it('should use an element other than body as the parent if provided', () => {
+        //         const modal = open({
+        //             template: '<div>Parent other than body</div>',
+        //             parent: 'modal'
+        //         });
 
-            afterEach(function() {
-                $document.find('body').find('modal').remove();
-            });
-        });
+        //         expect($document).toHaveModalOpenInOtherParent('modal');
+        //     });
 
-        describe('keyboard', function() {
+        //     afterEach(() => {
+        //         $document.find('body').find('modal').remove();
+        //     });
+        // });
 
-            it('should not close modals if keyboard option is set to false', function() {
-                open({
+        describe('keyboard', () => {
+            it('should not close modals if keyboard option is set to false', () => {
+                const modal = open({
                     template: '<div>No keyboard</div>',
-                    keyboard: false
-                }).then(function(modal){
-                    expect($document).toHaveModalsOpen(1);
-                    triggerKeyDown($document, 27);
-                    $rootScope.$digest();
-                    expect($document).toHaveModalsOpen(1);
+                    keyboard: false,
                 });
+
+                expect($document).toHaveModalsOpen(1);
+                triggerKeyDown($document, 27);
+                $rootScope.$digest();
+                expect($document).toHaveModalsOpen(1);
             });
         });
 
-        describe('backdrop', function() {
-
-            it('should not have any backdrop element if backdrop set to false', function() {
-                open({
+        describe('backdrop', () => {
+            it('should not have any backdrop element if backdrop set to false', () => {
+                const modal = open({
                     template: '<div>No backdrop</div>',
-                    backdrop: false
-                }).then(function(modal){
-                    expect($document).toHaveModalOpenWithContent('No backdrop', 'div');
-                    expect($document).not.toHaveBackdrop();
-
-                    dismiss(modal);
-                    expect($document).toHaveModalsOpen(0);
+                    backdrop: false,
                 });
+
+                expect($document).toHaveModalOpenWithContent('No backdrop', 'div');
+                expect($document).not.toHaveBackdrop();
+
+                dismiss(modal);
+                expect($document).toHaveModalsOpen(0);
             });
 
-            it('should not close modal on backdrop click if backdrop is specified as "static"', function() {
-                open({
+            it('should not close modal on backdrop click if backdrop is specified as "static"', () => {
+                const modal = open({
                     template: '<div>Static backdrop</div>',
-                    backdrop: 'static'
-                }).then(function(modal){
-                    $document[0].querySelector('body > div.reveal-overlay').click();
-                    expect($document).toHaveModalOpenWithContent('Static backdrop', 'div');
-                    expect($document).toHaveBackdrop();
+                    backdrop: 'static',
                 });
-            });
 
-            it('should animate backdrop on each modal opening', function() {
-
-                open({
-                    template: '<div>With backdrop</div>'
-                }).then(function(modal){
-                    var backdropEl = angular.element($document[0].querySelector('body > div.reveal-overlay'));
-                    expect(backdropEl).not.toHaveClass('in');
-
-                    $timeout.flush();
-                    expect(backdropEl).toHaveClass('in');
-
-                    dismiss(modal);
-                    waitForBackdropAnimation();
-
-                    open({
-                        template: '<div>With backdrop</div>'
-                    }).then(function(modal){
-                        backdropEl = angular.element($document[0].querySelector('body > div.reveal-overlay'));
-                        expect(backdropEl).not.toHaveClass('in');
-                    });
-                });
+                $document[0].querySelector('body > div.reveal-overlay').click();
+                expect($document).toHaveModalOpenWithContent('Static backdrop', 'div');
+                expect($document).toHaveBackdrop();
             });
         });
 
-        describe('custom window classes', function() {
-
-            it('should support additional window class as string', function() {
-                open({
+        describe('custom window classes', () => {
+            it('should support additional window class as string', () => {
+                const modal = open({
                     template: '<div>With custom window class</div>',
-                    windowClass: 'additional'
-                }).then(function(modal){
-                    expect(angular.element($document[0].querySelector('div.reveal'))).toHaveClass('additional');
+                    windowClass: 'additional',
                 });
+
+                expect(angular.element($document[0].querySelector('div.reveal'))).toHaveClass('additional');
             });
         });
     });
 
-    describe('multiple modals', function() {
-
-        it('it should allow opening of multiple modals', function() {
-            open({
-                template: '<div>Modal1</div>'
-            }).then(function(modal1){
-                open({
-                    template: '<div>Modal2</div>'
-                }).then(function(modal2){
-                    expect($document).toHaveModalsOpen(2);
-
-                    dismiss(modal2);
-                    expect($document).toHaveModalsOpen(1);
-                    expect($document).toHaveModalOpenWithContent('Modal1', 'div');
-
-                    dismiss(modal1);
-                    expect($document).toHaveModalsOpen(0);
-                });
+    describe('multiple modals', () => {
+        it('it should allow opening of multiple modals', () => {
+            const modal1 = open({
+                template: '<div>Modal1</div>',
             });
+
+            const modal2 = open({
+                template: '<div>Modal2</div>',
+            });
+
+            expect($document).toHaveModalsOpen(2);
+            dismiss(modal2);
+            expect($document).toHaveModalsOpen(1);
+            expect($document).toHaveModalOpenWithContent('Modal1', 'div');
+
+            dismiss(modal1);
+            expect($document).toHaveModalsOpen(0);
         });
 
-        it('should not close any modals on ESC if the topmost one does not allow it', function() {
-            open({
-                template: '<div>Modal1</div>'
-            }).then(function(modal1){
-                open({
-                    template: '<div>Modal2</div>',
-                    keyboard: false
-                }).then(function(modal2){
-                    triggerKeyDown($document, 27);
-                    expect($document).toHaveModalsOpen(2);
-                });
+        it('should not close any modals on ESC if the topmost one does not allow it', () => {
+            const modal1 = open({
+                template: '<div>Modal1</div>',
             });
+
+            const modal2 = open({
+                template: '<div>Modal2</div>',
+                keyboard: false,
+            });
+
+            triggerKeyDown($document, 27);
+            expect($document).toHaveModalsOpen(2);
         });
 
-        it('should not close any modals on click if a topmost modal does not have backdrop', function() {
+        it('should not close any modals on click if a topmost modal does not have backdrop', () => {
             expect($document).toHaveModalsOpen(0);
 
-            open({
-                template: '<div>Modal1</div>'
-            }).then(function(modal1){
-                open({
-                    template: '<div>Modal2</div>',
-                    backdrop: false
-                }).then(function(modal2){
-                    $document[0].querySelector('body > div.reveal-overlay').click();
-                    expect($document).toHaveModalsOpen(2);
-                });
-            });
-        });
-
-        it('multiple modals should not interfere with default options', function() {
-
-            open({
+            const modal1 = open({
                 template: '<div>Modal1</div>',
-                backdrop: false
-            }).then(function(modal1){
-                open({
-                    template: '<div>Modal2</div>'
-                }).then(function(modal2){
-
-                });
-                expect($document).toHaveBackdrop();
             });
 
-        });
-
-        it('should add "is-reveal-open" class when a modal gets opened', function() {
-
-            var body = $document.find('body');
-            expect(body).not.toHaveClass('is-reveal-open');
-
-            open({
-                template: '<div>Content1</div>'
-            }).then(function(modal1){
-                expect(body).toHaveClass('is-reveal-open');
-
-                open({
-                    template: '<div>Content1</div>'
-                }).then(function(modal2){
-                    expect(body).toHaveClass('is-reveal-open');
-
-                    dismiss(modal1);
-                    expect(body).toHaveClass('is-reveal-open');
-
-                    dismiss(modal2);
-                    expect(body).not.toHaveClass('is-reveal-open');
-                });
+            const modal2 = open({
+                template: '<div>Modal2</div>',
+                backdrop: false,
             });
+
+            $document[0].querySelector('body > div.reveal-overlay').click();
+            expect($document).toHaveModalsOpen(2);
         });
+
+        it('multiple modals should not interfere with default options', () => {
+            const modal1 = open({
+                template: '<div>Modal1</div>',
+                backdrop: false,
+            });
+
+            const modal2 = open({
+                template: '<div>Modal2</div>',
+            });
+
+            expect($document).toHaveBackdrop();
+        });
+
+        // it('should add "is-reveal-open" class when a modal gets opened', () => {
+
+        //     let body = $document.find('body');
+        //     expect(body).not.toHaveClass('is-reveal-open');
+
+        //     const modal1 = open({
+        //         template: '<div>Content1</div>'
+        //     });
+
+        //     expect(body).toHaveClass('is-reveal-open');
+
+        //     const modal2 = open({
+        //         template: '<div>Content1</div>'
+        //     });
+
+        //     expect(body).toHaveClass('is-reveal-open');
+
+        //     dismiss(modal1);
+        //     expect(body).toHaveClass('is-reveal-open');
+
+        //     dismiss(modal2);
+        //     expect(body).not.toHaveClass('is-reveal-open');
+        // });
     });
 });

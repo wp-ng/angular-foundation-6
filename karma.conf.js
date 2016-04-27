@@ -75,7 +75,7 @@ config.set({
           return content.replace(/\\/g, '\\\\').replace(/'/g, '\\\'').replace(/\r?\n/g, '\\n\' +\n    \'');
         };
 
-        var template = 'import angular from "angular";\n' + 
+        var template = 'import angular from "angular";\n' +
             'angular.module(\'%s\', []).run([\'$templateCache\', function($templateCache) {\n' +
             '  $templateCache.put(\'%s\',\n    \'%s\');\n' +
             '}]);\n';

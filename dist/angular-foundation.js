@@ -4,7 +4,7 @@
  * angular-foundation-6
  * http://circlingthesun.github.io/angular-foundation-6/
 
- * Version: 0.9.21 - 2016-04-24
+ * Version: 0.9.22 - 2016-04-27
  * License: MIT
  * (c) 
  */
@@ -503,7 +503,7 @@ angular.module('mm.foundation.modal', [])
                 },
                 get: function get(key) {
                     for (var i = 0; i < stack.length; i++) {
-                        if (key == stack[i].key) {
+                        if (key === stack[i].key) {
                             return stack[i];
                         }
                     }
@@ -542,7 +542,7 @@ angular.module('mm.foundation.modal', [])
 /**
  * A helper directive for the $modal service. It creates a backdrop element.
  */
-.directive('modalBackdrop', ['$modalStack', '$timeout', function ($modalStack, $timeout) {
+.directive('modalBackdrop', ['$modalStack', function ($modalStack) {
     'ngInject';
 
     return {
@@ -550,7 +550,6 @@ angular.module('mm.foundation.modal', [])
         replace: true,
         templateUrl: 'template/modal/backdrop.html',
         link: function link(scope) {
-
             scope.close = function (evt) {
                 var modal = $modalStack.getTop();
                 if (modal && modal.value.backdrop && modal.value.backdrop !== 'static' && evt.target === evt.currentTarget) {
@@ -561,7 +560,7 @@ angular.module('mm.foundation.modal', [])
             };
         }
     };
-}]).directive('modalWindow', ['$modalStack', '$timeout', function ($modalStack, $timeout) {
+}]).directive('modalWindow', function () {
     'ngInject';
 
     return {
@@ -576,12 +575,12 @@ angular.module('mm.foundation.modal', [])
             scope.windowClass = attrs.windowClass || '';
         }
     };
-}]).factory('$modalStack', ['$window', '$timeout', '$document', '$compile', '$rootScope', '$$stackedMap', '$animate', '$q', function ($window, $timeout, $document, $compile, $rootScope, $$stackedMap, $animate, $q) {
+}).factory('$modalStack', ['$window', '$timeout', '$document', '$compile', '$rootScope', '$$stackedMap', '$animate', '$q', function ($window, $timeout, $document, $compile, $rootScope, $$stackedMap, $animate, $q) {
+    'ngInject';
 
-    var body = $document.find('body').eq(0);
     var OPENED_MODAL_CLASS = 'is-reveal-open';
-    var backdropDomEl;
-    var backdropScope;
+    var backdropDomEl = void 0;
+    var backdropScope = void 0;
     var openedWindows = $$stackedMap.createNew();
     var $modalStack = {};
 
@@ -605,6 +604,8 @@ angular.module('mm.foundation.modal', [])
     function resizeHandler() {
         var opened = openedWindows.keys();
         var fixedPositiong = true;
+        var body = $document.find('body').eq(0);
+
         for (var i = 0; i < opened.length; i++) {
             var modalPos = $modalStack.reposition(opened[i]);
             if (modalPos && modalPos.position !== 'fixed') {
@@ -626,7 +627,9 @@ angular.module('mm.foundation.modal', [])
         openedWindows.remove(modalInstance);
 
         // remove window DOM element
-        $animate.leave(modalWindow.modalDomEl);
+        $animate.leave(modalWindow.modalDomEl).then(function () {
+            modalWindow.modalScope.$destroy();
+        });
         checkRemoveBackdrop();
         if (openedWindows.length() === 0) {
             body.removeClass(OPENED_MODAL_CLASS);
@@ -637,14 +640,16 @@ angular.module('mm.foundation.modal', [])
     function checkRemoveBackdrop() {
         // remove backdrop if no longer needed
         if (backdropDomEl && backdropIndex() === -1) {
-            var backdropScopeRef = backdropScope;
+            (function () {
+                var backdropScopeRef = backdropScope;
 
-            $animate.leave(backdropDomEl).then(function () {
-                backdropScopeRef.$destroy();
-                backdropScopeRef = null;
-            });
-            backdropDomEl = undefined;
-            backdropScope = undefined;
+                $animate.leave(backdropDomEl).then(function () {
+                    backdropScopeRef && backdropScopeRef.$destroy();
+                    backdropScopeRef = null;
+                });
+                backdropDomEl = null;
+                backdropScope = null;
+            })();
         }
     }
 
@@ -652,22 +657,23 @@ angular.module('mm.foundation.modal', [])
 
         var options = modalInstance.options;
         var el = options.modalDomEl;
+        var body = $document.find('body').eq(0);
 
-        var windowWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-        var windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+        var windowWidth = $window.innerWidth || $document.documentElement.clientWidth || body.clientWidth;
+        var windowHeight = $window.innerHeight || $document.documentElement.clientHeight || body.clientHeight;
 
         var width = el[0].offsetWidth;
         var height = el[0].offsetHeight;
 
         var left = parseInt((windowWidth - width) / 2, 10);
-        var top;
+        var top = void 0;
         if (height > windowHeight) {
             top = parseInt(Math.min(100, windowHeight / 10), 10);
         } else {
             top = parseInt((windowHeight - height) / 4, 10);
         }
 
-        // var fitsWindow = windowHeight >= top + height; // Alwats fits on mobile
+        // let fitsWindow = windowHeight >= top + height; // Alwats fits on mobile
         var fitsWindow = false; // Disable annying fixed positing
 
         var modalPos = options.modalPos = options.modalPos || {};
@@ -687,7 +693,7 @@ angular.module('mm.foundation.modal', [])
     }
 
     $document.bind('keydown', function (evt) {
-        var modal;
+        var modal = void 0;
 
         if (evt.which === 27) {
             modal = openedWindows.top();
@@ -717,7 +723,7 @@ angular.module('mm.foundation.modal', [])
         }
 
         if (openedWindows.length() === 1) {
-            angular.element($window).bind('resize', resizeHandler);
+            angular.element($window).on('resize', resizeHandler);
         }
 
         var classes = [];
@@ -725,10 +731,11 @@ angular.module('mm.foundation.modal', [])
         options.size && classes.push(options.size);
 
         var modalDomEl = angular.element('<div modal-window></div>').attr({
-            'style': 'visibility: visible; z-index: -1; display: block;',
+            style: '\n                visibility: visible;\n                z-index: -1;\n                display: block;\n            ',
             'window-class': classes.join(' '),
-            'index': openedWindows.length() - 1
+            index: openedWindows.length() - 1
         });
+
         modalDomEl.html(options.content);
         $compile(modalDomEl)(options.scope);
 
@@ -739,12 +746,13 @@ angular.module('mm.foundation.modal', [])
             openedWindows.top().value.modalDomEl = modalDomEl;
 
             // Attach, measure, remove
+            var body = $document.find('body').eq(0);
             body.prepend(modalDomEl);
             var modalPos = getModalCenter(modalInstance, true);
             modalDomEl.detach();
 
             modalDomEl.attr({
-                'style': 'visibility: visible; top: ' + modalPos.top + 'px; left: ' + modalPos.left + 'px; display: block; position: ' + modalPos.position + ';'
+                'style': '\n                    visibility: visible;\n                    top: ' + modalPos.top + 'px;\n                    left: ' + modalPos.left + 'px;\n                    display: block;\n                    position: ' + modalPos.position + ';\n                '
             });
 
             var promises = [];
@@ -757,16 +765,7 @@ angular.module('mm.foundation.modal', [])
                 body.addClass(OPENED_MODAL_CLASS);
             }
 
-            return $q.all(promises).then(function () {
-                // VERY BAD: This moves the modal
-                // // If the modal contains any autofocus elements refocus onto the first one
-                // if (modalDomEl[0].querySelectorAll('[autofocus]').length > 0) {
-                //     modalDomEl[0].querySelectorAll('[autofocus]')[0].focus();
-                // } else {
-                //     // otherwise focus the freshly-opened modal
-                //     modalDomEl[0].focus();
-                // }
-            });
+            return $q.all(promises);
         });
     };
 
@@ -780,6 +779,7 @@ angular.module('mm.foundation.modal', [])
             modalDomEl.css('position', modalPos.position);
             return modalPos;
         }
+        return {};
     };
 
     $modalStack.close = function (modalInstance, result) {
@@ -799,10 +799,10 @@ angular.module('mm.foundation.modal', [])
     };
 
     $modalStack.dismissAll = function (reason) {
-        var topModal = this.getTop();
+        var topModal = undefined.getTop();
         while (topModal) {
-            this.dismiss(topModal.key, reason);
-            topModal = this.getTop();
+            undefined.dismiss(topModal.key, reason);
+            topModal = undefined.getTop();
         }
     };
 
@@ -816,7 +816,7 @@ angular.module('mm.foundation.modal', [])
 
     var $modalProvider = {
         options: {
-            backdrop: true, //can be also false or 'static'
+            backdrop: true, // can be also false or 'static'
             keyboard: true
         },
         $get: ['$injector', '$rootScope', '$q', '$http', '$templateCache', '$controller', '$modalStack', function $get($injector, $rootScope, $q, $http, $templateCache, $controller, $modalStack) {
@@ -826,7 +826,7 @@ angular.module('mm.foundation.modal', [])
 
             function getTemplatePromise(options) {
                 if (options.template) {
-                    return $q.when(options.template);
+                    return $q.resolve(options.template);
                 }
                 return $http.get(options.templateUrl, {
                     cache: $templateCache
@@ -837,9 +837,9 @@ angular.module('mm.foundation.modal', [])
 
             function getResolvePromises(resolves) {
                 var promisesArr = [];
-                angular.forEach(resolves, function (value, key) {
+                angular.forEach(resolves, function (value) {
                     if (angular.isFunction(value) || angular.isArray(value)) {
-                        promisesArr.push($q.when($injector.invoke(value)));
+                        promisesArr.push($q.resolve($injector.invoke(value)));
                     }
                 });
                 return promisesArr;
@@ -876,12 +876,12 @@ angular.module('mm.foundation.modal', [])
 
                 var templateAndResolvePromise = $q.all([getTemplatePromise(modalOptions)].concat(getResolvePromises(modalOptions.resolve)));
 
-                var openedPromise = templateAndResolvePromise.then(function resolveSuccess(tplAndVars) {
+                var openedPromise = templateAndResolvePromise.then(function (tplAndVars) {
                     var modalScope = (modalOptions.scope || $rootScope).$new();
                     modalScope.$close = modalInstance.close;
                     modalScope.$dismiss = modalInstance.dismiss;
 
-                    var ctrlInstance;
+                    var ctrlInstance = void 0;
                     var ctrlLocals = {};
                     var resolveIter = 1;
 
@@ -908,8 +908,9 @@ angular.module('mm.foundation.modal', [])
                         windowClass: modalOptions.windowClass,
                         size: modalOptions.size
                     });
-                }, function resolveError(reason) {
+                }, function (reason) {
                     modalResultDeferred.reject(reason);
+                    return $q.reject(reason);
                 });
 
                 openedPromise.then(function () {
@@ -920,7 +921,6 @@ angular.module('mm.foundation.modal', [])
 
                 return modalInstance;
             };
-
             return $modal;
         }]
     };

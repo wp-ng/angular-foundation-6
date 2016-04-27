@@ -1,4 +1,3 @@
-'use strict';
 var gulp = require('gulp');
 var sass = require('gulp-sass');
 var ngAnnotate = require('gulp-ng-annotate');
@@ -96,15 +95,13 @@ function findModule(name, modules, foundModules) {
     foundModules[name] = true;
 
     function breakup(text, separator) {
-        return text.replace(/[A-Z]/g, function(match) {
+        return text.replace(/[A-Z]/g, (match) => {
             return separator + match;
         });
     }
 
     function ucwords(text) {
-        return text.replace(/^([a-z])|\s+([a-z])/g, function($1) {
-            return $1.toUpperCase();
-        });
+        return text.replace(/^([a-z])|\s+([a-z])/g, ($1) => $1.toUpperCase());
     }
 
     var module = {
@@ -116,14 +113,14 @@ function findModule(name, modules, foundModules) {
         dependencies: dependenciesForModule(name),
         docs: {
             md: expand('src/' + name + '/docs/*.md')
-                .map(fileContents).map(function(content){return marked(content);}).join('\n'),
+                .map(fileContents).map((content) => marked(content)).join('\n'),
             js: expand('src/' + name + '/docs/*.js')
                 .map(fileContents).join('\n'),
             html: expand('src/' + name + '/docs/*.html')
                 .map(fileContents).join('\n')
         }
     };
-    module.dependencies.forEach(function(name) {
+    module.dependencies.forEach((name) => {
         findModule(name, modules, foundModules);
     });
     modules.push(module);
@@ -134,7 +131,7 @@ function dependenciesForModule(name) {
 
     expand('src/' + name + '/*.js')
         .map(fileContents)
-        .forEach(function(contents) {
+        .forEach((contents) => {
             // var contents = String(buffer);
             // Strategy: find where module is declared,
             // and from there get everything inside the [] and split them by comma
@@ -142,7 +139,7 @@ function dependenciesForModule(name) {
             var depArrayStart = contents.indexOf('[', moduleDeclIndex);
             var depArrayEnd = contents.indexOf(']', depArrayStart);
             var dependencies = contents.substring(depArrayStart + 1, depArrayEnd);
-            dependencies.split(',').forEach(function(dep) {
+            dependencies.split(',').forEach((dep) => {
                 if (dep.indexOf('mm.foundation.') > -1) {
                     var depName = dep.trim().replace('mm.foundation.', '').replace(/['"]/g, '');
                     if (deps.indexOf(depName) < 0) {
@@ -163,7 +160,7 @@ function findModules() {
     expand({
         filter: 'isDirectory',
         cwd: '.'
-    }, 'src/*').forEach(function(dir) {
+    }, 'src/*').forEach((dir) => {
         var moduleName = dir.split('/')[1];
         if (moduleName[0] === '_') {
             return;
@@ -174,7 +171,7 @@ function findModules() {
         findModule(moduleName, modules, foundModules);
     });
 
-    modules.sort(function(a, b) {
+    modules.sort((a, b) => {
         if (a.name < b.name) {
             return -1;
         }
@@ -216,7 +213,7 @@ function build(fileName, opts) {
     );
     fakeFileStream.end();
 
-    modules.forEach(function(module) {
+    modules.forEach((module) => {
         if (!options.skipSource) {
             sq.queue(gulp.src(module.srcFiles));
         }
@@ -236,9 +233,7 @@ function build(fileName, opts) {
         }
     });
 
-    var srcModules = _.map(modules, 'moduleName').map(function(m) {
-        return '"' + m + '"';
-    });
+    var srcModules = _.map(modules, 'moduleName').map((m) => '"' + m + '"');
     var fakeFileStream2 = source('mm.foundation.js');
     fakeFileStream2.write('angular.module("mm.foundation", [' + srcModules + ']);');
     sq.queue(fakeFileStream2.pipe(vinylBuffer()));
@@ -285,7 +280,7 @@ gulp.task('changelog', () => {
 
 gulp.task('demo', () => {
     var modules = findModules();
-    var demoModules = modules.filter(function(module) {
+    var demoModules = modules.filter((module) => {
         return module.docs.md && module.docs.js && module.docs.html;
     });
 
@@ -298,9 +293,8 @@ gulp.task('demo', () => {
         .pipe(template({
             pkg: pkg,
             demoModules: demoModules,
-            ngversion: jspmVersion(pkg.jspm.dependencies['angular']),
+            ngversion: jspmVersion(pkg.jspm.dependencies.angular),
             nglegacyversion: jspmVersion(pkg.jspm.devDependencies['angular-legacy']),
-            //fdversion: '6.0.5',
             fdversion: '6.2.0',
             faversion: '4.3.0',
         }));
@@ -370,7 +364,6 @@ gulp.task('test-legacy', (done) => {
 gulp.task('tdd', (done) => {
     var config = {
         configFile: __dirname + '/karma.conf.js',
-        //background: true
     };
     if (argv.coverage) {
         config.preprocessors = {
@@ -382,7 +375,7 @@ gulp.task('tdd', (done) => {
     new KarmaServer(config, done).start();
 });
 
-gulp.task('test', ['test-current', /*'test-legacy'*/ ], (done) => {
+gulp.task('test', ['test-current'], (done) => {
     done();
 });
 
@@ -427,21 +420,6 @@ gulp.task('publish', ['enforce'], (done) => {
 });
 
 gulp.task('release', (done) => {
-    // ### Release
-    // * Bump up version number in `package.json`
-    // * Commit the version change with the following message: `chore(release): [version number]`
-    // * tag
-    // * push changes and a tag (`git push --tags`)
-    // * switch to the `gh-pages` branch: `git checkout gh-pages`
-    // * copy content of the dist folder to the main folder
-    // * Commit the version change with the following message: `chore(release): [version number]`
-    // * push changes
-    // * switch back to the `main branch` and modify `package.json` to bump up version for the next iteration
-    // * commit (`chore(release): starting [version number]`) and push
-    // * publish NPM, Bower and NuGet packages
-
-    // git subtree push --prefix dist origin gh-pages
-    // npm publish
     runSequence('test', 'build', 'bump', 'demo', 'publish', done);
 });
 

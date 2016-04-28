@@ -9,7 +9,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
  * angular-foundation-6
  * http://circlingthesun.github.io/angular-foundation-6/
 
- * Version: 0.9.27 - 2016-04-27
+ * Version: 0.9.28 - 2016-04-28
  * License: MIT
  * (c) 
  */

@@ -46,7 +46,7 @@ angular.module('foundationDemoApp').controller('ModalInstanceCtrl', function($sc
 
     $scope.items = items;
     $scope.selected = {
-        item: $scope.items[0];
+        item: $scope.items[0],
     };
 
     $scope.reposition = function() {

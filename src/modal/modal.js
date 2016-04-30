@@ -8,7 +8,7 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
     'ngInject';
     return {
         createNew: () => {
-            let stack = [];
+            const stack = [];
 
             return {
                 add: (key, value) => {
@@ -25,7 +25,7 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
                     }
                 },
                 keys: () => {
-                    let keys = [];
+                    const keys = [];
                     for (let i = 0; i < stack.length; i++) {
                         keys.push(stack[i].key);
                     }
@@ -35,7 +35,7 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
                 remove: (key) => {
                     let idx = -1;
                     for (let i = 0; i < stack.length; i++) {
-                        if (key == stack[i].key) {
+                        if (key === stack[i].key) {
                             idx = i;
                             break;
                         }
@@ -97,7 +97,7 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
 
     function backdropIndex() {
         let topBackdropIndex = -1;
-        let opened = openedWindows.keys();
+        const opened = openedWindows.keys();
         for (let i = 0; i < opened.length; i++) {
             if (openedWindows.get(opened[i]).value.backdrop) {
                 topBackdropIndex = i;
@@ -113,17 +113,17 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
     });
 
     function resizeHandler() {
-        let opened = openedWindows.keys();
+        const opened = openedWindows.keys();
         let fixedPositiong = true;
-        let body = $document.find('body').eq(0);
+        const body = $document.find('body').eq(0);
 
         for (let i = 0; i < opened.length; i++) {
-            let modalPos = $modalStack.reposition(opened[i]);
-            if(modalPos && modalPos.position !== 'fixed'){
+            const modalPos = $modalStack.reposition(opened[i]);
+            if (modalPos && modalPos.position !== 'fixed') {
                 fixedPositiong = false;
             }
         }
-        if(fixedPositiong){
+        if (fixedPositiong) {
             body.addClass(OPENED_MODAL_CLASS);
         } else {
             body.removeClass(OPENED_MODAL_CLASS);
@@ -154,7 +154,9 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
             let backdropScopeRef = backdropScope;
 
             $animate.leave(backdropDomEl).then(() => {
-                backdropScopeRef && backdropScopeRef.$destroy();
+                if (backdropScopeRef){
+                    backdropScopeRef.$destroy();
+                }
                 backdropScopeRef = null;
             });
             backdropDomEl = null;
@@ -185,11 +187,11 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
 
         const modalPos = options.modalPos = options.modalPos || {};
 
-        if(modalPos.windowHeight !== windowHeight){
+        if (modalPos.windowHeight !== windowHeight) {
             modalPos.scrollY = $window.pageYOffset || 0;
         }
 
-        if(modalPos.position !== 'fixed'){
+        if (modalPos.position !== 'fixed') {
             modalPos.top = fitsWindow ? top : top + modalPos.scrollY;
         }
 
@@ -234,11 +236,16 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
             angular.element($window).on('resize', resizeHandler);
         }
 
-        let classes = [];
-        options.windowClass &&  classes.push(options.windowClass);
-        options.size && classes.push(options.size);
+        const classes = [];
+        if (options.windowClass) {
+            classes.push(options.windowClass);
+        }
 
-        let modalDomEl = angular.element('<div modal-window></div>').attr({
+        if (options.size) {
+            classes.push(options.size);
+        }
+
+        const modalDomEl = angular.element('<div modal-window></div>').attr({
             style: `
                 visibility: visible;
                 z-index: -1;
@@ -250,17 +257,16 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
 
         modalDomEl.html(options.content);
         $compile(modalDomEl)(options.scope);
+        openedWindows.top().value.modalDomEl = modalDomEl;
 
         return $timeout(() => {
             // let the directives kick in
             options.scope.$apply();
 
-            openedWindows.top().value.modalDomEl = modalDomEl;
-
             // Attach, measure, remove
-            let body = $document.find('body').eq(0);
+            const body = $document.find('body').eq(0);
             body.prepend(modalDomEl);
-            let modalPos = getModalCenter(modalInstance, true);
+            const modalPos = getModalCenter(modalInstance, true);
             modalDomEl.detach();
 
             modalDomEl.attr({
@@ -273,13 +279,13 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
                 `,
             });
 
-            let promises = [];
+            const promises = [];
 
-            if(backdropDomEl){
+            if (backdropDomEl) {
                 promises.push($animate.enter(backdropDomEl, body));
             }
             promises.push($animate.enter(modalDomEl, body));
-            if(modalPos.position === 'fixed'){
+            if (modalPos.position === 'fixed') {
                 body.addClass(OPENED_MODAL_CLASS);
             }
 
@@ -292,12 +298,12 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
     };
 
     $modalStack.reposition = (modalInstance) => {
-        let modalWindow = openedWindows.get(modalInstance).value;
+        const modalWindow = openedWindows.get(modalInstance).value;
         if (modalWindow) {
-            let modalDomEl = modalWindow.modalDomEl;
-            let modalPos = getModalCenter(modalInstance);
-            modalDomEl.css('top', modalPos.top + 'px');
-            modalDomEl.css('left', modalPos.left + 'px');
+            const modalDomEl = modalWindow.modalDomEl;
+            const modalPos = getModalCenter(modalInstance);
+            modalDomEl.css('top', `${modalPos.top}px`);
+            modalDomEl.css('left', `${modalPos.left}px`);
             modalDomEl.css('position', modalPos.position);
             return modalPos;
         }
@@ -305,7 +311,7 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
     };
 
     $modalStack.close = (modalInstance, result) => {
-        let modalWindow = openedWindows.get(modalInstance);
+        const modalWindow = openedWindows.get(modalInstance);
         if (modalWindow) {
             modalWindow.value.deferred.resolve(result);
             removeModalWindow(modalInstance);
@@ -313,7 +319,7 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
     };
 
     $modalStack.dismiss = (modalInstance, reason) => {
-        let modalWindow = openedWindows.get(modalInstance);
+        const modalWindow = openedWindows.get(modalInstance);
         if (modalWindow) {
             modalWindow.value.deferred.reject(reason);
             removeModalWindow(modalInstance);
@@ -328,16 +334,14 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
         }
     };
 
-    $modalStack.getTop = () => {
-        return openedWindows.top();
-    };
+    $modalStack.getTop = () => openedWindows.top();
 
     return $modalStack;
 })
 
 .provider('$modal', () => {
     'ngInject';
-    let $modalProvider = {
+    const $modalProvider = {
         options: {
             backdrop: true, // can be also false or 'static'
             keyboard: true,
@@ -345,21 +349,19 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
         $get: function($injector, $rootScope, $q, $http, $templateCache, $controller, $modalStack) {
             'ngInject';
 
-            let $modal = {};
+            const $modal = {};
 
             function getTemplatePromise(options) {
-                if(options.template){
+                if (options.template) {
                     return $q.resolve(options.template);
                 }
                 return $http.get(options.templateUrl, {
-                    cache: $templateCache
-                }).then((result) => {
-                    return result.data;
-                });
+                    cache: $templateCache,
+                }).then((result) => result.data);
             }
 
             function getResolvePromises(resolves) {
-                let promisesArr = [];
+                const promisesArr = [];
                 angular.forEach(resolves, (value) => {
                     if (angular.isFunction(value) || angular.isArray(value)) {
                         promisesArr.push($q.resolve($injector.invoke(value)));
@@ -369,12 +371,11 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
             }
 
             $modal.open = (modalOpts) => {
-
-                let modalResultDeferred = $q.defer();
-                let modalOpenedDeferred = $q.defer();
+                const modalResultDeferred = $q.defer();
+                const modalOpenedDeferred = $q.defer();
 
                 // prepare an instance of a modal to be injected into controllers and returned to a caller
-                let modalInstance = {
+                const modalInstance = {
                     result: modalResultDeferred.promise,
                     opened: modalOpenedDeferred.promise,
                     close: (result) => {
@@ -385,11 +386,11 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
                     },
                     reposition: () => {
                         $modalStack.reposition(modalInstance);
-                    }
+                    },
                 };
 
                 // merge and clean up options
-                let modalOptions = angular.extend({}, $modalProvider.options, modalOpts);
+                const modalOptions = angular.extend({}, $modalProvider.options, modalOpts);
                 modalOptions.resolve = modalOptions.resolve || {};
 
                 // verify options
@@ -398,8 +399,8 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
                 }
 
                 const templateAndResolvePromise =
-                    $q.all([getTemplatePromise(modalOptions)].concat(getResolvePromises(modalOptions.resolve)));
-
+                    $q.all([getTemplatePromise(modalOptions)]
+                        .concat(getResolvePromises(modalOptions.resolve)));
 
                 const openedPromise = templateAndResolvePromise.then((tplAndVars) => {
                     const modalScope = (modalOptions.scope || $rootScope).$new();
@@ -407,7 +408,7 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
                     modalScope.$dismiss = modalInstance.dismiss;
 
                     let ctrlInstance;
-                    let ctrlLocals = {};
+                    const ctrlLocals = {};
                     let resolveIter = 1;
 
                     // controllers

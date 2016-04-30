@@ -9,7 +9,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
  * angular-foundation-6
  * http://circlingthesun.github.io/angular-foundation-6/
 
- * Version: 0.9.29 - 2016-04-28
+ * Version: 0.9.30 - 2016-04-30
  * License: MIT
  * (c) 
  */
@@ -586,7 +586,7 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
                 remove: function remove(key) {
                     var idx = -1;
                     for (var i = 0; i < stack.length; i++) {
-                        if (key == stack[i].key) {
+                        if (key === stack[i].key) {
                             idx = i;
                             break;
                         }
@@ -709,7 +709,9 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
                 var backdropScopeRef = backdropScope;
 
                 $animate.leave(backdropDomEl).then(function () {
-                    backdropScopeRef && backdropScopeRef.$destroy();
+                    if (backdropScopeRef) {
+                        backdropScopeRef.$destroy();
+                    }
                     backdropScopeRef = null;
                 });
                 backdropDomEl = null;
@@ -791,8 +793,13 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
         }
 
         var classes = [];
-        options.windowClass && classes.push(options.windowClass);
-        options.size && classes.push(options.size);
+        if (options.windowClass) {
+            classes.push(options.windowClass);
+        }
+
+        if (options.size) {
+            classes.push(options.size);
+        }
 
         var modalDomEl = angular.element('<div modal-window></div>').attr({
             style: '\n                visibility: visible;\n                z-index: -1;\n                display: block;\n            ',
@@ -802,12 +809,11 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
 
         modalDomEl.html(options.content);
         $compile(modalDomEl)(options.scope);
+        openedWindows.top().value.modalDomEl = modalDomEl;
 
         return $timeout(function () {
             // let the directives kick in
             options.scope.$apply();
-
-            openedWindows.top().value.modalDomEl = modalDomEl;
 
             // Attach, measure, remove
             var body = $document.find('body').eq(0);
@@ -916,7 +922,6 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
             }
 
             $modal.open = function (modalOpts) {
-
                 var modalResultDeferred = $q.defer();
                 var modalOpenedDeferred = $q.defer();
 

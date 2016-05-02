@@ -16,7 +16,7 @@ angular.module('plunker', [])
           '<html ng-app="foundationDemoApp">\n' +
           '  <head>\n' +
           '    <script src="//ajax.googleapis.com/ajax/libs/angularjs/'+ngVersion+'/angular.js"></script>\n' +
-          '    <script src="//circlingthesun.github.io/angular-foundation-6/mm-foundation-tpls-'+version+'.js"></script>\n' +
+          '    <script src="//circlingthesun.github.io/angular-foundation-6/angular-foundation.js"></script>\n' +
           '    <script src="example.js"></script>\n' +
           '    <link href="//cdnjs.cloudflare.com/ajax/libs/foundation/'+fdVersion+'/foundation.css" rel="stylesheet">\n' +
           '  </head>\n' +

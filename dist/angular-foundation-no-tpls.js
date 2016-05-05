@@ -9,7 +9,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
  * angular-foundation-6
  * http://circlingthesun.github.io/angular-foundation-6/
 
- * Version: 0.9.30 - 2016-04-30
+ * Version: 0.9.31 - 2016-05-05
  * License: MIT
  * (c) 
  */
@@ -723,7 +723,7 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
         }
 
         // let fitsWindow = windowHeight >= top + height; // Alwats fits on mobile
-        var fitsWindow = mediaQueries.getCurrentSize() === 'small' || windowHeight >= top + height; // Disable annoying fixed positing for higher breakpoints
+        var fitsWindow = mediaQueries.getCurrentSize() === 'small'; // || (windowHeight >= top + height); // Disable annoying fixed positing for higher breakpoints
 
         var modalPos = options.modalPos = options.modalPos || {};
 

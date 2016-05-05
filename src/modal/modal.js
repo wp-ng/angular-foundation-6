@@ -183,7 +183,7 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
         }
 
         // let fitsWindow = windowHeight >= top + height; // Alwats fits on mobile
-        const fitsWindow = mediaQueries.getCurrentSize() === 'small' || (windowHeight >= top + height); // Disable annoying fixed positing for higher breakpoints
+        const fitsWindow = mediaQueries.getCurrentSize() === 'small';// || (windowHeight >= top + height); // Disable annoying fixed positing for higher breakpoints
 
         const modalPos = options.modalPos = options.modalPos || {};
 

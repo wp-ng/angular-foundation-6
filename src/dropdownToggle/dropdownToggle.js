@@ -1,6 +1,30 @@
 function DropdownToggleController($scope, $attrs, mediaQueries, $element, $position) {
     'ngInject';
     var $ctrl = this;
+    const $body = angular.element(document.querySelector('body'));
+
+    function close(e) {
+        $ctrl.active = false;
+        $ctrl.css = {};
+
+        if ($ctrl.closeOnClick) {
+            $body.off('click', close);
+        }
+
+        $scope.$apply();
+    }
+
+    $ctrl.$onInit = function init() {
+        if ($ctrl.closeOnClick) {
+            $element.on('click', (e) => e.stopPropagation());
+        }
+    };
+
+    $ctrl.$onDestroy = function destroy() {
+        if ($ctrl.closeOnClick) {
+            $body.off('click', close);
+        }
+    };
 
     $ctrl.css = {};
 
@@ -22,6 +46,10 @@ function DropdownToggleController($scope, $attrs, mediaQueries, $element, $posit
         $ctrl.css.top = triggerPosition.top + triggerPosition.height + 2 + 'px';
         $ctrl.css.left = triggerPosition.left + 'px';
 
+        if ($ctrl.closeOnClick) {
+            $body.on('click', close);
+        }
+
         // if (mediaQueries.small() && !mediaQueries.medium()) {
 
         // }
@@ -33,6 +61,9 @@ function dropdownToggle($document, $window, $location) {
     return {
         scope: {},
         restrict: 'EA',
+        bindToController: {
+            closeOnClick: '=',
+        },
         transclude: {
             'toggle': 'toggle',
             'pane': 'pane'

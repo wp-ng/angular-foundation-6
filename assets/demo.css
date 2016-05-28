@@ -33,7 +33,7 @@ div[role=main] section.demo {
  */
 /**
  * Foundation for Sites by ZURB
- * Version 6.2.0
+ * Version 6.2.3
  * foundation.zurb.com
  * Licensed under MIT Open Source
  */
@@ -83,17 +83,12 @@ div[role=main] section.demo {
   transition-duration: 0.25s;
   transition-timing-function: cubic-bezier;
   transition-delay: 0s;
-  -webkit-transform: translateY(-100%);
   transform: translateY(-100%);
-  transition-property: opacity, -webkit-transform;
   transition-property: transform, opacity;
-  transition-property: transform, opacity, -webkit-transform;
   opacity: 0;
-  -webkit-backface-visibility: hidden;
   backface-visibility: hidden; }
 
 .reveal.ng-enter.ng-enter-active {
-  -webkit-transform: translateY(0);
   transform: translateY(0);
   opacity: 1; }
 
@@ -101,15 +96,11 @@ div[role=main] section.demo {
   transition-duration: 500ms;
   transition-timing-function: linear;
   transition-duration: 0.25s;
-  -webkit-transform: scale(1);
   transform: scale(1);
-  transition-property: opacity, -webkit-transform;
   transition-property: transform, opacity;
-  transition-property: transform, opacity, -webkit-transform;
   opacity: 1; }
 
 .reveal.ng-leave.ng-leave-active {
-  -webkit-transform: scale(0);
   transform: scale(0);
   opacity: 0; }
 
@@ -128,13 +119,7 @@ div[role=main] section.demo {
   position: relative; }
   .marketing-topbar::before, .marketing-topbar::after {
     content: ' ';
-    display: table;
-    -webkit-flex-basis: 0;
-    -ms-flex-preferred-size: 0;
-    flex-basis: 0;
-    -webkit-order: 1;
-    -ms-flex-order: 1;
-    order: 1; }
+    display: table; }
   .marketing-topbar::after {
     clear: both; }
   .marketing-topbar ul:first-child {

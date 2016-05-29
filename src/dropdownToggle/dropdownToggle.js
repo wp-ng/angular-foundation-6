@@ -37,14 +37,22 @@ function DropdownToggleController($scope, $attrs, mediaQueries, $element, $posit
             return;
         }
 
-        var dropdown = angular.element($element[0].querySelector('.dropdown-pane'));
         var dropdownTrigger = angular.element($element[0].querySelector('toggle *:first-child'));
 
         // var dropdownWidth = dropdown.prop('offsetWidth');
         var triggerPosition = $position.position(dropdownTrigger);
 
         $ctrl.css.top = triggerPosition.top + triggerPosition.height + 2 + 'px';
-        $ctrl.css.left = triggerPosition.left + 'px';
+
+        if ($ctrl.paneAlign === 'center') {
+            $ctrl.css.left = `${triggerPosition.left + (triggerPosition.width / 2)}px`;
+            $ctrl.css.transform = 'translateX(-50%)';
+        } else if ($ctrl.paneAlign === 'right') {
+            $ctrl.css.left = `${triggerPosition.left + triggerPosition.width}px`;
+            $ctrl.css.transform = 'translateX(-100%)';
+        } else {
+            $ctrl.css.left = `${triggerPosition.left}px`;
+        }
 
         if ($ctrl.closeOnClick) {
             $body.on('click', close);
@@ -63,6 +71,7 @@ function dropdownToggle($document, $window, $location) {
         restrict: 'EA',
         bindToController: {
             closeOnClick: '=',
+            paneAlign: '@',
         },
         transclude: {
             'toggle': 'toggle',

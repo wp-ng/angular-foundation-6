@@ -4,3 +4,4 @@ DropdownToggle is a simple directive which will toggle a dropdown link on click.
 The following settings can be applied as attributes to the root element:
 
 - `close-on-click`: Allows a click on the body to close the dropdown.
+- `pane-align`: Determines how the dropdown-pane should be aligned from the toggle.

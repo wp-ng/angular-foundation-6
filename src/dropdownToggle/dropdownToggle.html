@@ -4,6 +4,6 @@
     ng-style="$ctrl.css"
     ng-class="{'is-open': $ctrl.active}"
     ng-attr-aria-hidden="$ctrl.active"
-    class="dropdown-pane">
+    class="dropdown-pane{{$ctrl.paneAlign && ' dropdown-pane-' + $ctrl.paneAlign}}">
   Just some junk that needs to be said. Or not. Your choice.
 </div>

@@ -78,7 +78,7 @@
                   <h3>With love, from <a href="http://github.com/pineconellc/">Pinecone</a></h3>
                   <hr>
                   <p>
-                  <a class="button radius large" href="https://github.com/circlingthesun/angular-foundation-6/tree/gh-pages"><i class="fa fa-download"></i> Download v0.9.33</a>
+                  <a class="button radius large" href="https://github.com/circlingthesun/angular-foundation-6/tree/gh-pages"><i class="fa fa-download"></i> Download v0.9.34</a>
                     <a class="button radius large" href="https://github.com/circlingthesun/angular-foundation-6"><i class="fa fa-github"></i> Contribute</a>
                   </p>
                 </div>
@@ -170,7 +170,7 @@
                     <div class="row code">
                       <div class="columns medium-12" ng-controller="PlunkerCtrl">
                         <div class="float-right">
-                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.3', '6.2.0', '0.9.33', 'accordion')">
+                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.3', '6.2.0', '0.9.34', 'accordion')">
                             <i class="fa fa-edit"></i> Edit in plunker
                           </button>
                         </div>
@@ -281,7 +281,7 @@
                     <div class="row code">
                       <div class="columns medium-12" ng-controller="PlunkerCtrl">
                         <div class="float-right">
-                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.3', '6.2.0', '0.9.33', 'alert')">
+                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.3', '6.2.0', '0.9.34', 'alert')">
                             <i class="fa fa-edit"></i> Edit in plunker
                           </button>
                         </div>
@@ -379,7 +379,7 @@
                     <div class="row code">
                       <div class="columns medium-12" ng-controller="PlunkerCtrl">
                         <div class="float-right">
-                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.3', '6.2.0', '0.9.33', 'buttons')">
+                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.3', '6.2.0', '0.9.34', 'buttons')">
                             <i class="fa fa-edit"></i> Edit in plunker
                           </button>
                         </div>
@@ -575,7 +575,7 @@
                     <div class="row code">
                       <div class="columns medium-12" ng-controller="PlunkerCtrl">
                         <div class="float-right">
-                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.3', '6.2.0', '0.9.33', 'dropdownMenu')">
+                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.3', '6.2.0', '0.9.34', 'dropdownMenu')">
                             <i class="fa fa-edit"></i> Edit in plunker
                           </button>
                         </div>
@@ -716,7 +716,7 @@
                       <div class="columns medium-6 show-grid">
                         <div ng-controller="DropdownCtrl">
 
-  <dropdown-toggle style="display: block;">
+  <dropdown-toggle>
     <toggle><p><a>Click me for a dropdown-toggle, yo!</a></p></toggle>
     <pane>
       <ul class="menu vertical">
@@ -727,9 +727,9 @@
     </pane>
   </dropdown-toggle>
 
-  <dropdown-toggle style="display: block;">
+  <dropdown-toggle pane-align="right">
     <toggle>
-      <a class="dropdown button">dropdown-toggles can also have links!</a>
+      <a class="dropdown button large">dropdown-toggles can also have links!</a>
     </toggle>
     <pane>
       <ul class="menu vertical">
@@ -742,7 +742,7 @@
 
   <div class="button-group">
     <a class="button">Primary Action</a>
-    <dropdown-toggle close-on-click="true">
+    <dropdown-toggle close-on-click="true" pane-align="center">
       <toggle>
         <a class="dropdown button arrow-only">
           <span class="show-for-sr">Show menu</span>
@@ -766,6 +766,7 @@
 <p>The following settings can be applied as attributes to the root element:</p>
 <ul>
 <li><code>close-on-click</code>: Allows a click on the body to close the dropdown.</li>
+<li><code>pane-align</code>: Determines how the dropdown-pane should be aligned from the toggle.</li>
 </ul>
 
                       </div>
@@ -774,7 +775,7 @@
                     <div class="row code">
                       <div class="columns medium-12" ng-controller="PlunkerCtrl">
                         <div class="float-right">
-                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.3', '6.2.0', '0.9.33', 'dropdownToggle')">
+                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.3', '6.2.0', '0.9.34', 'dropdownToggle')">
                             <i class="fa fa-edit"></i> Edit in plunker
                           </button>
                         </div>
@@ -783,7 +784,7 @@
                             <div plunker-content="markup">
                               <pre ng-non-bindable><code data-language="html">&lt;div ng-controller=&quot;DropdownCtrl&quot;&gt;
 
-  &lt;dropdown-toggle style=&quot;display: block;&quot;&gt;
+  &lt;dropdown-toggle&gt;
     &lt;toggle&gt;&lt;p&gt;&lt;a&gt;Click me for a dropdown-toggle, yo!&lt;/a&gt;&lt;/p&gt;&lt;/toggle&gt;
     &lt;pane&gt;
       &lt;ul class=&quot;menu vertical&quot;&gt;
@@ -794,9 +795,9 @@
     &lt;/pane&gt;
   &lt;/dropdown-toggle&gt;
 
-  &lt;dropdown-toggle style=&quot;display: block;&quot;&gt;
+  &lt;dropdown-toggle pane-align=&quot;right&quot;&gt;
     &lt;toggle&gt;
-      &lt;a class=&quot;dropdown button&quot;&gt;dropdown-toggles can also have links!&lt;/a&gt;
+      &lt;a class=&quot;dropdown button large&quot;&gt;dropdown-toggles can also have links!&lt;/a&gt;
     &lt;/toggle&gt;
     &lt;pane&gt;
       &lt;ul class=&quot;menu vertical&quot;&gt;
@@ -809,7 +810,7 @@
 
   &lt;div class=&quot;button-group&quot;&gt;
     &lt;a class=&quot;button&quot;&gt;Primary Action&lt;/a&gt;
-    &lt;dropdown-toggle close-on-click=&quot;true&quot;&gt;
+    &lt;dropdown-toggle close-on-click=&quot;true&quot; pane-align=&quot;center&quot;&gt;
       &lt;toggle&gt;
         &lt;a class=&quot;dropdown button arrow-only&quot;&gt;
           &lt;span class=&quot;show-for-sr&quot;&gt;Show menu&lt;/span&gt;
@@ -936,7 +937,7 @@ Creating custom modals is straightforward: create a partial view, its controller
                     <div class="row code">
                       <div class="columns medium-12" ng-controller="PlunkerCtrl">
                         <div class="float-right">
-                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.3', '6.2.0', '0.9.33', 'modal')">
+                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.3', '6.2.0', '0.9.34', 'modal')">
                             <i class="fa fa-edit"></i> Edit in plunker
                           </button>
                         </div>
@@ -1215,7 +1216,7 @@ angular.module('foundationDemoApp').controller('ModalInstanceCtrl', function($sc
                     <div class="row code">
                       <div class="columns medium-12" ng-controller="PlunkerCtrl">
                         <div class="float-right">
-                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.3', '6.2.0', '0.9.33', 'offcanvas')">
+                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.3', '6.2.0', '0.9.34', 'offcanvas')">
                             <i class="fa fa-edit"></i> Edit in plunker
                           </button>
                         </div>
@@ -1426,7 +1427,7 @@ angular.module('foundationDemoApp').controller('ModalInstanceCtrl', function($sc
                     <div class="row code">
                       <div class="columns medium-12" ng-controller="PlunkerCtrl">
                         <div class="float-right">
-                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.3', '6.2.0', '0.9.33', 'pagination')">
+                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.3', '6.2.0', '0.9.34', 'pagination')">
                             <i class="fa fa-edit"></i> Edit in plunker
                           </button>
                         </div>
@@ -1559,7 +1560,7 @@ angular.module('foundationDemoApp').controller('ModalInstanceCtrl', function($sc
                     <div class="row code">
                       <div class="columns medium-12" ng-controller="PlunkerCtrl">
                         <div class="float-right">
-                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.3', '6.2.0', '0.9.33', 'progressbar')">
+                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.3', '6.2.0', '0.9.34', 'progressbar')">
                             <i class="fa fa-edit"></i> Edit in plunker
                           </button>
                         </div>
@@ -1736,7 +1737,7 @@ angular.module('foundationDemoApp').controller('ModalInstanceCtrl', function($sc
                     <div class="row code">
                       <div class="columns medium-12" ng-controller="PlunkerCtrl">
                         <div class="float-right">
-                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.3', '6.2.0', '0.9.33', 'rating')">
+                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.3', '6.2.0', '0.9.34', 'rating')">
                             <i class="fa fa-edit"></i> Edit in plunker
                           </button>
                         </div>
@@ -1893,7 +1894,7 @@ Whether to open an active tab automatically.</p>
                     <div class="row code">
                       <div class="columns medium-12" ng-controller="PlunkerCtrl">
                         <div class="float-right">
-                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.3', '6.2.0', '0.9.33', 'tabs')">
+                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.3', '6.2.0', '0.9.34', 'tabs')">
                             <i class="fa fa-edit"></i> Edit in plunker
                           </button>
                         </div>
@@ -2069,7 +2070,7 @@ appendToBody: false
                     <div class="row code">
                       <div class="columns medium-12" ng-controller="PlunkerCtrl">
                         <div class="float-right">
-                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.3', '6.2.0', '0.9.33', 'tooltip')">
+                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.3', '6.2.0', '0.9.34', 'tooltip')">
                             <i class="fa fa-edit"></i> Edit in plunker
                           </button>
                         </div>
@@ -2259,7 +2260,7 @@ appendToBody: false
     </div>
     <div class="modal-footer">
       <a class="button" ng-click="cancel()">Cancel</a>
-      <a class="button" ng-click="download('0.9.33')"><i class="fa fa-download"></i> Download 0.9.33</a>
+      <a class="button" ng-click="download('0.9.34')"><i class="fa fa-download"></i> Download 0.9.34</a>
     </div>
   </script>
 </body>

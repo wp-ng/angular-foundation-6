@@ -9,7 +9,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
  * angular-foundation-6
  * http://circlingthesun.github.io/angular-foundation-6/
 
- * Version: 0.9.32 - 2016-05-28
+ * Version: 0.9.33 - 2016-05-29
  * License: MIT
  * (c) 
  */
@@ -397,14 +397,22 @@ function DropdownToggleController($scope, $attrs, mediaQueries, $element, $posit
             return;
         }
 
-        var dropdown = angular.element($element[0].querySelector('.dropdown-pane'));
         var dropdownTrigger = angular.element($element[0].querySelector('toggle *:first-child'));
 
         // var dropdownWidth = dropdown.prop('offsetWidth');
         var triggerPosition = $position.position(dropdownTrigger);
 
         $ctrl.css.top = triggerPosition.top + triggerPosition.height + 2 + 'px';
-        $ctrl.css.left = triggerPosition.left + 'px';
+
+        if ($ctrl.paneAlign === 'center') {
+            $ctrl.css.left = triggerPosition.left + triggerPosition.width / 2 + 'px';
+            $ctrl.css.transform = 'translateX(-50%)';
+        } else if ($ctrl.paneAlign === 'right') {
+            $ctrl.css.left = triggerPosition.left + triggerPosition.width + 'px';
+            $ctrl.css.transform = 'translateX(-100%)';
+        } else {
+            $ctrl.css.left = triggerPosition.left + 'px';
+        }
 
         if ($ctrl.closeOnClick) {
             $body.on('click', close);
@@ -423,7 +431,8 @@ function dropdownToggle($document, $window, $location) {
         scope: {},
         restrict: 'EA',
         bindToController: {
-            closeOnClick: '='
+            closeOnClick: '=',
+            paneAlign: '@'
         },
         transclude: {
             'toggle': 'toggle',
@@ -451,7 +460,7 @@ angular.module('mm.foundation.dropdownToggle', ['mm.foundation.position', 'mm.fo
 
 (function () {
     angular.module("mm.foundation.dropdownToggle").run(["$templateCache", function ($templateCache) {
-        $templateCache.put("template/dropdownToggle/dropdownToggle.html", "<span ng-click=\"$ctrl.toggle()\" ng-transclude=\"toggle\">Toggle Dropdown</span>\n<div\n    ng-transclude=\"pane\"\n    ng-style=\"$ctrl.css\"\n    ng-class=\"{\'is-open\': $ctrl.active}\"\n    ng-attr-aria-hidden=\"$ctrl.active\"\n    class=\"dropdown-pane\">\n  Just some junk that needs to be said. Or not. Your choice.\n</div>\n");
+        $templateCache.put("template/dropdownToggle/dropdownToggle.html", "<span ng-click=\"$ctrl.toggle()\" ng-transclude=\"toggle\">Toggle Dropdown</span>\n<div\n    ng-transclude=\"pane\"\n    ng-style=\"$ctrl.css\"\n    ng-class=\"{\'is-open\': $ctrl.active}\"\n    ng-attr-aria-hidden=\"$ctrl.active\"\n    class=\"dropdown-pane{{$ctrl.paneAlign && \' dropdown-pane-\' + $ctrl.paneAlign}}\">\n  Just some junk that needs to be said. Or not. Your choice.\n</div>\n");
     }]);
 })();
 angular.module('mm.foundation.mediaQueries', []).factory('matchMedia', ['$document', '$window', function ($document, $window) {

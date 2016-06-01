@@ -282,9 +282,9 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
             const promises = [];
 
             if (backdropDomEl) {
-                promises.push($animate.enter(backdropDomEl, body));
+                promises.push($animate.enter(backdropDomEl, body, body[0].lastChild));
             }
-            promises.push($animate.enter(modalDomEl, body));
+            promises.push($animate.enter(modalDomEl, body, body[0].lastChild));
             if (modalPos.position === 'fixed') {
                 body.addClass(OPENED_MODAL_CLASS);
             }

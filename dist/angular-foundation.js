@@ -9,7 +9,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
  * angular-foundation-6
  * http://circlingthesun.github.io/angular-foundation-6/
 
- * Version: 0.9.34 - 2016-06-01
+ * Version: 0.9.35 - 2016-06-04
  * License: MIT
  * (c) 
  */
@@ -710,7 +710,7 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
 
     function resizeHandler() {
         var opened = openedWindows.keys();
-        var fixedPositiong = true;
+        var fixedPositiong = opened.length > 0;
         var body = $document.find('body').eq(0);
 
         for (var i = 0; i < opened.length; i++) {

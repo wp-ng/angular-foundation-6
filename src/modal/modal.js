@@ -114,7 +114,7 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
 
     function resizeHandler() {
         const opened = openedWindows.keys();
-        let fixedPositiong = true;
+        let fixedPositiong = opened.length > 0;
         const body = $document.find('body').eq(0);
 
         for (let i = 0; i < opened.length; i++) {

@@ -9,7 +9,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
  * angular-foundation-6
  * http://circlingthesun.github.io/angular-foundation-6/
 
- * Version: 0.9.35 - 2016-06-04
+ * Version: 0.9.36 - 2016-06-10
  * License: MIT
  * (c) 
  */
@@ -289,7 +289,8 @@ angular.module('mm.foundation.dropdownMenu', []).directive('dropdownMenu', ['$co
     return {
         bindToController: {
             disableHover: '=',
-            disableClickOpen: '='
+            disableClickOpen: '=',
+            closingTime: '='
         },
         scope: {},
         restrict: 'A',
@@ -298,10 +299,11 @@ angular.module('mm.foundation.dropdownMenu', []).directive('dropdownMenu', ['$co
             'ngInject';
 
             var vm = this;
-            // $element is-dropdown-submenu-parent
         }]
     };
-}]).directive('li', function () {
+}]).directive('li', ['$timeout', function ($timeout) {
+    'ngInject';
+
     return {
         require: '?^^dropdownMenu',
         restrict: 'E',
@@ -312,6 +314,7 @@ angular.module('mm.foundation.dropdownMenu', []).directive('dropdownMenu', ['$co
 
             var ulChild = null;
             var children = $element[0].children;
+            var mouseLeaveTimeout;
 
             for (var i = 0; i < children.length; i++) {
                 var child = angular.element(children[i]);
@@ -335,6 +338,9 @@ angular.module('mm.foundation.dropdownMenu', []).directive('dropdownMenu', ['$co
 
                 if (!dropdownMenu.disableHover) {
                     $element.on('mouseenter', function () {
+
+                        $timeout.cancel(mouseLeaveTimeout);
+                        $element.parent().children().children().removeClass('js-dropdown-active');
                         ulChild.addClass('js-dropdown-active');
                         $element.addClass('is-active');
                     });
@@ -347,14 +353,15 @@ angular.module('mm.foundation.dropdownMenu', []).directive('dropdownMenu', ['$co
                 });
 
                 $element.on('mouseleave', function () {
-                    ulChild.removeClass('js-dropdown-active');
-                    $element.removeClass('is-active');
+                    mouseLeaveTimeout = $timeout(function () {
+                        ulChild.removeClass('js-dropdown-active');
+                        $element.removeClass('is-active');
+                    }, dropdownMenu.closingTime ? dropdownMenu.closingTime : 500);
                 });
             }
         }
     };
-});
-
+}]);
 function DropdownToggleController($scope, $attrs, mediaQueries, $element, $position) {
     'ngInject';
 

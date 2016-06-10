@@ -4,7 +4,8 @@ angular.module('mm.foundation.dropdownMenu', [])
     return {
         bindToController: {
             disableHover: '=',
-            disableClickOpen: '='
+            disableClickOpen: '=',
+            closingTime: '='
         },
         scope: {},
         restrict: 'A',
@@ -12,11 +13,11 @@ angular.module('mm.foundation.dropdownMenu', [])
         controller: function($scope, $element) {
             'ngInject';
             var vm = this;
-            // $element is-dropdown-submenu-parent
         }
     };
 })
-.directive('li', () => {
+.directive('li', ($timeout) => {
+    'ngInject';
     return {
         require: '?^^dropdownMenu',
         restrict: 'E',
@@ -27,6 +28,8 @@ angular.module('mm.foundation.dropdownMenu', [])
 
             let ulChild = null;
             let children = $element[0].children;
+            var mouseLeaveTimeout;
+
 
             for(let i = 0; i < children.length; i++){
                 let child = angular.element(children[i]);
@@ -48,12 +51,13 @@ angular.module('mm.foundation.dropdownMenu', [])
                     ulChild.addClass('first-sub');
                 }
 
-
                 if(!dropdownMenu.disableHover){
                     $element.on('mouseenter', () => {
+
+                        $timeout.cancel(mouseLeaveTimeout);
+                        $element.parent().children().children().removeClass('js-dropdown-active');
                         ulChild.addClass('js-dropdown-active');
                         $element.addClass('is-active');
-
                     });
                 }
 
@@ -64,8 +68,10 @@ angular.module('mm.foundation.dropdownMenu', [])
                 });
 
                 $element.on('mouseleave', () => {
-                    ulChild.removeClass('js-dropdown-active');
-                    $element.removeClass('is-active');
+                    mouseLeaveTimeout = $timeout(function(){
+                        ulChild.removeClass('js-dropdown-active');
+                        $element.removeClass('is-active');
+                    }, dropdownMenu.closingTime ? dropdownMenu.closingTime : 500);
                 });
             }
         }

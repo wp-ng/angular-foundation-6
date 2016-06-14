@@ -1,6 +1,7 @@
-function DropdownToggleController($scope, $attrs, mediaQueries, $element, $position) {
+function DropdownToggleController($scope, $attrs, mediaQueries, $element, $position, $timeout) {
     'ngInject';
     var $ctrl = this;
+    var hoverTimeout;
     const $body = angular.element(document.querySelector('body'));
 
     function close(e) {
@@ -30,19 +31,41 @@ function DropdownToggleController($scope, $attrs, mediaQueries, $element, $posit
 
     $ctrl.toggle = function() {
         $ctrl.active = !$ctrl.active;
-
         $ctrl.css = {};
 
         if (!$ctrl.active) {
             return;
         }
 
+        positionPane(2);
+
+        if ($ctrl.closeOnClick) {
+            $body.on('click', close);
+        }
+    };
+
+    $ctrl.mouseover = function() {
+        $timeout.cancel(hoverTimeout);
+        $ctrl.active = true;
+        positionPane(1);
+    }
+
+    $ctrl.mouseleave = function() {
+        $timeout.cancel(hoverTimeout);
+        hoverTimeout = $timeout(function() {
+            $scope.$apply(function() {
+                $ctrl.active = false;
+            });
+        }, 250);
+    };
+
+    function positionPane(offset) {
         var dropdownTrigger = angular.element($element[0].querySelector('toggle *:first-child'));
 
         // var dropdownWidth = dropdown.prop('offsetWidth');
         var triggerPosition = $position.position(dropdownTrigger);
 
-        $ctrl.css.top = triggerPosition.top + triggerPosition.height + 2 + 'px';
+        $ctrl.css.top = triggerPosition.top + triggerPosition.height + offset + 'px';
 
         if ($ctrl.paneAlign === 'center') {
             $ctrl.css.left = `${triggerPosition.left + (triggerPosition.width / 2)}px`;
@@ -53,15 +76,7 @@ function DropdownToggleController($scope, $attrs, mediaQueries, $element, $posit
         } else {
             $ctrl.css.left = `${triggerPosition.left}px`;
         }
-
-        if ($ctrl.closeOnClick) {
-            $body.on('click', close);
-        }
-
-        // if (mediaQueries.small() && !mediaQueries.medium()) {
-
-        // }
-    };
+    }
 }
 
 function dropdownToggle($document, $window, $location) {
@@ -72,6 +87,7 @@ function dropdownToggle($document, $window, $location) {
         bindToController: {
             closeOnClick: '=',
             paneAlign: '@',
+            toggleOnHover: '='
         },
         transclude: {
             'toggle': 'toggle',

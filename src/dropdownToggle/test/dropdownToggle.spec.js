@@ -10,16 +10,17 @@ describe('dropdownToggle', function() {
   var inject = mocks.inject;
   var module = mocks.module;
 
-  var $compile, $rootScope, $document, $location, $window, elm, toggleElm, targetElm, $scope;
+  var $compile, $rootScope, $document, $location, $window, elm, toggleElm, targetElm, $scope, $timeout;
 
   beforeEach(module('template/dropdownToggle/dropdownToggle.html'));
 
-  function dropdown(id) {
+  function dropdown(id, hover) {
     if (!id) {
       id = 'target';
     }
+    var hoverAttr = hover ? 'toggle-on-hover="true"' : '';
     var element = angular.element(
-      '<dropdown-toggle id="' + id + '" style="display: block;">' +
+      '<dropdown-toggle id="' + id + '" style="display: block;"' + hoverAttr + '>' +
         '<toggle><a>dropdown-toggles can also have links!</a></toggle>' +
         '<pane>' +
           '<ul>' +
@@ -63,12 +64,13 @@ describe('dropdownToggle', function() {
     });
   }));
 
-  beforeEach(inject(function(_$compile_, _$rootScope_, _$document_, _$location_, _$window_) {
+  beforeEach(inject(function(_$compile_, _$rootScope_, _$document_, _$location_, _$window_, _$timeout_) {
     $compile = _$compile_;
     $rootScope = _$rootScope_;
     $document = _$document_;
     $window = _$window_;
     $location = _$location_;
+    $timeout = _$timeout_;
     $scope = $rootScope.$new();
   }));
 
@@ -124,6 +126,35 @@ describe('dropdownToggle', function() {
       expect(targetElm.hasClass('is-open')).toBe(true);
       toggleElm[0].click();
       expect(targetElm.hasClass('is-open')).toBe(false);
+    });
+  });
+
+  describe('with hover enabled', function() {
+    beforeEach(function() {
+      elm = dropdown(1, true);
+      toggleElm = elm.find('span');
+      targetElm = angular.element(elm[0].querySelector('.dropdown-pane'));
+    });
+
+    it('should add/remove the "is-open" class on hover', function() {
+      toggleElm.triggerHandler('mouseover');
+      $scope.$apply();
+      expect(targetElm.hasClass('is-open')).toBe(true);
+      toggleElm.triggerHandler('mouseleave');
+      $scope.$apply();
+      $timeout(function() {
+        expect(targetElm.hasClass('is-open')).toBe(false);
+      }, 250);
+    });
+
+    it('should not remove the "is-open" class when moving to pane', function() {
+      toggleElm.triggerHandler('mouseover');
+      $scope.$apply();
+      targetElm.triggerHandler('mouseover');
+      $scope.$apply();
+      $timeout(function() {
+        expect(targetElm.hasClass('is-open')).toBe(true);
+      }, 250);
     });
   });
 

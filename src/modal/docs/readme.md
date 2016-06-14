@@ -13,6 +13,7 @@ The `$modal` service has only one method: `open(options)` where available option
 * `keyboard` - indicates whether the dialog should be closable by hitting the ESC key, defaults to true
 * `windowClass` - additional CSS class(es) to be added to a modal window template
 * `size` - controls the size of the modal. Allowed values: `tiny`, `small`, `large`, and `full`.
+* `closeOnClick` - determines whether clicking the backdrop closes the modal. Defaults to `true`.
 
 The `open` method returns a modal instance, an object with the following properties:
 

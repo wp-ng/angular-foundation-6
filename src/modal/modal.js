@@ -61,7 +61,7 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
         link: (scope) => {
             scope.close = (evt) => {
                 const modal = $modalStack.getTop();
-                if (modal && modal.value.backdrop && modal.value.backdrop !== 'static' && (evt.target === evt.currentTarget)) {
+                if (modal && modal.value.closeOnClick && modal.value.backdrop && modal.value.backdrop !== 'static' && (evt.target === evt.currentTarget)) {
                     evt.preventDefault();
                     evt.stopPropagation();
                     $modalStack.dismiss(modal.key, 'backdrop click');
@@ -221,6 +221,7 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
             modalScope: options.scope,
             backdrop: options.backdrop,
             keyboard: options.keyboard,
+            closeOnClick: options.closeOnClick,
         };
         openedWindows.add(modalInstance, modalInstance.options);
 
@@ -345,6 +346,7 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
         options: {
             backdrop: true, // can be also false or 'static'
             keyboard: true,
+            closeOnClick: true,
         },
         $get: function($injector, $rootScope, $q, $http, $templateCache, $controller, $modalStack) {
             'ngInject';
@@ -433,6 +435,7 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
                         keyboard: modalOptions.keyboard,
                         windowClass: modalOptions.windowClass,
                         size: modalOptions.size,
+                        closeOnClick: modalOptions.closeOnClick,
                     });
                 }, (reason) => {
                     modalResultDeferred.reject(reason);

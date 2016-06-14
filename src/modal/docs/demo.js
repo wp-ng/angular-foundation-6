@@ -1,7 +1,7 @@
 angular.module('foundationDemoApp').controller('ModalDemoCtrl', function($scope, $modal, $log) {
 
 
-    $scope.open = function(size, backdrop, itemCount) {
+    $scope.open = function(size, backdrop, itemCount, closeOnClick) {
 
         $scope.items = [];
 
@@ -20,6 +20,10 @@ angular.module('foundationDemoApp').controller('ModalDemoCtrl', function($scope,
                 },
             },
         };
+
+        if(angular.isDefined(closeOnClick)){
+            params.closeOnClick = closeOnClick;
+        }
 
         if(angular.isDefined(size)){
             params.size = size;

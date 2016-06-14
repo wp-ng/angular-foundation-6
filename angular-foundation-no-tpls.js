@@ -9,7 +9,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
  * angular-foundation-6
  * http://circlingthesun.github.io/angular-foundation-6/
 
- * Version: 0.9.37 - 2016-06-14
+ * Version: 0.9.38 - 2016-06-14
  * License: MIT
  * (c) 
  */
@@ -666,7 +666,7 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
         link: function link(scope) {
             scope.close = function (evt) {
                 var modal = $modalStack.getTop();
-                if (modal && modal.value.backdrop && modal.value.backdrop !== 'static' && evt.target === evt.currentTarget) {
+                if (modal && modal.value.closeOnClick && modal.value.backdrop && modal.value.backdrop !== 'static' && evt.target === evt.currentTarget) {
                     evt.preventDefault();
                     evt.stopPropagation();
                     $modalStack.dismiss(modal.key, 'backdrop click');
@@ -825,7 +825,8 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
             deferred: options.deferred,
             modalScope: options.scope,
             backdrop: options.backdrop,
-            keyboard: options.keyboard
+            keyboard: options.keyboard,
+            closeOnClick: options.closeOnClick
         };
         openedWindows.add(modalInstance, modalInstance.options);
 
@@ -942,7 +943,8 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
     var $modalProvider = {
         options: {
             backdrop: true, // can be also false or 'static'
-            keyboard: true
+            keyboard: true,
+            closeOnClick: true
         },
         $get: ['$injector', '$rootScope', '$q', '$http', '$templateCache', '$controller', '$modalStack', function $get($injector, $rootScope, $q, $http, $templateCache, $controller, $modalStack) {
             'ngInject';
@@ -1030,7 +1032,8 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
                         backdrop: modalOptions.backdrop,
                         keyboard: modalOptions.keyboard,
                         windowClass: modalOptions.windowClass,
-                        size: modalOptions.size
+                        size: modalOptions.size,
+                        closeOnClick: modalOptions.closeOnClick
                     });
                 }, function (reason) {
                     modalResultDeferred.reject(reason);

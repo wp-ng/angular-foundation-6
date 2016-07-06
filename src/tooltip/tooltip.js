@@ -144,19 +144,19 @@ angular.module('mm.foundation.tooltip', ['mm.foundation.position', 'mm.foundatio
                                 case 'bottom':
                                     ttPosition = {
                                         top: position.top + position.height + 10,
-                                        left: position.left
+                                        left: position.left - ttWidth / 2 + position.width / 2,
                                     };
                                     break;
                                 case 'left':
                                     ttPosition = {
                                         top: position.top + position.height / 2 - ttHeight / 2,
-                                        left: position.left - ttWidth - 10
+                                        left: position.left - ttWidth - 10,
                                     };
                                     break;
                                 default:
                                     ttPosition = {
                                         top: position.top - ttHeight - 10,
-                                        left: position.left
+                                        left: position.left - ttWidth / 2 + position.width / 2,
                                     };
                                     break;
                             }

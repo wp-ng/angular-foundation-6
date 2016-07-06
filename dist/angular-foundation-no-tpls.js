@@ -9,7 +9,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
  * angular-foundation-6
  * http://circlingthesun.github.io/angular-foundation-6/
 
- * Version: 0.9.38 - 2016-06-14
+ * Version: 0.9.39 - 2016-07-06
  * License: MIT
  * (c) 
  */
@@ -891,7 +891,10 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
                 return modalDomEl[0].offsetHeight;
             }, resizeHandler);
 
-            return $q.all(promises);
+            return $q.all(promises).then(function () {
+                var focusedElem = modalDomEl[0].querySelector('[autofocus]') || modalDomEl[0];
+                focusedElem.focus();
+            });
         });
     };
 

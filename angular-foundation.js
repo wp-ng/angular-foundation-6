@@ -9,7 +9,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
  * angular-foundation-6
  * http://circlingthesun.github.io/angular-foundation-6/
 
- * Version: 0.9.39 - 2016-07-06
+ * Version: 0.9.40 - 2016-07-06
  * License: MIT
  * (c) 
  */
@@ -2145,7 +2145,7 @@ angular.module('mm.foundation.tooltip', ['mm.foundation.position', 'mm.foundatio
                                 case 'bottom':
                                     ttPosition = {
                                         top: position.top + position.height + 10,
-                                        left: position.left
+                                        left: position.left - ttWidth / 2 + position.width / 2
                                     };
                                     break;
                                 case 'left':
@@ -2157,7 +2157,7 @@ angular.module('mm.foundation.tooltip', ['mm.foundation.position', 'mm.foundatio
                                 default:
                                     ttPosition = {
                                         top: position.top - ttHeight - 10,
-                                        left: position.left
+                                        left: position.left - ttWidth / 2 + position.width / 2
                                     };
                                     break;
                             }

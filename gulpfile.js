@@ -399,7 +399,11 @@ gulp.task('build', ['lint'], () => {
         .pipe(gulp.dest('dist'));
 });
 
-gulp.task('bump', () => {
+gulp.task('bump', (cb) => {
+    if (argv.nobump){
+        return cb();
+    }
+
     var newVer = semver.inc(pkg.version, 'patch');
     pkg.version = newVer;
     return gulp.src(['./bower.json', './package.json'])

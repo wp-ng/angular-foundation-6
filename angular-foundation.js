@@ -9,7 +9,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
  * angular-foundation-6
  * http://circlingthesun.github.io/angular-foundation-6/
 
- * Version: 0.9.41 - 2016-07-14
+ * Version: 0.9.42 - 2016-07-15
  * License: MIT
  * (c) 
  */
@@ -742,11 +742,8 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
                 fixedPositiong = false;
             }
         }
-        if (fixedPositiong) {
-            body.addClass(OPENED_MODAL_CLASS);
-        } else {
-            body.removeClass(OPENED_MODAL_CLASS);
-        }
+
+        // body.addClass(OPENED_MODAL_CLASS);
     }
 
     function removeModalWindow(modalInstance) {
@@ -787,6 +784,11 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
 
     function getModalCenter(modalInstance) {
         var options = modalInstance.options;
+
+        if (options.backdrop) {
+            return { left: 0, position: 'relative' };
+        }
+
         var el = options.modalDomEl;
         var body = $document.find('body').eq(0);
 
@@ -803,22 +805,10 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
             top = parseInt((windowHeight - height) / 4, 10);
         }
 
-        // let fitsWindow = windowHeight >= top + height; // Alwats fits on mobile
-        var fitsWindow = mediaQueries.getCurrentSize() === 'small'; // || (windowHeight >= top + height); // Disable annoying fixed positing for higher breakpoints
-
         var modalPos = options.modalPos = options.modalPos || {};
 
-        if (modalPos.windowHeight !== windowHeight) {
-            modalPos.scrollY = $window.pageYOffset || 0;
-        }
-
-        if (modalPos.position !== 'fixed') {
-            modalPos.top = fitsWindow ? top : top + modalPos.scrollY;
-        }
-
         modalPos.left = left;
-        modalPos.position = fitsWindow ? 'fixed' : 'absolute';
-        modalPos.windowHeight = windowHeight;
+        modalPos.position = 'fixed';
 
         return modalPos;
     }
@@ -867,6 +857,10 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
             classes.push(options.size);
         }
 
+        if (!options.backdrop) {
+            classes.push('without-overlay');
+        }
+
         var modalDomEl = angular.element('<div modal-window></div>').attr({
             style: '\n                visibility: visible;\n                z-index: -1;\n                display: block;\n            ',
             'window-class': classes.join(' '),
@@ -888,7 +882,7 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
             modalDomEl.detach();
 
             modalDomEl.attr({
-                style: '\n                    visibility: visible;\n                    top: ' + modalPos.top + 'px;\n                    left: ' + modalPos.left + 'px;\n                    display: block;\n                    position: ' + modalPos.position + ';\n                '
+                style: '\n                    visibility: visible;\n                    left: ' + modalPos.left + 'px;\n                    display: block;\n                    position: ' + modalPos.position + ';\n                '
             });
 
             var promises = [];
@@ -896,20 +890,24 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
             if (backdropDomEl) {
                 promises.push($animate.enter(backdropDomEl, body, body[0].lastChild));
             }
-            promises.push($animate.enter(modalDomEl, body, body[0].lastChild));
-            if (modalPos.position === 'fixed') {
-                body.addClass(OPENED_MODAL_CLASS);
-            }
 
-            // Watch for modal resize
-            // This allows for scrolling
-            options.scope.$watch(function () {
-                return Math.floor(modalDomEl[0].offsetHeight / 10);
-            }, resizeHandler);
+            var modalParent = backdropDomEl || body;
+
+            promises.push($animate.enter(modalDomEl, modalParent, modalParent[0].lastChild));
+            body.addClass(OPENED_MODAL_CLASS);
+
+            // Only for no backdrop modals
+            if (!options.backdrop) {
+                options.scope.$watch(function () {
+                    return Math.floor(modalDomEl[0].offsetHeight / 10);
+                }, resizeHandler);
+            }
 
             return $q.all(promises).then(function () {
                 var focusedElem = modalDomEl[0].querySelector('[autofocus]') || modalDomEl[0];
+                var y = modalParent[0].scrollTop;
                 focusedElem.focus();
+                modalParent[0].scrollTop = y;
             });
         });
     };
@@ -919,7 +917,6 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
         if (modalWindow) {
             var modalDomEl = modalWindow.modalDomEl;
             var modalPos = getModalCenter(modalInstance);
-            modalDomEl.css('top', modalPos.top + 'px');
             modalDomEl.css('left', modalPos.left + 'px');
             modalDomEl.css('position', modalPos.position);
             return modalPos;
@@ -1076,8 +1073,8 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
 
 (function () {
     angular.module("mm.foundation.modal").run(["$templateCache", function ($templateCache) {
-        $templateCache.put("template/modal/backdrop.html", "<div class=\"reveal-overlay ng-animate\" ng-click=\"close($event)\" style=\"display: block;\"></div>\n");
-        $templateCache.put("template/modal/window.html", "<div tabindex=\"-1\" class=\"reveal without-overlay {{ windowClass }}\" style=\"display: block; visibility: visible;\">\n  <div ng-transclude></div>\n</div>\n");
+        $templateCache.put("template/modal/backdrop.html", "<div ng-animate-children=\"true\" class=\"reveal-overlay ng-animate\" ng-click=\"close($event)\" style=\"display: block;\"></div>\n");
+        $templateCache.put("template/modal/window.html", "<div tabindex=\"-1\" class=\"reveal {{ windowClass }}\" style=\"display: block; visibility: visible;\">\n  <div ng-transclude></div>\n</div>\n");
     }]);
 })();
 angular.module('mm.foundation.offcanvas', []).directive('offCanvasWrapper', ['$window', function ($window) {

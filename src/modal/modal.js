@@ -123,11 +123,8 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
                 fixedPositiong = false;
             }
         }
-        if (fixedPositiong) {
-            body.addClass(OPENED_MODAL_CLASS);
-        } else {
-            body.removeClass(OPENED_MODAL_CLASS);
-        }
+
+        // body.addClass(OPENED_MODAL_CLASS);
     }
 
     function removeModalWindow(modalInstance) {
@@ -166,6 +163,11 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
 
     function getModalCenter(modalInstance) {
         const options = modalInstance.options;
+
+        if (options.backdrop) {
+            return { left: 0, position: 'relative' };
+        }
+
         const el = options.modalDomEl;
         const body = $document.find('body').eq(0);
 
@@ -182,22 +184,10 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
             top = parseInt((windowHeight - height) / 4, 10);
         }
 
-        // let fitsWindow = windowHeight >= top + height; // Alwats fits on mobile
-        const fitsWindow = mediaQueries.getCurrentSize() === 'small';// || (windowHeight >= top + height); // Disable annoying fixed positing for higher breakpoints
-
         const modalPos = options.modalPos = options.modalPos || {};
 
-        if (modalPos.windowHeight !== windowHeight) {
-            modalPos.scrollY = $window.pageYOffset || 0;
-        }
-
-        if (modalPos.position !== 'fixed') {
-            modalPos.top = fitsWindow ? top : top + modalPos.scrollY;
-        }
-
         modalPos.left = left;
-        modalPos.position = fitsWindow ? 'fixed' : 'absolute';
-        modalPos.windowHeight = windowHeight;
+        modalPos.position = 'fixed';
 
         return modalPos;
     }
@@ -246,6 +236,10 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
             classes.push(options.size);
         }
 
+        if (!options.backdrop) {
+            classes.push('without-overlay');
+        }
+
         const modalDomEl = angular.element('<div modal-window></div>').attr({
             style: `
                 visibility: visible;
@@ -273,7 +267,6 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
             modalDomEl.attr({
                 style: `
                     visibility: visible;
-                    top: ${modalPos.top}px;
                     left: ${modalPos.left}px;
                     display: block;
                     position: ${modalPos.position};
@@ -285,18 +278,23 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
             if (backdropDomEl) {
                 promises.push($animate.enter(backdropDomEl, body, body[0].lastChild));
             }
-            promises.push($animate.enter(modalDomEl, body, body[0].lastChild));
-            if (modalPos.position === 'fixed') {
-                body.addClass(OPENED_MODAL_CLASS);
-            }
 
-            // Watch for modal resize
-            // This allows for scrolling
-            options.scope.$watch(() => Math.floor(modalDomEl[0].offsetHeight / 10), resizeHandler);
+            const modalParent = backdropDomEl || body;
+
+            promises.push($animate.enter(modalDomEl, modalParent, modalParent[0].lastChild));
+            body.addClass(OPENED_MODAL_CLASS);
+
+
+            // Only for no backdrop modals
+            if (!options.backdrop) {
+                options.scope.$watch(() => Math.floor(modalDomEl[0].offsetHeight / 10), resizeHandler);
+            }
 
             return $q.all(promises).then(() => {
                 const focusedElem = (modalDomEl[0].querySelector('[autofocus]') || modalDomEl[0]);
+                const y = modalParent[0].scrollTop;
                 focusedElem.focus();
+                modalParent[0].scrollTop = y;
             });
         });
     };
@@ -306,7 +304,6 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
         if (modalWindow) {
             const modalDomEl = modalWindow.modalDomEl;
             const modalPos = getModalCenter(modalInstance);
-            modalDomEl.css('top', `${modalPos.top}px`);
             modalDomEl.css('left', `${modalPos.left}px`);
             modalDomEl.css('position', modalPos.position);
             return modalPos;

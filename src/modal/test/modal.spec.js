@@ -26,7 +26,7 @@ describe('$modal', () => {
     let mockComputedStyle;
     let $animate;
 
-    let triggerKeyDown = (element, keyCode) => {
+    const triggerKeyDown = (element, keyCode) => {
         const evt = {
             type: 'keydown',
             which: keyCode,
@@ -44,7 +44,7 @@ describe('$modal', () => {
         $controllerProvider = _$controllerProvider_;
         $modalProvider = _$modalProvider_;
 
-        let mockdocument = angular.element(document);
+        const mockdocument = angular.element(document);
         $provide.value('$document', mockdocument);
 
         mockComputedStyle = {
@@ -132,8 +132,8 @@ describe('$modal', () => {
             toHaveModalOpenWithStyle: (util, customEqualityTesters) => {
 
                 function compare(actual, style, expected) {
-                    const modalDomEls = actual[0].querySelector('body > div.reveal');
-                    let passed = getComputedStyle(modalDomEls)[style] === expected;
+                    const modalDomEls = actual[0].querySelector('body div.reveal');
+                    const passed = getComputedStyle(modalDomEls)[style] === expected;
                     return {
                         pass: passed,
                         message: `Expected '${angular.mock.dump(modalDomEls)}' to have a style ${style} with value ${expected}.`
@@ -148,9 +148,9 @@ describe('$modal', () => {
             toHaveModalOpenWithContent: (util, customEqualityTesters) => {
 
                 function compare(actual, content, selector) {
-                    const modalDomEls = actual[0].querySelector('body > div.reveal > div');
-                    let contentToCompare = selector ? modalDomEls.querySelector(selector) : modalDomEls;
-                    let passed = getComputedStyle(modalDomEls).display === 'block' && contentToCompare.innerHTML == content;
+                    const modalDomEls = actual[0].querySelector('body div.reveal > div');
+                    const contentToCompare = selector ? modalDomEls.querySelector(selector) : modalDomEls;
+                    const passed = getComputedStyle(modalDomEls).display === 'block' && contentToCompare.innerHTML == content;
                     return {
                         pass: passed,
                         message: `Expected '${angular.mock.dump(modalDomEls)}' to be open with '${content}'.`,
@@ -165,7 +165,7 @@ describe('$modal', () => {
             toHaveModalsOpen: (util, customEqualityTesters) => {
 
                 function compare(actual, noOfModals) {
-                    const modalDomEls = actual[0].querySelectorAll('body > div.reveal');
+                    const modalDomEls = actual[0].querySelectorAll('body div.reveal');
                     return {
                         pass: modalDomEls.length === noOfModals,
                     };
@@ -179,7 +179,7 @@ describe('$modal', () => {
             toHaveBackdrop: (util, customEqualityTesters) => {
 
                 function compare(actual) {
-                    let backdropDomEls = actual[0].querySelectorAll('body > div.reveal-overlay');
+                    const backdropDomEls = actual[0].querySelectorAll('body > div.reveal-overlay');
                     return {
                         pass: backdropDomEls.length === 1,
                         message: `Expected '${angular.mock.dump(backdropDomEls)}' to be a backdrop element'.`,
@@ -346,7 +346,7 @@ describe('$modal', () => {
 
             expect($document).toHaveModalsOpen(1);
 
-            $document[0].querySelector('body > div.reveal-overlay').click();
+            $document[0].querySelector('body div.reveal-overlay').click();
             // $timeout.flush();
             $rootScope.$digest();
 
@@ -625,7 +625,7 @@ describe('$modal', () => {
                     backdrop: 'static',
                 });
 
-                $document[0].querySelector('body > div.reveal-overlay').click();
+                $document[0].querySelector('body div.reveal-overlay').click();
                 expect($document).toHaveModalOpenWithContent('Static backdrop', 'div');
                 expect($document).toHaveBackdrop();
             });
@@ -688,7 +688,7 @@ describe('$modal', () => {
                 backdrop: false,
             });
 
-            $document[0].querySelector('body > div.reveal-overlay').click();
+            $document[0].querySelector('body div.reveal-overlay').click();
             expect($document).toHaveModalsOpen(2);
         });
 

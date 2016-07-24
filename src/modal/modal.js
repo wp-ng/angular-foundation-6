@@ -71,7 +71,7 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
     };
 })
 
-.directive('modalWindow', () => {
+.directive('modalWindow', ($modalStack) => {
     'ngInject';
     return {
         restrict: 'EA',
@@ -83,6 +83,10 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
         templateUrl: 'template/modal/window.html',
         link: (scope, element, attrs) => {
             scope.windowClass = attrs.windowClass || '';
+            scope.isTop = () => {
+                const top = $modalStack.getTop();
+                return top ? top.value.modalScope && top.value.modalScope === scope.$parent : true;
+            };
         },
     };
 })

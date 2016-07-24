@@ -1,7 +1,8 @@
 angular.module('foundationDemoApp').controller('ModalDemoCtrl', function($scope, $modal, $log) {
 
+    $scope.open = open;
 
-    $scope.open = function(size, backdrop, itemCount, closeOnClick) {
+    function open(size, backdrop, itemCount, closeOnClick) {
 
         $scope.items = [];
 
@@ -13,12 +14,34 @@ angular.module('foundationDemoApp').controller('ModalDemoCtrl', function($scope,
 
         var params = {
             templateUrl: 'myModalContent.html',
-            controller: 'ModalInstanceCtrl',
             resolve: {
                 items: function() {
                     return $scope.items;
                 },
             },
+            controller: function($scope, $modalInstance, items) {
+
+                $scope.items = items;
+                $scope.selected = {
+                    item: $scope.items[0],
+                };
+
+                $scope.reposition = function() {
+                    $modalInstance.reposition();
+                };
+
+                $scope.ok = function() {
+                    $modalInstance.close($scope.selected.item);
+                };
+
+                $scope.cancel = function() {
+                    $modalInstance.dismiss('cancel');
+                };
+
+                $scope.openNested = function() {
+                    open();
+                };
+            }
         };
 
         if(angular.isDefined(closeOnClick)){
@@ -41,29 +64,4 @@ angular.module('foundationDemoApp').controller('ModalDemoCtrl', function($scope,
             $log.info('Modal dismissed at: ' + new Date());
         });
     };
-});
-
-// Please note that $modalInstance represents a modal window (instance) dependency.
-// It is not the same as the $modal service used above.
-
-angular.module('foundationDemoApp').controller('ModalInstanceCtrl', function($scope, $modalInstance, items) {
-
-    $scope.items = items;
-    $scope.selected = {
-        item: $scope.items[0],
-    };
-
-    $scope.reposition = function() {
-        $modalInstance.reposition();
-    };
-
-    $scope.ok = function() {
-        $modalInstance.close($scope.selected.item);
-    };
-
-    $scope.cancel = function() {
-        $modalInstance.dismiss('cancel');
-    };
-
-
 });

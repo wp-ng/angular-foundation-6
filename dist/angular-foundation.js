@@ -9,7 +9,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
  * angular-foundation-6
  * http://circlingthesun.github.io/angular-foundation-6/
 
- * Version: 0.10.0 - 2016-07-19
+ * Version: 0.10.1 - 2016-07-24
  * License: MIT
  * (c) 
  */
@@ -690,7 +690,7 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
             };
         }
     };
-}]).directive('modalWindow', function () {
+}]).directive('modalWindow', ['$modalStack', function ($modalStack) {
     'ngInject';
 
     return {
@@ -703,9 +703,13 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
         templateUrl: 'template/modal/window.html',
         link: function link(scope, element, attrs) {
             scope.windowClass = attrs.windowClass || '';
+            scope.isTop = function () {
+                var top = $modalStack.getTop();
+                return top ? top.value.modalScope && top.value.modalScope === scope.$parent : true;
+            };
         }
     };
-}).factory('$modalStack', ['$window', '$timeout', '$document', '$compile', '$rootScope', '$$stackedMap', '$animate', '$q', 'mediaQueries', function ($window, $timeout, $document, $compile, $rootScope, $$stackedMap, $animate, $q, mediaQueries) {
+}]).factory('$modalStack', ['$window', '$timeout', '$document', '$compile', '$rootScope', '$$stackedMap', '$animate', '$q', 'mediaQueries', function ($window, $timeout, $document, $compile, $rootScope, $$stackedMap, $animate, $q, mediaQueries) {
     'ngInject';
 
     var OPENED_MODAL_CLASS = 'is-reveal-open';
@@ -1074,7 +1078,7 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
 (function () {
     angular.module("mm.foundation.modal").run(["$templateCache", function ($templateCache) {
         $templateCache.put("template/modal/backdrop.html", "<div ng-animate-children=\"true\" class=\"reveal-overlay ng-animate\" ng-click=\"close($event)\" style=\"display: block;\"></div>\n");
-        $templateCache.put("template/modal/window.html", "<div tabindex=\"-1\" class=\"reveal {{ windowClass }}\" style=\"display: block; visibility: visible;\">\n  <div ng-transclude></div>\n</div>\n");
+        $templateCache.put("template/modal/window.html", "<div ng-show=\"isTop()\" tabindex=\"-1\" class=\"reveal {{ windowClass }}\" style=\"display: block; visibility: visible;\">\n  <div ng-transclude></div>\n</div>\n");
     }]);
 })();
 angular.module('mm.foundation.offcanvas', []).directive('offCanvasWrapper', ['$window', function ($window) {

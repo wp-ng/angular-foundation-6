@@ -9,7 +9,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
  * angular-foundation-6
  * http://circlingthesun.github.io/angular-foundation-6/
 
- * Version: 0.10.2 - 2016-07-28
+ * Version: 0.10.3 - 2016-07-28
  * License: MIT
  * (c) 
  */
@@ -605,9 +605,21 @@ angular.module('mm.foundation.mediaQueries', []).factory('matchMedia', ['$docume
         return matched;
     }
 
+    var iPhoneSniff = function iPhoneSniff() {
+        return (/iP(ad|hone|od).*OS/.test(window.navigator.userAgent)
+        );
+    };
+    var androidSniff = function androidSniff() {
+        return (/Android/.test(window.navigator.userAgent)
+        );
+    };
+
     return {
         getCurrentSize: getCurrentSize,
-        atLeast: atLeast
+        atLeast: atLeast,
+        mobileSniff: function mobileSniff() {
+            return iPhoneSniff() || androidSniff();
+        }
     };
 }]);
 
@@ -712,7 +724,9 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
 }]).factory('$modalStack', ['$window', '$timeout', '$document', '$compile', '$rootScope', '$$stackedMap', '$animate', '$q', 'mediaQueries', function ($window, $timeout, $document, $compile, $rootScope, $$stackedMap, $animate, $q, mediaQueries) {
     'ngInject';
 
+    var isMobile = mediaQueries.mobileSniff();
     var OPENED_MODAL_CLASS = 'is-reveal-open';
+    var originalScrollPos = null; // For mobile scroll hack
     var backdropDomEl = void 0;
     var backdropScope = void 0;
     var openedWindows = $$stackedMap.createNew();
@@ -754,23 +768,7 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
         // clean up the stack
         openedWindows.remove(modalInstance);
 
-        checkRemoveBackdrop();
-        if (openedWindows.length() === 0) {
-            var body = $document.find('body').eq(0);
-            var html = $document.find('html').eq(0);
-            body.removeClass(OPENED_MODAL_CLASS);
-            html.removeClass(OPENED_MODAL_CLASS);
-            angular.element($window).unbind('resize', resizeHandler);
-        }
-
-        // remove window DOM element
-        $animate.leave(modalWindow.modalDomEl).then(function () {
-            modalWindow.modalScope.$destroy();
-        });
-    }
-
-    function checkRemoveBackdrop() {
-        // remove backdrop if no longer needed
+        // Remove backdrop
         if (backdropDomEl && backdropIndex() === -1) {
             (function () {
                 var backdropScopeRef = backdropScope;
@@ -785,6 +783,27 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
                 backdropScope = null;
             })();
         }
+
+        // Remove modal
+        if (openedWindows.length() === 0) {
+            var body = $document.find('body').eq(0);
+            body.removeClass(OPENED_MODAL_CLASS);
+
+            if (isMobile) {
+                var html = $document.find('html').eq(0);
+                html.removeClass(OPENED_MODAL_CLASS);
+                if (originalScrollPos) {
+                    body[0].scrollTop = originalScrollPos;
+                    originalScrollPos = null;
+                }
+            }
+            angular.element($window).unbind('resize', resizeHandler);
+        }
+
+        // remove window DOM element
+        $animate.leave(modalWindow.modalDomEl).then(function () {
+            modalWindow.modalScope.$destroy();
+        });
     }
 
     function getModalCenter(modalInstance) {
@@ -900,8 +919,8 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
 
             promises.push($animate.enter(modalDomEl, modalParent, modalParent[0].lastChild));
 
-            if (true) {
-                // In JQ Foundation 6 this only gets run for mobile, doesnt seem to hurt for desktop
+            if (isMobile) {
+                originalScrollPos = $window.pageYOffset;
                 var html = $document.find('html').eq(0);
                 html.addClass(OPENED_MODAL_CLASS);
             }

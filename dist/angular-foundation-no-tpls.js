@@ -9,7 +9,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
  * angular-foundation-6
  * http://circlingthesun.github.io/angular-foundation-6/
 
- * Version: 0.10.1 - 2016-07-24
+ * Version: 0.10.2 - 2016-07-28
  * License: MIT
  * (c) 
  */
@@ -730,26 +730,27 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
                 fixedPositiong = false;
             }
         }
-
-        // body.addClass(OPENED_MODAL_CLASS);
     }
 
     function removeModalWindow(modalInstance) {
-        var body = $document.find('body').eq(0);
         var modalWindow = openedWindows.get(modalInstance).value;
 
         // clean up the stack
         openedWindows.remove(modalInstance);
 
+        checkRemoveBackdrop();
+        if (openedWindows.length() === 0) {
+            var body = $document.find('body').eq(0);
+            var html = $document.find('html').eq(0);
+            body.removeClass(OPENED_MODAL_CLASS);
+            html.removeClass(OPENED_MODAL_CLASS);
+            angular.element($window).unbind('resize', resizeHandler);
+        }
+
         // remove window DOM element
         $animate.leave(modalWindow.modalDomEl).then(function () {
             modalWindow.modalScope.$destroy();
         });
-        checkRemoveBackdrop();
-        if (openedWindows.length() === 0) {
-            body.removeClass(OPENED_MODAL_CLASS);
-            angular.element($window).unbind('resize', resizeHandler);
-        }
     }
 
     function checkRemoveBackdrop() {
@@ -882,6 +883,13 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
             var modalParent = backdropDomEl || body;
 
             promises.push($animate.enter(modalDomEl, modalParent, modalParent[0].lastChild));
+
+            if (true) {
+                // In JQ Foundation 6 this only gets run for mobile, doesnt seem to hurt for desktop
+                var html = $document.find('html').eq(0);
+                html.addClass(OPENED_MODAL_CLASS);
+            }
+
             body.addClass(OPENED_MODAL_CLASS);
 
             // Only for no backdrop modals

@@ -93,7 +93,9 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
 
 .factory('$modalStack', ($window, $timeout, $document, $compile, $rootScope, $$stackedMap, $animate, $q, mediaQueries) => {
     'ngInject';
+    const isMobile = mediaQueries.mobileSniff();
     const OPENED_MODAL_CLASS = 'is-reveal-open';
+    let originalScrollPos = null; // For mobile scroll hack
     let backdropDomEl;
     let backdropScope;
     const openedWindows = $$stackedMap.createNew();
@@ -135,24 +137,7 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
         // clean up the stack
         openedWindows.remove(modalInstance);
 
-
-        checkRemoveBackdrop();
-        if (openedWindows.length() === 0) {
-            const body = $document.find('body').eq(0);
-            const html = $document.find('html').eq(0);
-            body.removeClass(OPENED_MODAL_CLASS);
-            html.removeClass(OPENED_MODAL_CLASS);
-            angular.element($window).unbind('resize', resizeHandler);
-        }
-
-        // remove window DOM element
-        $animate.leave(modalWindow.modalDomEl).then(() => {
-            modalWindow.modalScope.$destroy();
-        });
-    }
-
-    function checkRemoveBackdrop() {
-        // remove backdrop if no longer needed
+        // Remove backdrop
         if (backdropDomEl && backdropIndex() === -1) {
             let backdropScopeRef = backdropScope;
 
@@ -165,7 +150,29 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
             backdropDomEl = null;
             backdropScope = null;
         }
+
+        // Remove modal
+        if (openedWindows.length() === 0) {
+            const body = $document.find('body').eq(0);
+            body.removeClass(OPENED_MODAL_CLASS);
+
+            if (isMobile) {
+                const html = $document.find('html').eq(0);
+                html.removeClass(OPENED_MODAL_CLASS);
+                if (originalScrollPos) {
+                    body[0].scrollTop = originalScrollPos;
+                    originalScrollPos = null;
+                }
+            }
+            angular.element($window).unbind('resize', resizeHandler);
+        }
+
+        // remove window DOM element
+        $animate.leave(modalWindow.modalDomEl).then(() => {
+            modalWindow.modalScope.$destroy();
+        });
     }
+
 
     function getModalCenter(modalInstance) {
         const options = modalInstance.options;
@@ -289,7 +296,8 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
 
             promises.push($animate.enter(modalDomEl, modalParent, modalParent[0].lastChild));
 
-            if (true) { // In JQ Foundation 6 this only gets run for mobile, doesnt seem to hurt for desktop
+            if (isMobile) {
+                originalScrollPos = $window.pageYOffset;
                 const html = $document.find('html').eq(0);
                 html.addClass(OPENED_MODAL_CLASS);
             }

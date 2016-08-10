@@ -9,7 +9,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
  * angular-foundation-6
  * http://circlingthesun.github.io/angular-foundation-6/
 
- * Version: 0.10.3 - 2016-07-28
+ * Version: 0.10.4 - 2016-08-10
  * License: MIT
  * (c) 
  */
@@ -374,41 +374,48 @@ function DropdownToggleController($scope, $attrs, mediaQueries, $element, $posit
         $ctrl.css = {};
 
         if ($ctrl.closeOnClick) {
-            $body.off('click', close);
+            $body.off('click', closeOnClick);
         }
-
-        $scope.$apply();
     }
 
-    $ctrl.$onInit = function init() {
+    function open(e) {
+        $ctrl.active = true;
+        $ctrl.css = {};
+
+        positionPane(2);
+
         if ($ctrl.closeOnClick) {
-            $element.on('click', function (e) {
-                return e.stopPropagation();
-            });
+            $body.on('click', closeOnClick);
         }
-    };
+    }
+
+    function closeOnClick(e) {
+        var elementContents = Array.prototype.slice.apply($element[0].querySelectorAll('*'));
+
+        if (!elementContents.length) {
+            return;
+        }
+
+        var isOuterElement = elementContents.every(function (node) {
+            return node !== e.target;
+        });
+
+        if (isOuterElement) {
+            close();
+            $scope.$apply();
+        }
+    }
 
     $ctrl.$onDestroy = function destroy() {
         if ($ctrl.closeOnClick) {
-            $body.off('click', close);
+            $body.off('click', closeOnClick);
         }
     };
 
     $ctrl.css = {};
 
     $ctrl.toggle = function () {
-        $ctrl.active = !$ctrl.active;
-        $ctrl.css = {};
-
-        if (!$ctrl.active) {
-            return;
-        }
-
-        positionPane(2);
-
-        if ($ctrl.closeOnClick) {
-            $body.on('click', close);
-        }
+        if ($ctrl.active) close();else open();
     };
 
     $ctrl.mouseover = function () {

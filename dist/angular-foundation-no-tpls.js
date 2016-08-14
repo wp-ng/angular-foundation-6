@@ -9,7 +9,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
  * angular-foundation-6
  * http://circlingthesun.github.io/angular-foundation-6/
 
- * Version: 0.10.5 - 2016-08-10
+ * Version: 0.10.6 - 2016-08-14
  * License: MIT
  * (c) 
  */
@@ -978,119 +978,118 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
 }]).provider('$modal', function () {
     'ngInject';
 
-    var $modalProvider = {
-        options: {
-            backdrop: true, // can be also false or 'static'
-            keyboard: true,
-            closeOnClick: true
-        },
-        $get: ['$injector', '$rootScope', '$q', '$http', '$templateCache', '$controller', '$modalStack', function $get($injector, $rootScope, $q, $http, $templateCache, $controller, $modalStack) {
-            'ngInject';
+    var _this = this;
 
-            var $modal = {};
-
-            function getTemplatePromise(options) {
-                if (options.template) {
-                    return $q.resolve(options.template);
-                }
-                return $http.get(options.templateUrl, {
-                    cache: $templateCache
-                }).then(function (result) {
-                    return result.data;
-                });
-            }
-
-            function getResolvePromises(resolves) {
-                var promisesArr = [];
-                angular.forEach(resolves, function (value) {
-                    if (angular.isFunction(value) || angular.isArray(value)) {
-                        promisesArr.push($q.resolve($injector.invoke(value)));
-                    }
-                });
-                return promisesArr;
-            }
-
-            $modal.open = function (modalOpts) {
-                var modalResultDeferred = $q.defer();
-                var modalOpenedDeferred = $q.defer();
-
-                // prepare an instance of a modal to be injected into controllers and returned to a caller
-                var modalInstance = {
-                    result: modalResultDeferred.promise,
-                    opened: modalOpenedDeferred.promise,
-                    close: function close(result) {
-                        $modalStack.close(modalInstance, result);
-                    },
-                    dismiss: function dismiss(reason) {
-                        $modalStack.dismiss(modalInstance, reason);
-                    },
-                    reposition: function reposition() {
-                        $modalStack.reposition(modalInstance);
-                    }
-                };
-
-                // merge and clean up options
-                var modalOptions = angular.extend({}, $modalProvider.options, modalOpts);
-                modalOptions.resolve = modalOptions.resolve || {};
-
-                // verify options
-                if (!modalOptions.template && !modalOptions.templateUrl) {
-                    throw new Error('One of template or templateUrl options is required.');
-                }
-
-                var templateAndResolvePromise = $q.all([getTemplatePromise(modalOptions)].concat(getResolvePromises(modalOptions.resolve)));
-
-                var openedPromise = templateAndResolvePromise.then(function (tplAndVars) {
-                    var modalScope = (modalOptions.scope || $rootScope).$new();
-                    modalScope.$close = modalInstance.close;
-                    modalScope.$dismiss = modalInstance.dismiss;
-
-                    var ctrlInstance = void 0;
-                    var ctrlLocals = {};
-                    var resolveIter = 1;
-
-                    // controllers
-                    if (modalOptions.controller) {
-                        ctrlLocals.$scope = modalScope;
-                        ctrlLocals.$modalInstance = modalInstance;
-                        angular.forEach(modalOptions.resolve, function (value, key) {
-                            ctrlLocals[key] = tplAndVars[resolveIter++];
-                        });
-
-                        ctrlInstance = $controller(modalOptions.controller, ctrlLocals);
-                        if (modalOptions.controllerAs) {
-                            modalScope[modalOptions.controllerAs] = ctrlInstance;
-                        }
-                    }
-
-                    return $modalStack.open(modalInstance, {
-                        scope: modalScope,
-                        deferred: modalResultDeferred,
-                        content: tplAndVars[0],
-                        backdrop: modalOptions.backdrop,
-                        keyboard: modalOptions.keyboard,
-                        windowClass: modalOptions.windowClass,
-                        size: modalOptions.size,
-                        closeOnClick: modalOptions.closeOnClick
-                    });
-                }, function (reason) {
-                    modalResultDeferred.reject(reason);
-                    return $q.reject(reason);
-                });
-
-                openedPromise.then(function () {
-                    modalOpenedDeferred.resolve(true);
-                }, function () {
-                    modalOpenedDeferred.reject(false);
-                });
-
-                return modalInstance;
-            };
-            return $modal;
-        }]
+    this.options = {
+        backdrop: true, // can be also false or 'static'
+        keyboard: true,
+        closeOnClick: true
     };
 
-    return $modalProvider;
+    this.$get = ['$injector', '$rootScope', '$q', '$http', '$templateCache', '$controller', '$modalStack', function ($injector, $rootScope, $q, $http, $templateCache, $controller, $modalStack) {
+        'ngInject';
+
+        var $modal = {};
+
+        function getTemplatePromise(options) {
+            if (options.template) {
+                return $q.resolve(options.template);
+            }
+            return $http.get(options.templateUrl, {
+                cache: $templateCache
+            }).then(function (result) {
+                return result.data;
+            });
+        }
+
+        function getResolvePromises(resolves) {
+            var promisesArr = [];
+            angular.forEach(resolves, function (value) {
+                if (angular.isFunction(value) || angular.isArray(value)) {
+                    promisesArr.push($q.resolve($injector.invoke(value)));
+                }
+            });
+            return promisesArr;
+        }
+
+        $modal.open = function (modalOpts) {
+            var modalResultDeferred = $q.defer();
+            var modalOpenedDeferred = $q.defer();
+
+            // prepare an instance of a modal to be injected into controllers and returned to a caller
+            var modalInstance = {
+                result: modalResultDeferred.promise,
+                opened: modalOpenedDeferred.promise,
+                close: function close(result) {
+                    $modalStack.close(modalInstance, result);
+                },
+                dismiss: function dismiss(reason) {
+                    $modalStack.dismiss(modalInstance, reason);
+                },
+                reposition: function reposition() {
+                    $modalStack.reposition(modalInstance);
+                }
+            };
+
+            // merge and clean up options
+            var modalOptions = angular.extend({}, _this.options, modalOpts);
+            modalOptions.resolve = modalOptions.resolve || {};
+
+            // verify options
+            if (!modalOptions.template && !modalOptions.templateUrl) {
+                throw new Error('One of template or templateUrl options is required.');
+            }
+
+            var templateAndResolvePromise = $q.all([getTemplatePromise(modalOptions)].concat(getResolvePromises(modalOptions.resolve)));
+
+            var openedPromise = templateAndResolvePromise.then(function (tplAndVars) {
+                var modalScope = (modalOptions.scope || $rootScope).$new();
+                modalScope.$close = modalInstance.close;
+                modalScope.$dismiss = modalInstance.dismiss;
+
+                var ctrlInstance = void 0;
+                var ctrlLocals = {};
+                var resolveIter = 1;
+
+                // controllers
+                if (modalOptions.controller) {
+                    ctrlLocals.$scope = modalScope;
+                    ctrlLocals.$modalInstance = modalInstance;
+                    angular.forEach(modalOptions.resolve, function (value, key) {
+                        ctrlLocals[key] = tplAndVars[resolveIter++];
+                    });
+
+                    ctrlInstance = $controller(modalOptions.controller, ctrlLocals);
+                    if (modalOptions.controllerAs) {
+                        modalScope[modalOptions.controllerAs] = ctrlInstance;
+                    }
+                }
+
+                return $modalStack.open(modalInstance, {
+                    scope: modalScope,
+                    deferred: modalResultDeferred,
+                    content: tplAndVars[0],
+                    backdrop: modalOptions.backdrop,
+                    keyboard: modalOptions.keyboard,
+                    windowClass: modalOptions.windowClass,
+                    size: modalOptions.size,
+                    closeOnClick: modalOptions.closeOnClick
+                });
+            }, function (reason) {
+                modalResultDeferred.reject(reason);
+                return $q.reject(reason);
+            });
+
+            openedPromise.then(function () {
+                modalOpenedDeferred.resolve(true);
+            }, function () {
+                modalOpenedDeferred.reject(false);
+            });
+
+            return modalInstance;
+        };
+        return $modal;
+    }];
 });
 
 angular.module('mm.foundation.offcanvas', []).directive('offCanvasWrapper', ['$window', function ($window) {

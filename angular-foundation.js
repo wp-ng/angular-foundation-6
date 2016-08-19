@@ -9,7 +9,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
  * angular-foundation-6
  * http://circlingthesun.github.io/angular-foundation-6/
 
- * Version: 0.10.6 - 2016-08-14
+ * Version: 0.10.7 - 2016-08-19
  * License: MIT
  * (c) 
  */
@@ -382,7 +382,7 @@ function DropdownToggleController($scope, $attrs, mediaQueries, $element, $posit
         $ctrl.active = true;
         $ctrl.css = {};
 
-        positionPane(2);
+        positionPane($ctrl.paneOffset || 2);
 
         if ($ctrl.closeOnClick) {
             $body.on('click', closeOnClick);
@@ -421,7 +421,7 @@ function DropdownToggleController($scope, $attrs, mediaQueries, $element, $posit
     $ctrl.mouseover = function () {
         $timeout.cancel(hoverTimeout);
         $ctrl.active = true;
-        positionPane(1);
+        positionPane($ctrl.paneOffset || 1);
     };
 
     $ctrl.mouseleave = function () {
@@ -462,7 +462,8 @@ function dropdownToggle($document, $window, $location) {
         bindToController: {
             closeOnClick: '=',
             paneAlign: '@',
-            toggleOnHover: '='
+            toggleOnHover: '=',
+            paneOffset: '='
         },
         transclude: {
             'toggle': 'toggle',
@@ -490,7 +491,7 @@ angular.module('mm.foundation.dropdownToggle', ['mm.foundation.position', 'mm.fo
 
 (function () {
     angular.module("mm.foundation.dropdownToggle").run(["$templateCache", function ($templateCache) {
-        $templateCache.put("template/dropdownToggle/dropdownToggle.html", "<span\n    ng-click=\"!$ctrl.toggleOnHover && $ctrl.toggle()\"\n    ng-mouseover=\"$ctrl.toggleOnHover && $ctrl.mouseover()\"\n    ng-mouseleave=\"$ctrl.toggleOnHover && $ctrl.mouseleave($event)\"\n    ng-transclude=\"toggle\">\n    Toggle Dropdown\n</span>\n<div\n    ng-transclude=\"pane\"\n    ng-style=\"$ctrl.css\"\n    ng-class=\"{\'is-open\': $ctrl.active}\"\n    ng-attr-aria-hidden=\"$ctrl.active\"\n    ng-mouseover=\"$ctrl.toggleOnHover && $ctrl.mouseover()\"\n    ng-mouseleave=\"$ctrl.toggleOnHover && $ctrl.mouseleave($event)\"\n    class=\"dropdown-pane{{$ctrl.paneAlign && \' dropdown-pane-\' + $ctrl.paneAlign}}\">\n  Just some junk that needs to be said. Or not. Your choice.\n</div>\n");
+        $templateCache.put("template/dropdownToggle/dropdownToggle.html", "<span\n    ng-class=\"{\'is-open\': $ctrl.active}\"\n    ng-click=\"!$ctrl.toggleOnHover && $ctrl.toggle()\"\n    ng-mouseover=\"$ctrl.toggleOnHover && $ctrl.mouseover()\"\n    ng-mouseleave=\"$ctrl.toggleOnHover && $ctrl.mouseleave($event)\"\n    ng-transclude=\"toggle\"></span>\n<div\n    ng-transclude=\"pane\"\n    ng-style=\"$ctrl.css\"\n    ng-class=\"{\'is-open\': $ctrl.active}\"\n    ng-attr-aria-hidden=\"$ctrl.active\"\n    ng-mouseover=\"$ctrl.toggleOnHover && $ctrl.mouseover()\"\n    ng-mouseleave=\"$ctrl.toggleOnHover && $ctrl.mouseleave($event)\"\n    class=\"dropdown-pane{{$ctrl.paneAlign && \' dropdown-pane-\' + $ctrl.paneAlign}}\"></div>\n");
     }]);
 })();
 angular.module('mm.foundation.mediaQueries', []).factory('matchMedia', ['$document', '$window', function ($document, $window) {
@@ -1598,11 +1599,11 @@ angular.module('mm.foundation.progressbar', []).constant('progressConfig', {
             //     width: percent + '%'
             // });
         } else {
-                element.css({
-                    'transition': 'none',
-                    'width': percent + '%'
-                });
-            }
+            element.css({
+                'transition': 'none',
+                'width': percent + '%'
+            });
+        }
     };
 
     this.removeBar = function (bar) {

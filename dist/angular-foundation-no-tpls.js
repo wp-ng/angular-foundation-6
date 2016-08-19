@@ -9,7 +9,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
  * angular-foundation-6
  * http://circlingthesun.github.io/angular-foundation-6/
 
- * Version: 0.10.6 - 2016-08-14
+ * Version: 0.10.7 - 2016-08-19
  * License: MIT
  * (c) 
  */
@@ -371,7 +371,7 @@ function DropdownToggleController($scope, $attrs, mediaQueries, $element, $posit
         $ctrl.active = true;
         $ctrl.css = {};
 
-        positionPane(2);
+        positionPane($ctrl.paneOffset || 2);
 
         if ($ctrl.closeOnClick) {
             $body.on('click', closeOnClick);
@@ -410,7 +410,7 @@ function DropdownToggleController($scope, $attrs, mediaQueries, $element, $posit
     $ctrl.mouseover = function () {
         $timeout.cancel(hoverTimeout);
         $ctrl.active = true;
-        positionPane(1);
+        positionPane($ctrl.paneOffset || 1);
     };
 
     $ctrl.mouseleave = function () {
@@ -451,7 +451,8 @@ function dropdownToggle($document, $window, $location) {
         bindToController: {
             closeOnClick: '=',
             paneAlign: '@',
-            toggleOnHover: '='
+            toggleOnHover: '=',
+            paneOffset: '='
         },
         transclude: {
             'toggle': 'toggle',
@@ -1570,11 +1571,11 @@ angular.module('mm.foundation.progressbar', []).constant('progressConfig', {
             //     width: percent + '%'
             // });
         } else {
-                element.css({
-                    'transition': 'none',
-                    'width': percent + '%'
-                });
-            }
+            element.css({
+                'transition': 'none',
+                'width': percent + '%'
+            });
+        }
     };
 
     this.removeBar = function (bar) {

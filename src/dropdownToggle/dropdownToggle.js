@@ -17,7 +17,7 @@ function DropdownToggleController($scope, $attrs, mediaQueries, $element, $posit
         $ctrl.active = true;
         $ctrl.css = {};
 
-        positionPane(2);
+        positionPane($ctrl.paneOffset || 2);
 
         if ($ctrl.closeOnClick) {
             $body.on('click', closeOnClick);
@@ -55,7 +55,7 @@ function DropdownToggleController($scope, $attrs, mediaQueries, $element, $posit
     $ctrl.mouseover = function() {
         $timeout.cancel(hoverTimeout);
         $ctrl.active = true;
-        positionPane(1);
+        positionPane($ctrl.paneOffset || 1);
     }
 
     $ctrl.mouseleave = function() {
@@ -95,7 +95,8 @@ function dropdownToggle($document, $window, $location) {
         bindToController: {
             closeOnClick: '=',
             paneAlign: '@',
-            toggleOnHover: '='
+            toggleOnHover: '=',
+            paneOffset: '='
         },
         transclude: {
             'toggle': 'toggle',

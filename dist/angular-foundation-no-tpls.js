@@ -1,7 +1,7 @@
 'use strict';
 
 AccordionController.$inject = ['$scope', '$attrs', 'accordionConfig'];
-DropdownToggleController.$inject = ['$scope', '$attrs', 'mediaQueries', '$element', '$position', '$timeout'];
+DropdownToggleController.$inject = ['$scope', '$attrs', 'mediaQueries', '$element', '$position', '$timeout', 'dropdownPaneOffset'];
 dropdownToggle.$inject = ['$document', '$window', '$location'];
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
@@ -9,7 +9,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
  * angular-foundation-6
  * http://circlingthesun.github.io/angular-foundation-6/
 
- * Version: 0.10.7 - 2016-08-19
+ * Version: 0.10.8 - 2016-08-19
  * License: MIT
  * (c) 
  */
@@ -351,7 +351,7 @@ angular.module('mm.foundation.dropdownMenu', []).directive('dropdownMenu', ['$co
         }
     };
 }]);
-function DropdownToggleController($scope, $attrs, mediaQueries, $element, $position, $timeout) {
+function DropdownToggleController($scope, $attrs, mediaQueries, $element, $position, $timeout, dropdownPaneOffset) {
     'ngInject';
 
     var $ctrl = this;
@@ -371,7 +371,7 @@ function DropdownToggleController($scope, $attrs, mediaQueries, $element, $posit
         $ctrl.active = true;
         $ctrl.css = {};
 
-        positionPane($ctrl.paneOffset || 2);
+        positionPane($ctrl.paneOffset || dropdownPaneOffset);
 
         if ($ctrl.closeOnClick) {
             $body.on('click', closeOnClick);
@@ -410,7 +410,7 @@ function DropdownToggleController($scope, $attrs, mediaQueries, $element, $posit
     $ctrl.mouseover = function () {
         $timeout.cancel(hoverTimeout);
         $ctrl.active = true;
-        positionPane($ctrl.paneOffset || 1);
+        positionPane($ctrl.paneOffset || dropdownPaneOffset);
     };
 
     $ctrl.mouseleave = function () {
@@ -476,7 +476,7 @@ function dropdownToggle($document, $window, $location) {
      </li>
    </ul>
  */
-angular.module('mm.foundation.dropdownToggle', ['mm.foundation.position', 'mm.foundation.mediaQueries']).directive('dropdownToggle', dropdownToggle);
+angular.module('mm.foundation.dropdownToggle', ['mm.foundation.position', 'mm.foundation.mediaQueries']).directive('dropdownToggle', dropdownToggle).constant('dropdownPaneOffset', 1);
 
 angular.module('mm.foundation.mediaQueries', []).factory('matchMedia', ['$document', '$window', function ($document, $window) {
     'ngInject';

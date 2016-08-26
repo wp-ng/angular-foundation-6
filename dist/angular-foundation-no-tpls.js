@@ -9,7 +9,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
  * angular-foundation-6
  * http://circlingthesun.github.io/angular-foundation-6/
 
- * Version: 0.10.8 - 2016-08-19
+ * Version: 0.10.9 - 2016-08-26
  * License: MIT
  * (c) 
  */
@@ -357,10 +357,14 @@ function DropdownToggleController($scope, $attrs, mediaQueries, $element, $posit
     var $ctrl = this;
     var hoverTimeout;
     var $body = angular.element(document.querySelector('body'));
+    $ctrl.css = {};
+
+    $timeout(function () {
+        positionPane();
+    });
 
     function close(e) {
         $ctrl.active = false;
-        $ctrl.css = {};
 
         if ($ctrl.closeOnClick) {
             $body.off('click', closeOnClick);
@@ -369,9 +373,8 @@ function DropdownToggleController($scope, $attrs, mediaQueries, $element, $posit
 
     function open(e) {
         $ctrl.active = true;
-        $ctrl.css = {};
 
-        positionPane($ctrl.paneOffset || dropdownPaneOffset);
+        positionPane(dropdownPaneOffset);
 
         if ($ctrl.closeOnClick) {
             $body.on('click', closeOnClick);
@@ -401,8 +404,6 @@ function DropdownToggleController($scope, $attrs, mediaQueries, $element, $posit
         }
     };
 
-    $ctrl.css = {};
-
     $ctrl.toggle = function () {
         if ($ctrl.active) close();else open();
     };
@@ -410,7 +411,7 @@ function DropdownToggleController($scope, $attrs, mediaQueries, $element, $posit
     $ctrl.mouseover = function () {
         $timeout.cancel(hoverTimeout);
         $ctrl.active = true;
-        positionPane($ctrl.paneOffset || dropdownPaneOffset);
+        positionPane(dropdownPaneOffset);
     };
 
     $ctrl.mouseleave = function () {
@@ -422,7 +423,8 @@ function DropdownToggleController($scope, $attrs, mediaQueries, $element, $posit
         }, 250);
     };
 
-    function positionPane(offset) {
+    function positionPane(offset_) {
+        var offset = $ctrl.paneOffset || offset_;
         var dropdownTrigger = angular.element($element[0].querySelector('toggle *:first-child'));
 
         // var dropdownWidth = dropdown.prop('offsetWidth');

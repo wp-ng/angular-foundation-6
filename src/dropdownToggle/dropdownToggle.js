@@ -3,10 +3,14 @@ function DropdownToggleController($scope, $attrs, mediaQueries, $element, $posit
     var $ctrl = this;
     var hoverTimeout;
     const $body = angular.element(document.querySelector('body'));
+    $ctrl.css = {};
+
+    $timeout(() => {
+        positionPane();
+    });
 
     function close(e) {
         $ctrl.active = false;
-        $ctrl.css = {};
 
         if ($ctrl.closeOnClick) {
             $body.off('click', closeOnClick);
@@ -15,9 +19,8 @@ function DropdownToggleController($scope, $attrs, mediaQueries, $element, $posit
 
     function open(e) {
         $ctrl.active = true;
-        $ctrl.css = {};
 
-        positionPane($ctrl.paneOffset || dropdownPaneOffset);
+        positionPane(dropdownPaneOffset);
 
         if ($ctrl.closeOnClick) {
             $body.on('click', closeOnClick);
@@ -45,8 +48,7 @@ function DropdownToggleController($scope, $attrs, mediaQueries, $element, $posit
         }
     };
 
-    $ctrl.css = {};
-
+    
     $ctrl.toggle = function() {
         if ($ctrl.active) close();
         else open();
@@ -55,7 +57,7 @@ function DropdownToggleController($scope, $attrs, mediaQueries, $element, $posit
     $ctrl.mouseover = function() {
         $timeout.cancel(hoverTimeout);
         $ctrl.active = true;
-        positionPane($ctrl.paneOffset || dropdownPaneOffset);
+        positionPane(dropdownPaneOffset);
     }
 
     $ctrl.mouseleave = function() {
@@ -67,7 +69,8 @@ function DropdownToggleController($scope, $attrs, mediaQueries, $element, $posit
         }, 250);
     };
 
-    function positionPane(offset) {
+    function positionPane(offset_) {
+        var offset = $ctrl.paneOffset || offset_;
         var dropdownTrigger = angular.element($element[0].querySelector('toggle *:first-child'));
 
         // var dropdownWidth = dropdown.prop('offsetWidth');

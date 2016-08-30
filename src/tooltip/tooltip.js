@@ -84,8 +84,10 @@ angular.module('mm.foundation.tooltip', ['mm.foundation.position', 'mm.foundatio
              * trigger; else it will just use the show trigger.
              */
             function getTriggers(trigger) {
-                var show = trigger || options.trigger || defaultTriggerShow;
-                var hide = triggerMap[show] || show;
+                var show = (trigger || options.trigger || defaultTriggerShow).split(' ');
+                var hide = show.map(function(trigger) {
+                    return triggerMap[trigger] || trigger;
+                });
                 return {
                     show: show,
                     hide: hide
@@ -117,7 +119,6 @@ angular.module('mm.foundation.tooltip', ['mm.foundation.position', 'mm.foundatio
                         var popupTimeout;
                         var appendToBody = angular.isDefined(options.appendToBody) ? options.appendToBody : false;
                         var triggers = getTriggers(undefined);
-                        var hasRegisteredTriggers = false;
                         var hasEnableExp = angular.isDefined(attrs[prefix + 'Enable']);
 
                         var positionTooltip = function() {
@@ -305,42 +306,32 @@ angular.module('mm.foundation.tooltip', ['mm.foundation.position', 'mm.foundatio
                         });
 
                         var unregisterTriggers = function() {
-                            if (hasRegisteredTriggers) {
-                                if (angular.isFunction(triggers.show)) {
-                                    unregisterTriggerFunction();
+                            triggers.show.forEach(function(showTrigger, i) {
+                                var hideTrigger = triggers.hide[i];
+                                if (showTrigger === hideTrigger) {
+                                    element.off(showTrigger, toggleTooltipBind);
                                 } else {
-                                    element.unbind(triggers.show, showTooltipBind);
-                                    element.unbind(triggers.hide, hideTooltipBind);
+                                    element.off(showTrigger, showTooltipBind);
+                                    element.off(hideTrigger, hideTooltipBind);
                                 }
-                            }
+                            });
                         };
 
-                        var unregisterTriggerFunction = function() {};
 
                         attrs[prefix + 'Trigger'] = attrs[prefix + 'Trigger'] || null;
 
                         attrs.$observe(prefix + 'Trigger', function(val) {
                             unregisterTriggers();
-                            unregisterTriggerFunction();
-
                             triggers = getTriggers(val);
-
-                            if (angular.isFunction(triggers.show)) {
-                                unregisterTriggerFunction = scope.$watch(function() {
-                                    return triggers.show(scope, element, attrs);
-                                }, function(val) {
-                                    return val ? $timeout(show) : $timeout(hide);
-                                });
-                            } else {
-                                if (triggers.show === triggers.hide) {
-                                    element.bind(triggers.show, toggleTooltipBind);
+                            triggers.show.forEach(function(showTrigger, i) {
+                                var hideTrigger = triggers.hide[i];
+                                if (showTrigger === hideTrigger) {
+                                    element.bind(showTrigger, toggleTooltipBind)
                                 } else {
-                                    element.bind(triggers.show, showTooltipBind);
-                                    element.bind(triggers.hide, hideTooltipBind);
+                                    element.bind(showTrigger, showTooltipBind);
+                                    element.bind(hideTrigger, hideTooltipBind);
                                 }
-                            }
-
-                            hasRegisteredTriggers = true;
+                            });
                         });
 
 
@@ -364,7 +355,6 @@ angular.module('mm.foundation.tooltip', ['mm.foundation.position', 'mm.foundatio
                             $timeout.cancel(transitionTimeout);
                             $timeout.cancel(popupTimeout);
                             unregisterTriggers();
-                            unregisterTriggerFunction();
                             removeTooltip();
                         });
                     };

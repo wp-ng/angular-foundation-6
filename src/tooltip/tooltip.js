@@ -332,8 +332,12 @@ angular.module('mm.foundation.tooltip', ['mm.foundation.position', 'mm.foundatio
                                     element.bind(hideTrigger, hideTooltipBind);
                                 }
                             });
+                            element.on('keydown', function (e) {
+                                if (e.which === 27) {
+                                    hideTooltipBind();
+                                }
+                            });
                         });
-
 
                         attrs.$observe(prefix + 'AppendToBody', function(val) {
                             appendToBody = angular.isDefined(val) ? $parse(val)(scope) : appendToBody;

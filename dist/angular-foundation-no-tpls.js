@@ -9,7 +9,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
  * angular-foundation-6
  * http://circlingthesun.github.io/angular-foundation-6/
 
- * Version: 0.10.9 - 2016-08-26
+ * Version: 0.10.10 - 2016-09-03
  * License: MIT
  * (c) 
  */
@@ -720,6 +720,9 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
 
     var isMobile = mediaQueries.mobileSniff();
     var OPENED_MODAL_CLASS = 'is-reveal-open';
+    // For modal focus
+    var tabbableSelector = 'a[href], area[href], input:not([disabled]):not([tabindex=\'-1\']), ' + 'button:not([disabled]):not([tabindex=\'-1\']),select:not([disabled]):not([tabindex=\'-1\']), textarea:not([disabled]):not([tabindex=\'-1\']), ' + 'iframe, object, embed, *[tabindex]:not([tabindex=\'-1\']), *[contenteditable=true]';
+
     var originalScrollPos = null; // For mobile scroll hack
     var backdropDomEl = void 0;
     var backdropScope = void 0;
@@ -800,6 +803,10 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
         });
     }
 
+    function isVisible(element) {
+        return !!(element.offsetWidth || element.offsetHeight || element.getClientRects().length);
+    }
+
     function getModalCenter(modalInstance) {
         var options = modalInstance.options;
 
@@ -831,18 +838,87 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
         return modalPos;
     }
 
-    $document.bind('keydown', function (evt) {
-        var modal = void 0;
+    $document.on('keydown', function (evt) {
+        var modal = openedWindows.top();
+        if (modal) {
+            if (evt.which === 27) {
+                if (modal.value.keyboard) {
+                    $rootScope.$apply(function () {
+                        $modalStack.dismiss(modal.key);
+                    });
+                }
+            } else if (evt.which === 9) {
+                var list = $modalStack.loadFocusElementList(modal);
+                var focusChanged = false;
+                if (evt.shiftKey) {
+                    if ($modalStack.isFocusInFirstItem(evt, list) || $modalStack.isModalFocused(evt, modal)) {
+                        focusChanged = $modalStack.focusLastFocusableElement(list);
+                    }
+                } else {
+                    if ($modalStack.isFocusInLastItem(evt, list)) {
+                        focusChanged = $modalStack.focusFirstFocusableElement(list);
+                    }
+                }
 
-        if (evt.which === 27) {
-            modal = openedWindows.top();
-            if (modal && modal.value.keyboard) {
-                $rootScope.$apply(function () {
-                    $modalStack.dismiss(modal.key);
-                });
+                if (focusChanged) {
+                    evt.preventDefault();
+                    evt.stopPropagation();
+                }
             }
         }
     });
+
+    $modalStack.loadFocusElementList = function (modalWindow) {
+        if (modalWindow) {
+            var modalDomE1 = modalWindow.value.modalDomEl;
+            if (modalDomE1 && modalDomE1.length) {
+                var elements = modalDomE1[0].querySelectorAll(tabbableSelector);
+                return elements ? Array.prototype.filter.call(elements, function (element) {
+                    return isVisible(element);
+                }) : elements;
+            }
+        }
+    };
+
+    $modalStack.isModalFocused = function (evt, modalWindow) {
+        if (evt && modalWindow) {
+            var modalDomEl = modalWindow.value.modalDomEl;
+            if (modalDomEl && modalDomEl.length) {
+                return (evt.target || evt.srcElement) === modalDomEl[0];
+            }
+        }
+        return false;
+    };
+
+    $modalStack.isFocusInLastItem = function (evt, list) {
+        if (list.length > 0) {
+            return (evt.target || evt.srcElement) === list[list.length - 1];
+        }
+        return false;
+    };
+
+    $modalStack.focusFirstFocusableElement = function (list) {
+        if (list.length > 0) {
+            list[0].focus();
+            return true;
+        }
+        return false;
+    };
+
+    $modalStack.focusLastFocusableElement = function (list) {
+        if (list.length > 0) {
+            list[list.length - 1].focus();
+            return true;
+        }
+        return false;
+    };
+
+    $modalStack.isFocusInFirstItem = function (evt, list) {
+        if (list.length > 0) {
+            return (evt.target || evt.srcElement) === list[0];
+        }
+        return false;
+    };
 
     $modalStack.open = function (modalInstance, options) {
         modalInstance.options = {
@@ -1573,11 +1649,11 @@ angular.module('mm.foundation.progressbar', []).constant('progressConfig', {
             //     width: percent + '%'
             // });
         } else {
-            element.css({
-                'transition': 'none',
-                'width': percent + '%'
-            });
-        }
+                element.css({
+                    'transition': 'none',
+                    'width': percent + '%'
+                });
+            }
     };
 
     this.removeBar = function (bar) {
@@ -2083,8 +2159,10 @@ angular.module('mm.foundation.tooltip', ['mm.foundation.position', 'mm.foundatio
              * trigger; else it will just use the show trigger.
              */
             function getTriggers(trigger) {
-                var show = trigger || options.trigger || defaultTriggerShow;
-                var hide = triggerMap[show] || show;
+                var show = (trigger || options.trigger || defaultTriggerShow).split(' ');
+                var hide = show.map(function (trigger) {
+                    return triggerMap[trigger] || trigger;
+                });
                 return {
                     show: show,
                     hide: hide
@@ -2109,7 +2187,6 @@ angular.module('mm.foundation.tooltip', ['mm.foundation.position', 'mm.foundatio
                         var popupTimeout;
                         var appendToBody = angular.isDefined(options.appendToBody) ? options.appendToBody : false;
                         var triggers = getTriggers(undefined);
-                        var hasRegisteredTriggers = false;
                         var hasEnableExp = angular.isDefined(attrs[prefix + 'Enable']);
 
                         var positionTooltip = function positionTooltip() {
@@ -2295,42 +2372,36 @@ angular.module('mm.foundation.tooltip', ['mm.foundation.position', 'mm.foundatio
                         });
 
                         var unregisterTriggers = function unregisterTriggers() {
-                            if (hasRegisteredTriggers) {
-                                if (angular.isFunction(triggers.show)) {
-                                    unregisterTriggerFunction();
+                            triggers.show.forEach(function (showTrigger, i) {
+                                var hideTrigger = triggers.hide[i];
+                                if (showTrigger === hideTrigger) {
+                                    element.off(showTrigger, toggleTooltipBind);
                                 } else {
-                                    element.unbind(triggers.show, showTooltipBind);
-                                    element.unbind(triggers.hide, hideTooltipBind);
+                                    element.off(showTrigger, showTooltipBind);
+                                    element.off(hideTrigger, hideTooltipBind);
                                 }
-                            }
+                            });
                         };
-
-                        var unregisterTriggerFunction = function unregisterTriggerFunction() {};
 
                         attrs[prefix + 'Trigger'] = attrs[prefix + 'Trigger'] || null;
 
                         attrs.$observe(prefix + 'Trigger', function (val) {
                             unregisterTriggers();
-                            unregisterTriggerFunction();
-
                             triggers = getTriggers(val);
-
-                            if (angular.isFunction(triggers.show)) {
-                                unregisterTriggerFunction = scope.$watch(function () {
-                                    return triggers.show(scope, element, attrs);
-                                }, function (val) {
-                                    return val ? $timeout(show) : $timeout(hide);
-                                });
-                            } else {
-                                if (triggers.show === triggers.hide) {
-                                    element.bind(triggers.show, toggleTooltipBind);
+                            triggers.show.forEach(function (showTrigger, i) {
+                                var hideTrigger = triggers.hide[i];
+                                if (showTrigger === hideTrigger) {
+                                    element.bind(showTrigger, toggleTooltipBind);
                                 } else {
-                                    element.bind(triggers.show, showTooltipBind);
-                                    element.bind(triggers.hide, hideTooltipBind);
+                                    element.bind(showTrigger, showTooltipBind);
+                                    element.bind(hideTrigger, hideTooltipBind);
                                 }
-                            }
-
-                            hasRegisteredTriggers = true;
+                            });
+                            element.on('keydown', function (e) {
+                                if (e.which === 27) {
+                                    hideTooltipBind();
+                                }
+                            });
                         });
 
                         attrs.$observe(prefix + 'AppendToBody', function (val) {
@@ -2353,7 +2424,6 @@ angular.module('mm.foundation.tooltip', ['mm.foundation.position', 'mm.foundatio
                             $timeout.cancel(transitionTimeout);
                             $timeout.cancel(popupTimeout);
                             unregisterTriggers();
-                            unregisterTriggerFunction();
                             removeTooltip();
                         });
                     };

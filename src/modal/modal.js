@@ -95,6 +95,11 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
     'ngInject';
     const isMobile = mediaQueries.mobileSniff();
     const OPENED_MODAL_CLASS = 'is-reveal-open';
+    // For modal focus
+    var tabbableSelector = 'a[href], area[href], input:not([disabled]):not([tabindex=\'-1\']), ' +
+        'button:not([disabled]):not([tabindex=\'-1\']),select:not([disabled]):not([tabindex=\'-1\']), textarea:not([disabled]):not([tabindex=\'-1\']), ' +
+        'iframe, object, embed, *[tabindex]:not([tabindex=\'-1\']), *[contenteditable=true]';
+
     let originalScrollPos = null; // For mobile scroll hack
     let backdropDomEl;
     let backdropScope;
@@ -173,6 +178,11 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
         });
     }
 
+    function isVisible(element) {
+        return !!(element.offsetWidth ||
+            element.offsetHeight ||
+            element.getClientRects().length);
+    }
 
     function getModalCenter(modalInstance) {
         const options = modalInstance.options;
@@ -205,18 +215,88 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
         return modalPos;
     }
 
-    $document.bind('keydown', (evt) => {
-        let modal;
+    $document.on('keydown', (evt) => {
+        let modal = openedWindows.top();
+        if (modal) {
+            if (evt.which === 27) {
+                if (modal.value.keyboard) {
+                    $rootScope.$apply(() => {
+                        $modalStack.dismiss(modal.key);
+                    });
+                }
+            } else if (evt.which === 9) {
+                var list = $modalStack.loadFocusElementList(modal);
+                var focusChanged = false;
+                if (evt.shiftKey) {
+                    if ($modalStack.isFocusInFirstItem(evt, list) || $modalStack.isModalFocused(evt, modal)) {
+                        focusChanged = $modalStack.focusLastFocusableElement(list);
+                    }
+                } else {
+                    if ($modalStack.isFocusInLastItem(evt, list)) {
+                        focusChanged = $modalStack.focusFirstFocusableElement(list);
+                    }
+                }
 
-        if (evt.which === 27) {
-            modal = openedWindows.top();
-            if (modal && modal.value.keyboard) {
-                $rootScope.$apply(() => {
-                    $modalStack.dismiss(modal.key);
-                });
+                if (focusChanged) {
+                    evt.preventDefault();
+                    evt.stopPropagation();
+                }
             }
         }
     });
+
+    $modalStack.loadFocusElementList = function(modalWindow) {
+        if (modalWindow) {
+            var modalDomE1 = modalWindow.value.modalDomEl;
+            if (modalDomE1 && modalDomE1.length) {
+            var elements = modalDomE1[0].querySelectorAll(tabbableSelector);
+            return elements ?
+                Array.prototype.filter.call(elements, function(element) {
+                return isVisible(element);
+                }) : elements;
+            }
+        }
+    };
+
+    $modalStack.isModalFocused = function(evt, modalWindow) {
+        if (evt && modalWindow) {
+            var modalDomEl = modalWindow.value.modalDomEl;
+            if (modalDomEl && modalDomEl.length) {
+                return (evt.target || evt.srcElement) === modalDomEl[0];
+            }
+        }
+        return false;
+    };
+
+    $modalStack.isFocusInLastItem = function(evt, list) {
+        if (list.length > 0) {
+            return (evt.target || evt.srcElement) === list[list.length - 1];
+        }
+        return false;
+    };
+
+    $modalStack.focusFirstFocusableElement = function(list) {
+        if (list.length > 0) {
+            list[0].focus();
+            return true;
+        }
+        return false;
+    };
+
+    $modalStack.focusLastFocusableElement = function(list) {
+        if (list.length > 0) {
+            list[list.length - 1].focus();
+            return true;
+        }
+        return false;
+    };
+
+    $modalStack.isFocusInFirstItem = function(evt, list) {
+        if (list.length > 0) {
+            return (evt.target || evt.srcElement) === list[0];
+        }
+        return false;
+    };
 
     $modalStack.open = (modalInstance, options) => {
         modalInstance.options = {

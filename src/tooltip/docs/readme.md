@@ -14,7 +14,7 @@ will display:
   "bottom", "left", "right".
 - `tooltip-popup-delay`: For how long should the user have to have the mouse
   over the element before the tooltip shows (in milliseconds)? Defaults to 0.
-- `tooltip-trigger`: What should trigger a show of the tooltip?
+- `tooltip-trigger`: What should trigger a show of the tooltip? Supports a space separated list of event names
 - `tooltip-append-to-body`: Should the tooltip be appended to `$body` instead of
   the parent element?
 

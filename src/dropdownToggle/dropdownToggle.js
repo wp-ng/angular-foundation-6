@@ -1,9 +1,14 @@
-function DropdownToggleController($scope, $attrs, mediaQueries, $element, $position, $timeout, dropdownPaneOffset) {
+function DropdownToggleController($scope, $attrs, mediaQueries, $element, $position, $timeout, $transclude, dropdownPaneOffset) {
     'ngInject';
     var $ctrl = this;
     var hoverTimeout;
     const $body = angular.element(document.querySelector('body'));
     $ctrl.css = {};
+
+    $transclude((clone, tScope) => {
+        tScope.$close = close;
+        $element.find('div').append(clone);
+    }, $element.parent(), 'pane');
 
     $timeout(() => {
         positionPane();
@@ -48,7 +53,7 @@ function DropdownToggleController($scope, $attrs, mediaQueries, $element, $posit
         }
     };
 
-    
+
     $ctrl.toggle = function() {
         if ($ctrl.active) close();
         else open();

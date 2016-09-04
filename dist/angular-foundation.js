@@ -1,7 +1,7 @@
 'use strict';
 
 AccordionController.$inject = ['$scope', '$attrs', 'accordionConfig'];
-DropdownToggleController.$inject = ['$scope', '$attrs', 'mediaQueries', '$element', '$position', '$timeout', 'dropdownPaneOffset'];
+DropdownToggleController.$inject = ['$scope', '$attrs', 'mediaQueries', '$element', '$position', '$timeout', '$transclude', 'dropdownPaneOffset'];
 dropdownToggle.$inject = ['$document', '$window', '$location'];
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
@@ -9,7 +9,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
  * angular-foundation-6
  * http://circlingthesun.github.io/angular-foundation-6/
 
- * Version: 0.10.10 - 2016-09-03
+ * Version: 0.10.11 - 2016-09-04
  * License: MIT
  * (c) 
  */
@@ -362,13 +362,18 @@ angular.module('mm.foundation.dropdownMenu', []).directive('dropdownMenu', ['$co
         }
     };
 }]);
-function DropdownToggleController($scope, $attrs, mediaQueries, $element, $position, $timeout, dropdownPaneOffset) {
+function DropdownToggleController($scope, $attrs, mediaQueries, $element, $position, $timeout, $transclude, dropdownPaneOffset) {
     'ngInject';
 
     var $ctrl = this;
     var hoverTimeout;
     var $body = angular.element(document.querySelector('body'));
     $ctrl.css = {};
+
+    $transclude(function (clone, tScope) {
+        tScope.$close = close;
+        $element.find('div').append(clone);
+    }, $element.parent(), 'pane');
 
     $timeout(function () {
         positionPane();
@@ -493,7 +498,7 @@ angular.module('mm.foundation.dropdownToggle', ['mm.foundation.position', 'mm.fo
 
 (function () {
     angular.module("mm.foundation.dropdownToggle").run(["$templateCache", function ($templateCache) {
-        $templateCache.put("template/dropdownToggle/dropdownToggle.html", "<span\n    ng-class=\"{\'is-open\': $ctrl.active}\"\n    ng-click=\"!$ctrl.toggleOnHover && $ctrl.toggle()\"\n    ng-mouseover=\"$ctrl.toggleOnHover && $ctrl.mouseover()\"\n    ng-mouseleave=\"$ctrl.toggleOnHover && $ctrl.mouseleave($event)\"\n    ng-transclude=\"toggle\"></span>\n<div\n    ng-transclude=\"pane\"\n    ng-style=\"$ctrl.css\"\n    ng-class=\"{\'is-open\': $ctrl.active}\"\n    ng-attr-aria-hidden=\"$ctrl.active\"\n    ng-mouseover=\"$ctrl.toggleOnHover && $ctrl.mouseover()\"\n    ng-mouseleave=\"$ctrl.toggleOnHover && $ctrl.mouseleave($event)\"\n    class=\"dropdown-pane{{$ctrl.paneAlign && \' dropdown-pane-\' + $ctrl.paneAlign}}\"></div>\n");
+        $templateCache.put("template/dropdownToggle/dropdownToggle.html", "<span\n    ng-class=\"{\'is-open\': $ctrl.active}\"\n    ng-click=\"!$ctrl.toggleOnHover && $ctrl.toggle()\"\n    ng-mouseover=\"$ctrl.toggleOnHover && $ctrl.mouseover()\"\n    ng-mouseleave=\"$ctrl.toggleOnHover && $ctrl.mouseleave($event)\"\n    ng-transclude=\"toggle\"></span>\n<div\n    ng-style=\"$ctrl.css\"\n    ng-class=\"{\'is-open\': $ctrl.active}\"\n    ng-attr-aria-hidden=\"$ctrl.active\"\n    ng-mouseover=\"$ctrl.toggleOnHover && $ctrl.mouseover()\"\n    ng-mouseleave=\"$ctrl.toggleOnHover && $ctrl.mouseleave($event)\"\n    class=\"dropdown-pane{{$ctrl.paneAlign && \' dropdown-pane-\' + $ctrl.paneAlign}}\"></div>\n");
     }]);
 })();
 angular.module('mm.foundation.mediaQueries', []).factory('matchMedia', ['$document', '$window', function ($document, $window) {

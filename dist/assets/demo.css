@@ -86,6 +86,7 @@ div[role=main] section.demo {
   transform: translateY(-100%);
   transition-property: transform, opacity;
   opacity: 0;
+  -webkit-backface-visibility: hidden;
   backface-visibility: hidden; }
 
 .reveal.ng-enter.ng-enter-active {

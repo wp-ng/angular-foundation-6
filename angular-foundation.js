@@ -2049,6 +2049,7 @@ angular.module('mm.foundation.tabs', []).controller('TabsetController', ['$scope
                     if (active) {
                         tabsetCtrl.select(scope);
                         scope.onSelect();
+                        scope.$emit('change.zf.tabs', elm);
                     } else {
                         scope.onDeselect();
                     }

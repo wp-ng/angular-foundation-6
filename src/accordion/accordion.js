@@ -104,9 +104,9 @@ angular.module('mm.foundation.accordion', [])
                     setIsOpen && setIsOpen($scope.$parent, value);
 
                     if (value) {
-                        $scope.$emit('down.zf.accordionGroup', $element, $scope);
+                        $scope.$emit('down.af.accordionGroup', $element, $scope);
                     } else {
-                        $scope.$emit('up.zf.accordionGroup', $element, $scope);
+                        $scope.$emit('up.af.accordionGroup', $element, $scope);
                     }
                 });
             };

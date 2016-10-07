@@ -198,10 +198,10 @@ describe('accordion', function() {
 
             it('should emit an event when opening and closing', function() {
                 var downEmitted = false, upEmitted = false;
-                scope.$on("down.zf.accordionGroup", function() {
+                scope.$on("down.af.accordionGroup", function() {
                     downEmitted = true;
                 });
-                scope.$on("up.zf.accordionGroup", function() {
+                scope.$on("up.af.accordionGroup", function() {
                     upEmitted = true;
                 });
                 findGroupLink(0)[0].click();

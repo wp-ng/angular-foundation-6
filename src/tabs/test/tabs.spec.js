@@ -105,7 +105,7 @@ describe('tabs', function() {
         });
         it('should emit an event on select', function() {
             var eventEmitted = false;
-            scope.$on("change.zf.tabs", function() {
+            scope.$on("change.af.tabs", function() {
                 eventEmitted = true;
             });
             titles()[1].querySelector('a').click();

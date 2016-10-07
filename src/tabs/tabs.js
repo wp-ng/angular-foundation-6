@@ -218,7 +218,7 @@ angular.module('mm.foundation.tabs', [])
                     if (active) {
                         tabsetCtrl.select(scope);
                         scope.onSelect();
-                        scope.$emit('change.zf.tabs', elm);
+                        scope.$emit('change.af.tabs', elm);
                     } else {
                         scope.onDeselect();
                     }

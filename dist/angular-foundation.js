@@ -3,13 +3,13 @@
 AccordionController.$inject = ['$scope', '$attrs', 'accordionConfig'];
 DropdownToggleController.$inject = ['$scope', '$attrs', 'mediaQueries', '$element', '$position', '$timeout', '$transclude', 'dropdownPaneOffset'];
 dropdownToggle.$inject = ['$document', '$window', '$location'];
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 /*
  * angular-foundation-6
  * http://circlingthesun.github.io/angular-foundation-6/
 
- * Version: 0.10.12 - 2016-10-03
+ * Version: 0.10.12 - 2016-10-14
  * License: MIT
  * (c) 
  */
@@ -120,9 +120,9 @@ angular.module('mm.foundation.accordion', []).constant('accordionConfig', {
                     setIsOpen && setIsOpen($scope.$parent, value);
 
                     if (value) {
-                        $scope.$emit('down.zf.accordionGroup', $element, $scope);
+                        $scope.$emit('down.af.accordionGroup', $element, $scope);
                     } else {
-                        $scope.$emit('up.zf.accordionGroup', $element, $scope);
+                        $scope.$emit('up.af.accordionGroup', $element, $scope);
                     }
                 });
             };
@@ -1688,11 +1688,11 @@ angular.module('mm.foundation.progressbar', []).constant('progressConfig', {
             //     width: percent + '%'
             // });
         } else {
-            element.css({
-                'transition': 'none',
-                'width': percent + '%'
-            });
-        }
+                element.css({
+                    'transition': 'none',
+                    'width': percent + '%'
+                });
+            }
     };
 
     this.removeBar = function (bar) {
@@ -2049,7 +2049,7 @@ angular.module('mm.foundation.tabs', []).controller('TabsetController', ['$scope
                     if (active) {
                         tabsetCtrl.select(scope);
                         scope.onSelect();
-                        scope.$emit('change.zf.tabs', elm);
+                        scope.$emit('change.af.tabs', elm);
                     } else {
                         scope.onDeselect();
                     }

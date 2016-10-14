@@ -3,13 +3,13 @@
 AccordionController.$inject = ['$scope', '$attrs', 'accordionConfig'];
 DropdownToggleController.$inject = ['$scope', '$attrs', 'mediaQueries', '$element', '$position', '$timeout', '$transclude', 'dropdownPaneOffset'];
 dropdownToggle.$inject = ['$document', '$window', '$location'];
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 /*
  * angular-foundation-6
  * http://circlingthesun.github.io/angular-foundation-6/
 
- * Version: 0.10.11 - 2016-09-04
+ * Version: 0.10.12 - 2016-10-03
  * License: MIT
  * (c) 
  */
@@ -82,7 +82,7 @@ angular.module('mm.foundation.accordion', []).constant('accordionConfig', {
         bindToController: {
             heading: '@'
         }, // Create an isolated scope and interpolate the heading attribute onto this scope
-        controller: ['$scope', '$attrs', '$parse', function accordionGroupController($scope, $attrs, $parse) {
+        controller: ['$scope', '$element', '$attrs', '$parse', function accordionGroupController($scope, $element, $attrs, $parse) {
             'ngInject';
 
             var $ctrl = this;
@@ -118,6 +118,12 @@ angular.module('mm.foundation.accordion', []).constant('accordionConfig', {
                         $ctrl.accordion.closeOthers($ctrl);
                     }
                     setIsOpen && setIsOpen($scope.$parent, value);
+
+                    if (value) {
+                        $scope.$emit('down.zf.accordionGroup', $element, $scope);
+                    } else {
+                        $scope.$emit('up.zf.accordionGroup', $element, $scope);
+                    }
                 });
             };
         }]
@@ -1654,11 +1660,11 @@ angular.module('mm.foundation.progressbar', []).constant('progressConfig', {
             //     width: percent + '%'
             // });
         } else {
-                element.css({
-                    'transition': 'none',
-                    'width': percent + '%'
-                });
-            }
+            element.css({
+                'transition': 'none',
+                'width': percent + '%'
+            });
+        }
     };
 
     this.removeBar = function (bar) {
@@ -2003,6 +2009,7 @@ angular.module('mm.foundation.tabs', []).controller('TabsetController', ['$scope
                     if (active) {
                         tabsetCtrl.select(scope);
                         scope.onSelect();
+                        scope.$emit('change.zf.tabs', elm);
                     } else {
                         scope.onDeselect();
                     }

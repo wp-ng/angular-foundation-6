@@ -103,6 +103,14 @@ describe('tabs', function() {
             titles()[0].querySelector('a').click();
             expect(scope.selectFirst).toHaveBeenCalled();
         });
+        it('should emit an event on select', function() {
+            var eventEmitted = false;
+            scope.$on("change.af.tabs", function() {
+                eventEmitted = true;
+            });
+            titles()[1].querySelector('a').click();
+            expect(eventEmitted).toBe(true);
+        });
 
     });
 

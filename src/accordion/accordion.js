@@ -68,7 +68,7 @@ angular.module('mm.foundation.accordion', [])
         bindToController: {
             heading: '@'
         }, // Create an isolated scope and interpolate the heading attribute onto this scope
-        controller: function accordionGroupController($scope, $attrs, $parse) {
+        controller: function accordionGroupController($scope, $element, $attrs, $parse) {
             'ngInject';
             var $ctrl = this;
             $ctrl.isOpen = false;
@@ -102,6 +102,12 @@ angular.module('mm.foundation.accordion', [])
                         $ctrl.accordion.closeOthers($ctrl);
                     }
                     setIsOpen && setIsOpen($scope.$parent, value);
+
+                    if (value) {
+                        $scope.$emit('down.af.accordionGroup', $element, $scope);
+                    } else {
+                        $scope.$emit('up.af.accordionGroup', $element, $scope);
+                    }
                 });
             };
         }

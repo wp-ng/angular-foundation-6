@@ -5,7 +5,7 @@ import "src/accordion/accordion.html.js"
 import "src/accordion/accordion-group.html.js"
 
 describe('accordion', function() {
-    
+
     var inject = mocks.inject;
     var module = mocks.module;
 
@@ -194,6 +194,22 @@ describe('accordion', function() {
                 findGroupLink(0)[0].click();
                 scope.$digest();
                 expect(findGroupBody(0).scope().$ctrl.isOpen).toBe(false);
+            });
+
+            it('should emit an event when opening and closing', function() {
+                var downEmitted = false, upEmitted = false;
+                scope.$on("down.af.accordionGroup", function() {
+                    downEmitted = true;
+                });
+                scope.$on("up.af.accordionGroup", function() {
+                    upEmitted = true;
+                });
+                findGroupLink(0)[0].click();
+                scope.$digest();
+                expect(downEmitted).toBe(true);
+                findGroupLink(0)[0].click();
+                scope.$digest();
+                expect(upEmitted).toBe(true);
             });
         });
 

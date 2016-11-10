@@ -5,7 +5,8 @@ angular.module('mm.foundation.dropdownMenu', [])
         bindToController: {
             disableHover: '=',
             disableClickOpen: '=',
-            closingTime: '='
+            closingTime: '=',
+            opensLeft: '='
         },
         scope: {},
         restrict: 'A',
@@ -45,7 +46,7 @@ angular.module('mm.foundation.dropdownMenu', [])
 
             if(ulChild){
                 ulChild.addClass('is-dropdown-submenu menu submenu vertical');
-                $element.addClass('is-dropdown-submenu-parent opens-right');
+                $element.addClass('is-dropdown-submenu-parent opens-' + (dropdownMenu.opensLeft ? 'left' : 'right'));
 
                 if(topLevel){
                     ulChild.addClass('first-sub');

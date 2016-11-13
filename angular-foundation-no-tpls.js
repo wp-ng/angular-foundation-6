@@ -9,7 +9,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
  * angular-foundation-6
  * http://circlingthesun.github.io/angular-foundation-6/
 
- * Version: 0.10.12 - 2016-10-14
+ * Version: 0.10.13 - 2016-11-13
  * License: MIT
  * (c) 
  */
@@ -285,7 +285,8 @@ angular.module('mm.foundation.dropdownMenu', []).directive('dropdownMenu', ['$co
         bindToController: {
             disableHover: '=',
             disableClickOpen: '=',
-            closingTime: '='
+            closingTime: '=',
+            opensLeft: '='
         },
         scope: {},
         restrict: 'A',
@@ -325,7 +326,7 @@ angular.module('mm.foundation.dropdownMenu', []).directive('dropdownMenu', ['$co
 
             if (ulChild) {
                 ulChild.addClass('is-dropdown-submenu menu submenu vertical');
-                $element.addClass('is-dropdown-submenu-parent opens-right');
+                $element.addClass('is-dropdown-submenu-parent opens-' + (dropdownMenu.opensLeft ? 'left' : 'right'));
 
                 if (topLevel) {
                     ulChild.addClass('first-sub');
@@ -361,7 +362,7 @@ function DropdownToggleController($scope, $attrs, mediaQueries, $element, $posit
     'ngInject';
 
     var $ctrl = this;
-    var hoverTimeout;
+    var hoverTimeout = void 0;
     var $body = angular.element(document.querySelector('body'));
     $ctrl.css = {};
 
@@ -369,6 +370,10 @@ function DropdownToggleController($scope, $attrs, mediaQueries, $element, $posit
         tScope.$close = close;
         $element.find('div').append(clone);
     }, $element.parent(), 'pane');
+
+    $transclude(function (clone, tScope) {
+        $element.find('span').append(clone);
+    }, $element.parent(), 'toggle');
 
     $timeout(function () {
         positionPane();
@@ -409,14 +414,18 @@ function DropdownToggleController($scope, $attrs, mediaQueries, $element, $posit
         }
     }
 
-    $ctrl.$onDestroy = function destroy() {
+    $ctrl.$onDestroy = function () {
         if ($ctrl.closeOnClick) {
             $body.off('click', closeOnClick);
         }
     };
 
     $ctrl.toggle = function () {
-        if ($ctrl.active) close();else open();
+        if ($ctrl.active) {
+            close();
+        } else {
+            open();
+        }
     };
 
     $ctrl.mouseover = function () {
@@ -438,7 +447,7 @@ function DropdownToggleController($scope, $attrs, mediaQueries, $element, $posit
         var offset = $ctrl.paneOffset || offset_;
         var dropdownTrigger = angular.element($element[0].querySelector('toggle *:first-child'));
 
-        // var dropdownWidth = dropdown.prop('offsetWidth');
+        // let dropdownWidth = dropdown.prop('offsetWidth');
         var triggerPosition = $position.position(dropdownTrigger);
 
         $ctrl.css.top = triggerPosition.top + triggerPosition.height + offset + 'px';
@@ -575,8 +584,8 @@ angular.module('mm.foundation.mediaQueries', []).factory('matchMedia', ['$docume
 
     // Gets the media query of a breakpoint.
     function get(size) {
-        for (var i in this.queries) {
-            var query = this.queries[i];
+        for (var i in queries) {
+            var query = queries[i];
             if (size === query.name) return query.value;
         }
 

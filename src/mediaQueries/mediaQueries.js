@@ -83,8 +83,8 @@ angular.module('mm.foundation.mediaQueries', [])
 
     // Gets the media query of a breakpoint.
     function get(size) {
-        for (let i in this.queries) {
-            const query = this.queries[i];
+        for (let i in queries) {
+            const query = queries[i];
             if (size === query.name) return query.value;
         }
 

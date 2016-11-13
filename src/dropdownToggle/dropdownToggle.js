@@ -1,7 +1,7 @@
 function DropdownToggleController($scope, $attrs, mediaQueries, $element, $position, $timeout, $transclude, dropdownPaneOffset) {
     'ngInject';
-    var $ctrl = this;
-    var hoverTimeout;
+    const $ctrl = this;
+    let hoverTimeout;
     const $body = angular.element(document.querySelector('body'));
     $ctrl.css = {};
 
@@ -9,6 +9,10 @@ function DropdownToggleController($scope, $attrs, mediaQueries, $element, $posit
         tScope.$close = close;
         $element.find('div').append(clone);
     }, $element.parent(), 'pane');
+
+    $transclude((clone, tScope) => {
+        $element.find('span').append(clone);
+    }, $element.parent(), 'toggle');
 
     $timeout(() => {
         positionPane();
@@ -47,41 +51,44 @@ function DropdownToggleController($scope, $attrs, mediaQueries, $element, $posit
         }
     }
 
-    $ctrl.$onDestroy = function destroy() {
+    $ctrl.$onDestroy = () => {
         if ($ctrl.closeOnClick) {
             $body.off('click', closeOnClick);
         }
     };
 
 
-    $ctrl.toggle = function() {
-        if ($ctrl.active) close();
-        else open();
+    $ctrl.toggle = () => {
+        if ($ctrl.active) {
+            close();
+        } else {
+            open();
+        }
     };
 
-    $ctrl.mouseover = function() {
+    $ctrl.mouseover = () => {
         $timeout.cancel(hoverTimeout);
         $ctrl.active = true;
         positionPane(dropdownPaneOffset);
-    }
+    };
 
-    $ctrl.mouseleave = function() {
+    $ctrl.mouseleave = () => {
         $timeout.cancel(hoverTimeout);
-        hoverTimeout = $timeout(function() {
-            $scope.$apply(function() {
+        hoverTimeout = $timeout(() => {
+            $scope.$apply(() => {
                 $ctrl.active = false;
             });
         }, 250);
     };
 
     function positionPane(offset_) {
-        var offset = $ctrl.paneOffset || offset_;
-        var dropdownTrigger = angular.element($element[0].querySelector('toggle *:first-child'));
+        const offset = $ctrl.paneOffset || offset_;
+        const dropdownTrigger = angular.element($element[0].querySelector('toggle *:first-child'));
 
-        // var dropdownWidth = dropdown.prop('offsetWidth');
-        var triggerPosition = $position.position(dropdownTrigger);
+        // let dropdownWidth = dropdown.prop('offsetWidth');
+        const triggerPosition = $position.position(dropdownTrigger);
 
-        $ctrl.css.top = triggerPosition.top + triggerPosition.height + offset + 'px';
+        $ctrl.css.top = `${triggerPosition.top + triggerPosition.height + offset}px`;
 
         if ($ctrl.paneAlign === 'center') {
             $ctrl.css.left = `${triggerPosition.left + (triggerPosition.width / 2)}px`;
@@ -104,15 +111,15 @@ function dropdownToggle($document, $window, $location) {
             closeOnClick: '=',
             paneAlign: '@',
             toggleOnHover: '=',
-            paneOffset: '='
+            paneOffset: '=',
         },
         transclude: {
             'toggle': 'toggle',
-            'pane': 'pane'
+            'pane': 'pane',
         },
         templateUrl: 'template/dropdownToggle/dropdownToggle.html',
         controller: DropdownToggleController,
-        controllerAs: '$ctrl'
+        controllerAs: '$ctrl',
     };
 }
 

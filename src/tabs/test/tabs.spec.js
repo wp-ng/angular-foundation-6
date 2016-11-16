@@ -522,8 +522,20 @@ describe('tabs', function() {
             scope.$apply();
         }));
 
-        it('to show tabs vertically', function() {
-            expect(angular.element(elm[0].querySelectorAll('ul.tabs'))).toHaveClass('vertical');
+        it('to show tab headers vertically', function() {
+            var headers = angular.element(elm[0].querySelectorAll('ul.tabs'));
+
+            expect(headers).toHaveClass('vertical');
+            expect(headers.parent()).toHaveClass('medium-3');
+            expect(headers.parent()).toHaveClass('columns')
+        });
+
+        it('to show tab panels vertically', function() {
+            var content = angular.element(elm[0].querySelectorAll('div.tabs-content'));
+
+            expect(content).toHaveClass('vertical');
+            expect(content.parent()).toHaveClass('medium-9');
+            expect(content.parent()).toHaveClass('columns')
         });
     });
 

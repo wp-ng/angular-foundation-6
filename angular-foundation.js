@@ -9,7 +9,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
  * angular-foundation-6
  * http://circlingthesun.github.io/angular-foundation-6/
 
- * Version: 0.10.13 - 2016-11-13
+ * Version: 0.10.14 - 2016-11-23
  * License: MIT
  * (c) 
  */
@@ -1922,7 +1922,10 @@ angular.module('mm.foundation.tabs', []).controller('TabsetController', ['$scope
             openOnLoad: '=?'
         },
         controller: 'TabsetController',
-        templateUrl: 'template/tabs/tabset.html',
+        templateUrl: function templateUrl(elem, attr) {
+            var type = attr.vertical == 'vertical' ? 'vertical' : 'horizontal';
+            return 'template/tabs/tabset-' + type + '.html';
+        },
         link: function link(scope, element, attrs) {
             scope.vertical = angular.isDefined(attrs.vertical) ? scope.$parent.$eval(attrs.vertical) : false;
             scope.justified = angular.isDefined(attrs.justified) ? scope.$parent.$eval(attrs.justified) : false;
@@ -2135,7 +2138,8 @@ angular.module('mm.foundation.tabs', []).controller('TabsetController', ['$scope
 (function () {
     angular.module("mm.foundation.tabs").run(["$templateCache", function ($templateCache) {
         $templateCache.put("template/tabs/tab.html", "<li class=\"tabs-title\" ng-class=\"{\'is-active\': active}\">\n  <a ng-click=\"select()\" ng-attr-aria-selected=\"{{active}}\" tab-heading-transclude>{{heading}}</a>\n</li>\n");
-        $templateCache.put("template/tabs/tabset.html", "<div class=\"tabbable\">\n  <ul class=\"tabs\" ng-class=\"{\'vertical\': vertical}\" ng-transclude></ul>\n  <div class=\"tabs-content\" ng-class=\"{\'vertical\': vertical}\">\n    <div class=\"tabs-panel\"\n      ng-repeat=\"tab in tabs\"\n      ng-class=\"{\'is-active\': tab.active}\">\n      <div tab-content-transclude=\"tab\"></div>\n    </div>\n  </div>\n</div>\n");
+        $templateCache.put("template/tabs/tabset-horizontal.html", "<div class=\"tabbable\">\n  <ul class=\"tabs\" ng-transclude></ul>\n  <div class=\"tabs-content\">\n    <div class=\"tabs-panel\"\n      ng-repeat=\"tab in tabs\"\n      ng-class=\"{\'is-active\': tab.active}\">\n      <div tab-content-transclude=\"tab\"></div>\n    </div>\n  </div>\n</div>\n");
+        $templateCache.put("template/tabs/tabset-vertical.html", "<div class=\"tabbable row collapse\">\n  <div class=\"medium-3 columns\">\n    <ul class=\"tabs vertical\" ng-transclude></ul>\n  </div>\n  <div class=\"medium-9 columns\">\n    <div class=\"tabs-content vertical\">\n      <div class=\"tabs-panel\"\n        ng-repeat=\"tab in tabs\"\n        ng-class=\"{\'is-active\': tab.active}\">\n        <div tab-content-transclude=\"tab\"></div>\n      </div>\n    </div>\n  </div>\n</div>\n");
     }]);
 })();
 /**

@@ -3,14 +3,15 @@ import mocks from "angular-mocks";
 
 import "src/tabs/tabs.js"
 import "src/tabs/tab.html.js"
-import "src/tabs/tabset.html.js"
+import "src/tabs/tabset-horizontal.html.js"
+import "src/tabs/tabset-vertical.html.js"
 
 describe('tabs', function() {
 
     var inject = mocks.inject;
     var module = mocks.module;
 
-    beforeEach(module('mm.foundation.tabs', 'template/tabs/tabset.html', 'template/tabs/tab.html'));
+    beforeEach(module('mm.foundation.tabs', 'template/tabs/tabset-horizontal.html', 'template/tabs/tabset-vertical.html', 'template/tabs/tab.html'));
 
     var elm;
     var scope;
@@ -522,8 +523,20 @@ describe('tabs', function() {
             scope.$apply();
         }));
 
-        it('to show tabs vertically', function() {
-            expect(angular.element(elm[0].querySelectorAll('ul.tabs'))).toHaveClass('vertical');
+        it('to show tab headers vertically', function() {
+            var headers = angular.element(elm[0].querySelectorAll('ul.tabs'));
+
+            expect(headers).toHaveClass('vertical');
+            expect(headers.parent()).toHaveClass('medium-3');
+            expect(headers.parent()).toHaveClass('columns')
+        });
+
+        it('to show tab panels vertically', function() {
+            var content = angular.element(elm[0].querySelectorAll('div.tabs-content'));
+
+            expect(content).toHaveClass('vertical');
+            expect(content.parent()).toHaveClass('medium-9');
+            expect(content.parent()).toHaveClass('columns')
         });
     });
 

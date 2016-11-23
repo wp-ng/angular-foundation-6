@@ -84,7 +84,7 @@ angular.module('mm.foundation.tabs', [])
         },
         controller: 'TabsetController',
         templateUrl: function(elem, attr) {
-            var type = attr.vertical == 'true' ? 'vertical' : 'horizontal';
+            var type = attr.vertical == 'vertical' ? 'vertical' : 'horizontal';
             return 'template/tabs/tabset-' + type + '.html';
         },
         link: function(scope, element, attrs) {

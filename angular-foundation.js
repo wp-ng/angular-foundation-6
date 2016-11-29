@@ -9,7 +9,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
  * angular-foundation-6
  * http://circlingthesun.github.io/angular-foundation-6/
 
- * Version: 0.10.14 - 2016-11-23
+ * Version: 0.10.15 - 2016-11-29
  * License: MIT
  * (c) 
  */
@@ -1923,7 +1923,7 @@ angular.module('mm.foundation.tabs', []).controller('TabsetController', ['$scope
         },
         controller: 'TabsetController',
         templateUrl: function templateUrl(elem, attr) {
-            var type = attr.vertical == 'vertical' ? 'vertical' : 'horizontal';
+            var type = attr.vertical == 'true' ? 'vertical' : 'horizontal';
             return 'template/tabs/tabset-' + type + '.html';
         },
         link: function link(scope, element, attrs) {

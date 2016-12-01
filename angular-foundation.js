@@ -9,7 +9,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
  * angular-foundation-6
  * http://circlingthesun.github.io/angular-foundation-6/
 
- * Version: 0.10.16 - 2016-11-29
+ * Version: 0.10.17 - 2016-12-01
  * License: MIT
  * (c) 
  */
@@ -962,7 +962,8 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
             modalScope: options.scope,
             backdrop: options.backdrop,
             keyboard: options.keyboard,
-            closeOnClick: options.closeOnClick
+            closeOnClick: options.closeOnClick,
+            id: options.id
         };
         openedWindows.add(modalInstance, modalInstance.options);
 
@@ -1065,28 +1066,41 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
         var modalWindow = openedWindows.get(modalInstance);
         if (modalWindow) {
             modalWindow.value.deferred.resolve(result);
-            removeModalWindow(modalInstance);
+            return modalInstance.opened.then(function () {
+                removeModalWindow(modalInstance);
+            });
         }
+        return $q.resolve();
     };
 
     $modalStack.dismiss = function (modalInstance, reason) {
         var modalWindow = openedWindows.get(modalInstance);
         if (modalWindow) {
             modalWindow.value.deferred.reject(reason);
-            removeModalWindow(modalInstance);
+            return modalInstance.opened.then(function () {
+                removeModalWindow(modalInstance);
+            });
         }
+        return $q.resolve();
     };
 
     $modalStack.dismissAll = function (reason) {
-        var topModal = $modalStack.getTop();
-        while (topModal) {
-            $modalStack.dismiss(topModal.key, reason);
-            topModal = $modalStack.getTop();
-        }
+        var leaveOpenIds = arguments.length <= 1 || arguments[1] === undefined ? [] : arguments[1];
+        return $q.all(openedWindows.keys().filter(function (key) {
+            return leaveOpenIds.indexOf(openedWindows.get(key).value.id) !== -1;
+        }).map(function (key) {
+            return $modalStack.dismiss(key, reason);
+        }));
     };
 
     $modalStack.getTop = function () {
         return openedWindows.top();
+    };
+
+    $modalStack.isOpen = function (id) {
+        return openedWindows.keys().some(function (key) {
+            return skipIds.indexOf(openedWindows.get().value.id) !== -1;
+        });
     };
 
     return $modalStack;
@@ -1098,7 +1112,8 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
     this.options = {
         backdrop: true, // can be also false or 'static'
         keyboard: true,
-        closeOnClick: true
+        closeOnClick: true,
+        id: 0
     };
 
     this.$get = ['$injector', '$rootScope', '$q', '$http', '$templateCache', '$controller', '$modalStack', function ($injector, $rootScope, $q, $http, $templateCache, $controller, $modalStack) {
@@ -1188,7 +1203,8 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
                     keyboard: modalOptions.keyboard,
                     windowClass: modalOptions.windowClass,
                     size: modalOptions.size,
-                    closeOnClick: modalOptions.closeOnClick
+                    closeOnClick: modalOptions.closeOnClick,
+                    id: modalOptions.id
                 });
             }, function (reason) {
                 modalResultDeferred.reject(reason);

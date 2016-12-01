@@ -303,11 +303,11 @@ describe('$modal', () => {
             expect($document).toHaveModalOpenWithContent('Content', 'div');
             expect($document).toHaveBackdrop();
 
-            modal.close('closing in test');
+            close(modal, 'closing in test');
 
             expect($document).toHaveModalsOpen(0);
 
-            modal.close('closing in test');
+            close(modal, 'closing in test');
         });
 
         it('should open a modal from templateUrl', () => {

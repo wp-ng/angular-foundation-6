@@ -216,7 +216,7 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
     }
 
     $document.on('keydown', (evt) => {
-        let modal = openedWindows.top();
+        const modal = openedWindows.top();
         if (modal) {
             if (evt.which === 27) {
                 if (modal.value.keyboard) {
@@ -225,8 +225,8 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
                     });
                 }
             } else if (evt.which === 9) {
-                var list = $modalStack.loadFocusElementList(modal);
-                var focusChanged = false;
+                let list = $modalStack.loadFocusElementList(modal);
+                let focusChanged = false;
                 if (evt.shiftKey) {
                     if ($modalStack.isFocusInFirstItem(evt, list) || $modalStack.isModalFocused(evt, modal)) {
                         focusChanged = $modalStack.focusLastFocusableElement(list);
@@ -305,6 +305,7 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
             backdrop: options.backdrop,
             keyboard: options.keyboard,
             closeOnClick: options.closeOnClick,
+            id: options.id,
         };
         openedWindows.add(modalInstance, modalInstance.options);
 
@@ -414,27 +415,36 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
         const modalWindow = openedWindows.get(modalInstance);
         if (modalWindow) {
             modalWindow.value.deferred.resolve(result);
-            removeModalWindow(modalInstance);
+            return modalInstance.opened.then(() => {
+                removeModalWindow(modalInstance);
+            });
         }
+        return $q.resolve();
     };
 
     $modalStack.dismiss = (modalInstance, reason) => {
         const modalWindow = openedWindows.get(modalInstance);
         if (modalWindow) {
             modalWindow.value.deferred.reject(reason);
-            removeModalWindow(modalInstance);
+            return modalInstance.opened.then(() => {
+                removeModalWindow(modalInstance);
+            });
         }
+        return $q.resolve();
     };
 
-    $modalStack.dismissAll = (reason) => {
-        let topModal = $modalStack.getTop();
-        while (topModal) {
-            $modalStack.dismiss(topModal.key, reason);
-            topModal = $modalStack.getTop();
-        }
-    };
+    $modalStack.dismissAll = (reason, leaveOpenIds = []) =>
+        $q.all(openedWindows.keys().filter(key =>
+            leaveOpenIds.indexOf(openedWindows.get(key).value.id) !== -1
+        ).map(key =>
+            $modalStack.dismiss(key, reason)
+        ));
 
     $modalStack.getTop = () => openedWindows.top();
+
+    $modalStack.isOpen = (id) => openedWindows.keys().some(key =>
+            skipIds.indexOf(openedWindows.get().value.id) !== -1
+        );
 
     return $modalStack;
 })
@@ -446,6 +456,7 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
         backdrop: true, // can be also false or 'static'
         keyboard: true,
         closeOnClick: true,
+        id: 0,
     };
 
     this.$get = ($injector, $rootScope, $q, $http, $templateCache, $controller, $modalStack) => {
@@ -536,6 +547,7 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
                     windowClass: modalOptions.windowClass,
                     size: modalOptions.size,
                     closeOnClick: modalOptions.closeOnClick,
+                    id: modalOptions.id,
                 });
             }, (reason) => {
                 modalResultDeferred.reject(reason);

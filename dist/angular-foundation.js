@@ -9,7 +9,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
  * angular-foundation-6
  * http://circlingthesun.github.io/angular-foundation-6/
 
- * Version: 0.10.17 - 2016-12-01
+ * Version: 0.10.18 - 2016-12-02
  * License: MIT
  * (c) 
  */
@@ -1087,7 +1087,7 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
     $modalStack.dismissAll = function (reason) {
         var leaveOpenIds = arguments.length <= 1 || arguments[1] === undefined ? [] : arguments[1];
         return $q.all(openedWindows.keys().filter(function (key) {
-            return leaveOpenIds.indexOf(openedWindows.get(key).value.id) !== -1;
+            return leaveOpenIds.indexOf(openedWindows.get(key).value.id) === -1;
         }).map(function (key) {
             return $modalStack.dismiss(key, reason);
         }));

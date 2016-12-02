@@ -435,7 +435,7 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
 
     $modalStack.dismissAll = (reason, leaveOpenIds = []) =>
         $q.all(openedWindows.keys().filter(key =>
-            leaveOpenIds.indexOf(openedWindows.get(key).value.id) !== -1
+            leaveOpenIds.indexOf(openedWindows.get(key).value.id) === -1
         ).map(key =>
             $modalStack.dismiss(key, reason)
         ));

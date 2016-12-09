@@ -639,12 +639,6 @@ angular.module('mm.foundation.mediaQueries', []).factory('matchMedia', ['$docume
     };
 }]);
 
-function silenceUncaughtInPromise(promise) {
-    return promise.then(undefined, function (val) {
-        return val;
-    }) && promise;
-}
-
 angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
 
 /**

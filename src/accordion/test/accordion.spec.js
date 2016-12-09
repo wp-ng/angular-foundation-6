@@ -31,7 +31,6 @@ describe('accordion', function() {
             //     $attrs: $attrs
             // });
 
-            // console.log('-----------------------------------------------------------', ctrl);
             ctrl = $controller('AccordionController', {
                 $scope: $scope,
                 $element: $element,
@@ -154,11 +153,11 @@ describe('accordion', function() {
 
         describe('with static panels', function() {
             beforeEach(function() {
-                var tpl =
-                    "<accordion>" +
-                    "<accordion-group heading=\"title 1\">Content 1</accordion-group>" +
-                    "<accordion-group heading=\"title 2\">Content 2</accordion-group>" +
-                    "</accordion>";
+                var tpl =`
+                    <accordion>
+                        <accordion-group heading="title 1">Content 1</accordion-group>
+                        <accordion-group heading="title 2">Content 2</accordion-group>
+                    </accordion>`;
                 element = angular.element(tpl);
                 $compile(element)(scope);
                 scope.$digest();
@@ -216,10 +215,10 @@ describe('accordion', function() {
         describe('with dynamic panels', function() {
             var model;
             beforeEach(function() {
-                var tpl =
-                    "<accordion>" +
-                    "<accordion-group ng-repeat='group in groups' heading='{{group.name}}'>{{group.content}}</accordion-group>" +
-                    "</accordion>";
+                var tpl =`
+                    <accordion>
+                       <accordion-group ng-repeat='group in groups' heading='{{group.name}}'>{{group.content}}</accordion-group>
+                    </accordion>`;
                 element = angular.element(tpl);
                 model = [{
                     name: 'title 1',
@@ -264,11 +263,11 @@ describe('accordion', function() {
 
         describe('is-open attribute', function() {
             beforeEach(function() {
-                var tpl =
-                    '<accordion>' +
-                    '<accordion-group heading="title 1" is-open="open.first">Content 1</accordion-group>' +
-                    '<accordion-group heading="title 2" is-open="open.second">Content 2</accordion-group>' +
-                    '</accordion>';
+                var tpl = `
+                    <accordion>
+                      <accordion-group heading="title 1" is-open="open.first">Content 1</accordion-group>
+                      <accordion-group heading="title 2" is-open="open.second">Content 2</accordion-group>
+                    </accordion>`;
                 element = angular.element(tpl);
                 scope.open = {
                     first: false,
@@ -298,10 +297,12 @@ describe('accordion', function() {
         describe('is-open attribute with dynamic groups', function() {
             var model;
             beforeEach(function() {
-                var tpl =
-                    '<accordion>' +
-                    '<accordion-group ng-repeat="group in groups" heading="{{group.name}}" is-open="group.open">{{group.content}}</accordion-group>' +
-                    '</accordion>';
+                var tpl = `
+                    <accordion>
+                      <accordion-group ng-repeat="group in groups" heading="{{group.name}}" is-open="group.open">
+                      {{group.content}}
+                      </accordion-group>
+                    </accordion>`;
                 element = angular.element(tpl);
                 scope.groups = [{
                     name: 'title 1',
@@ -338,35 +339,37 @@ describe('accordion', function() {
 
         describe('accordion-heading element', function() {
             beforeEach(function() {
-                var tpl =
-                    '<accordion ng-init="a = [1,2,3]">' +
-                    '<accordion-group heading="I get overridden">' +
-                      '<accordion-heading>Heading Element <span ng-repeat="x in a">{{x}}</span></accordion-heading>' +
-                      'Body' +
-                    '</accordion-group>' +
-                    '</accordion>';
+                var tpl = `
+                    <accordion ng-init="a = [1,2,3]">
+                      <accordion-group heading="I get overridden">
+                        <accordion-heading>Heading Element <span ng-repeat="x in a">{{x}}</span></accordion-heading>
+                        Body
+                      </accordion-group>
+                    </accordion>`;
                 element = $compile(tpl)(scope);
+                scope.$digest();
                 scope.$digest();
                 groups = element.find('li');
             });
             it('transcludes the <accordion-heading> content into the heading link', function() {
                 expect(findGroupLink(0).text()).toBe('Heading Element 123');
             });
-            it('attaches the same scope to the transcluded heading and body', function() {
-                expect(findGroupLink(0).find('span').scope().$id).toBe(findGroupBody(0).find('span').scope().$id);
-            });
+            // NG 1.6 no longer wraps spans around text nodes
+            // it('attaches the same scope to the transcluded heading and body', function() {
+            //     expect(findGroupLink(0).find('span').scope().$id).toBe(findGroupBody(0).find('span').scope().$id);
+            // });
 
         });
 
         describe('accordion-heading attribute', function() {
             beforeEach(function() {
-                var tpl =
-                    '<accordion ng-init="a = [1,2,3]">' +
-                    '<accordion-group heading="I get overridden">' +
-                    '<div accordion-heading>Heading Element <span ng-repeat="x in a">{{x}}</span></div>' +
-                    'Body' +
-                    '</accordion-group>' +
-                    '</accordion>';
+                var tpl = `
+                    <accordion ng-init="a = [1,2,3]">
+                        <accordion-group heading="I get overridden">
+                        <div accordion-heading>Heading Element <span ng-repeat="x in a">{{x}}</span></div>
+                        Body
+                        </accordion-group>
+                    </accordion>`;
                 element = $compile(tpl)(scope);
                 scope.$digest();
                 groups = element.find('li');
@@ -374,9 +377,10 @@ describe('accordion', function() {
             it('transcludes the <accordion-heading> content into the heading link', function() {
                 expect(findGroupLink(0).text()).toBe('Heading Element 123');
             });
-            it('attaches the same scope to the transcluded heading and body', function() {
-                expect(findGroupLink(0).find('span').scope().$id).toBe(findGroupBody(0).find('span').scope().$id);
-            });
+            // NG 1.6 no longer wraps spans around text nodes
+            // it('attaches the same scope to the transcluded heading and body', function() {
+            //     expect(findGroupLink(0).find('span').scope().$id).toBe(findGroupBody(0).find('span').scope().$id);
+            // });
 
         });
 

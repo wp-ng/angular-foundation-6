@@ -6,13 +6,15 @@ function DropdownToggleController($scope, $attrs, mediaQueries, $element, $posit
     $ctrl.css = {};
 
     $transclude((clone, tScope) => {
-        tScope.$close = close;
-        $element.find('div').append(clone);
-    }, $element.parent(), 'pane');
+        const el = angular.element($element[0].querySelector('span:nth-child(1)'))
+        el.append(clone);
+    }, $element.parent(), 'toggle');
 
     $transclude((clone, tScope) => {
-        $element.find('span').append(clone);
-    }, $element.parent(), 'toggle');
+        tScope.$close = close;
+        const el = angular.element($element[0].querySelector('div:nth-child(2)'))
+        el.append(clone);
+    }, $element.parent(), 'pane');
 
     $timeout(() => {
         positionPane();

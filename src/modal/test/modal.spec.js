@@ -99,10 +99,29 @@ describe('$modal', () => {
                     compare,
                 };
             },
+            toBeResolved: (util, customEqualityTesters) => {
+                function compare(actual) {
+                    let resolved = false;
+                    actual.then(() => {
+                        resolved = true;
+                    });
+
+                    $rootScope.$digest();
+
+                    return {
+                        pass: resolved === true,
+                        message: `Expected '${angular.mock.dump(actual)}' to be resolved}'.`
+                    };
+                }
+
+                return {
+                    compare,
+                };
+            },
             toBeRejectedWith: (util, customEqualityTesters) => {
                 function compare(actual, expected) {
                     let rejected;
-                    actual.then(angular.noop, (reason) => {
+                    actual.catch((reason) => {
                         rejected = reason;
                     });
                     $rootScope.$digest();
@@ -110,6 +129,26 @@ describe('$modal', () => {
                     return {
                         pass: rejected === expected,
                         message: `Expected '${angular.mock.dump(actual)}' to be rejected with '${expected}' not '${angular.mock.dump(rejected)}'.`
+                    };
+                }
+
+                return {
+                    compare,
+                };
+            },
+
+
+            toBeRejected: (util, customEqualityTesters) => {
+                function compare(actual) {
+                    let rejected = false;
+                    actual.catch(() => {
+                        rejected = true;
+                    });
+                    $rootScope.$digest();
+
+                    return {
+                        pass: rejected === true,
+                        message: `Expected '${angular.mock.dump(actual)}' to be rejected.`
                     };
                 }
 
@@ -233,6 +272,11 @@ describe('$modal', () => {
         try{
             $animate.flush();
         } catch(e){}
+
+        // Prevent "Possibly unhandled rejection: closing in test thrown"
+        modal.result.catch(angular.noop);
+        modal.opened.catch(angular.noop);
+
         return modal;
     }
 
@@ -269,6 +313,7 @@ describe('$modal', () => {
             const modal = open({
                 template: '<div>Content</div>',
             });
+
             expect($document).toHaveModalsOpen(1);
             expect($document).toHaveModalOpenWithContent('Content', 'div');
             expect($document).toHaveBackdrop();
@@ -380,18 +425,24 @@ describe('$modal', () => {
                 },
             });
 
-            expect(modal.opened).toBeResolvedWith(true);
+            expect(modal.opened).toBeResolved();
         });
 
         it('should expose a promise linked to the templateUrl / resolve promises and reject it if needed', () => {
+            const d = $q.defer();
+
             const modal = open({
                 template: '<div>Content</div>',
                 resolve: {
-                    ok: () => $q.reject('ko'),
+                    ok: () => {
+                        return d.promise;
+                    },
                 },
             });
 
-            expect(modal.opened).toBeRejectedWith(false);
+            d.reject();
+
+            expect(modal.opened).toBeRejected();
         });
 
         it('should destroy modal scope on close', () => {

@@ -115,7 +115,6 @@ angular.module('mm.foundation.tooltip', ['mm.foundation.position', 'mm.foundatio
 
                     return function link(scope, element, attrs) {
                         var tooltip;
-                        var transitionTimeout;
                         var popupTimeout;
                         var appendToBody = angular.isDefined(options.appendToBody) ? options.appendToBody : false;
                         var triggers = getTriggers(undefined);
@@ -191,7 +190,7 @@ angular.module('mm.foundation.tooltip', ['mm.foundation.position', 'mm.foundatio
                                 popupTimeout = $timeout(show, scope.tt_popupDelay, false);
                                 popupTimeout.then(function(reposition) {
                                     reposition();
-                                });
+                                }, angular.noop);
                             } else {
                                 show()();
                             }
@@ -213,12 +212,6 @@ angular.module('mm.foundation.tooltip', ['mm.foundation.position', 'mm.foundatio
                             }
 
                             createTooltip();
-
-                            // If there is a pending remove transition, we must cancel it, lest the
-                            // tooltip be mysteriously removed.
-                            if (transitionTimeout) {
-                                $timeout.cancel(transitionTimeout);
-                            }
 
                             // Set the initial positioning.
                             tooltip.css({
@@ -356,7 +349,6 @@ angular.module('mm.foundation.tooltip', ['mm.foundation.position', 'mm.foundatio
 
                         // Make sure tooltip is destroyed and removed.
                         scope.$on('$destroy', function onDestroyTooltip() {
-                            $timeout.cancel(transitionTimeout);
                             $timeout.cancel(popupTimeout);
                             unregisterTriggers();
                             removeTooltip();

@@ -477,7 +477,7 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
             const promisesArr = [];
             angular.forEach(resolves, (value) => {
                 if (angular.isFunction(value) || angular.isArray(value)) {
-                    promisesArr.push($q.resolve($injector.invoke(value)));
+                    promisesArr.push($q.when($injector.invoke(value)));
                 }
             });
             return promisesArr;
@@ -555,9 +555,9 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
             });
 
             openedPromise.then(() => {
-                modalOpenedDeferred.resolve(true);
+                modalOpenedDeferred.resolve();
             }, () => {
-                modalOpenedDeferred.reject(false);
+                modalOpenedDeferred.reject();
             });
 
             return modalInstance;

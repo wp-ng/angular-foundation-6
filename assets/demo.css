@@ -33,7 +33,7 @@ div[role=main] section.demo {
  */
 /**
  * Foundation for Sites by ZURB
- * Version 6.2.3
+ * Version 6.2.4
  * foundation.zurb.com
  * Licensed under MIT Open Source
  */
@@ -86,6 +86,7 @@ div[role=main] section.demo {
   transform: translateY(-100%);
   transition-property: transform, opacity;
   opacity: 0;
+  -webkit-backface-visibility: hidden;
   backface-visibility: hidden; }
 
 .reveal.ng-enter.ng-enter-active {

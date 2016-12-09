@@ -3,13 +3,13 @@
 AccordionController.$inject = ['$scope', '$attrs', 'accordionConfig'];
 DropdownToggleController.$inject = ['$scope', '$attrs', 'mediaQueries', '$element', '$position', '$timeout', '$transclude', 'dropdownPaneOffset'];
 dropdownToggle.$inject = ['$document', '$window', '$location'];
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 /*
  * angular-foundation-6
  * http://circlingthesun.github.io/angular-foundation-6/
 
- * Version: 0.10.18 - 2016-12-02
+ * Version: 0.10.19 - 2016-12-09
  * License: MIT
  * (c) 
  */
@@ -378,13 +378,15 @@ function DropdownToggleController($scope, $attrs, mediaQueries, $element, $posit
     $ctrl.css = {};
 
     $transclude(function (clone, tScope) {
-        tScope.$close = close;
-        $element.find('div').append(clone);
-    }, $element.parent(), 'pane');
+        var el = angular.element($element[0].querySelector('span:nth-child(1)'));
+        el.append(clone);
+    }, $element.parent(), 'toggle');
 
     $transclude(function (clone, tScope) {
-        $element.find('span').append(clone);
-    }, $element.parent(), 'toggle');
+        tScope.$close = close;
+        var el = angular.element($element[0].querySelector('div:nth-child(2)'));
+        el.append(clone);
+    }, $element.parent(), 'pane');
 
     $timeout(function () {
         positionPane();
@@ -652,6 +654,12 @@ angular.module('mm.foundation.mediaQueries', []).factory('matchMedia', ['$docume
         }
     };
 }]);
+
+function silenceUncaughtInPromise(promise) {
+    return promise.then(undefined, function (val) {
+        return val;
+    }) && promise;
+}
 
 angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
 
@@ -1085,7 +1093,7 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
     };
 
     $modalStack.dismissAll = function (reason) {
-        var leaveOpenIds = arguments.length <= 1 || arguments[1] === undefined ? [] : arguments[1];
+        var leaveOpenIds = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
         return $q.all(openedWindows.keys().filter(function (key) {
             return leaveOpenIds.indexOf(openedWindows.get(key).value.id) === -1;
         }).map(function (key) {
@@ -1136,7 +1144,7 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
             var promisesArr = [];
             angular.forEach(resolves, function (value) {
                 if (angular.isFunction(value) || angular.isArray(value)) {
-                    promisesArr.push($q.resolve($injector.invoke(value)));
+                    promisesArr.push($q.when($injector.invoke(value)));
                 }
             });
             return promisesArr;
@@ -1212,9 +1220,9 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
             });
 
             openedPromise.then(function () {
-                modalOpenedDeferred.resolve(true);
+                modalOpenedDeferred.resolve();
             }, function () {
-                modalOpenedDeferred.reject(false);
+                modalOpenedDeferred.reject();
             });
 
             return modalInstance;
@@ -1713,11 +1721,11 @@ angular.module('mm.foundation.progressbar', []).constant('progressConfig', {
             //     width: percent + '%'
             // });
         } else {
-                element.css({
-                    'transition': 'none',
-                    'width': percent + '%'
-                });
-            }
+            element.css({
+                'transition': 'none',
+                'width': percent + '%'
+            });
+        }
     };
 
     this.removeBar = function (bar) {
@@ -2270,7 +2278,6 @@ angular.module('mm.foundation.tooltip', ['mm.foundation.position', 'mm.foundatio
 
                     return function link(scope, element, attrs) {
                         var tooltip;
-                        var transitionTimeout;
                         var popupTimeout;
                         var appendToBody = angular.isDefined(options.appendToBody) ? options.appendToBody : false;
                         var triggers = getTriggers(undefined);
@@ -2345,7 +2352,7 @@ angular.module('mm.foundation.tooltip', ['mm.foundation.position', 'mm.foundatio
                                 popupTimeout = $timeout(show, scope.tt_popupDelay, false);
                                 popupTimeout.then(function (reposition) {
                                     reposition();
-                                });
+                                }, angular.noop);
                             } else {
                                 show()();
                             }
@@ -2366,12 +2373,6 @@ angular.module('mm.foundation.tooltip', ['mm.foundation.position', 'mm.foundatio
                             }
 
                             createTooltip();
-
-                            // If there is a pending remove transition, we must cancel it, lest the
-                            // tooltip be mysteriously removed.
-                            if (transitionTimeout) {
-                                $timeout.cancel(transitionTimeout);
-                            }
 
                             // Set the initial positioning.
                             tooltip.css({
@@ -2508,7 +2509,6 @@ angular.module('mm.foundation.tooltip', ['mm.foundation.position', 'mm.foundatio
 
                         // Make sure tooltip is destroyed and removed.
                         scope.$on('$destroy', function onDestroyTooltip() {
-                            $timeout.cancel(transitionTimeout);
                             $timeout.cancel(popupTimeout);
                             unregisterTriggers();
                             removeTooltip();

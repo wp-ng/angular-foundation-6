@@ -1002,7 +1002,6 @@
 
             if (options.backdrop) {
                 var backdropScope = $rootScope.$new(true);
-                // backdropScope.index = currBackdropIndex + 1000;
                 backdropDomEl = $compile('<div modal-backdrop></div>')(backdropScope);
                 openedWindows.top().value.backdropDomEl = backdropDomEl;
                 openedWindows.top().value.backdropScope = backdropScope;

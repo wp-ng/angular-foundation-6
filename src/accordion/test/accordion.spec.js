@@ -1,8 +1,8 @@
-import angular from "angular";
-import mocks from "angular-mocks";
-import "src/accordion/accordion.js"
-import "src/accordion/accordion.html.js"
-import "src/accordion/accordion-group.html.js"
+import angular from 'angular';
+import mocks from 'angular-mocks';
+import 'src/accordion/accordion.js';
+import 'src/accordion/accordion.html.js';
+import 'src/accordion/accordion-group.html.js';
 
 describe('accordion', function() {
 

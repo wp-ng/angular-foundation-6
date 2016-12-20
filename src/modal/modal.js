@@ -36,7 +36,6 @@ export class StackedMap {
 angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
 
 
-
 /**
  * A helper directive for the $modal service. It creates a backdrop element.
  */
@@ -288,7 +287,6 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
 
         if (options.backdrop) {
             const backdropScope = $rootScope.$new(true);
-            backdropScope.index = currBackdropIndex;
             backdropDomEl = $compile('<div modal-backdrop></div>')(backdropScope);
             openedWindows.top().value.backdropDomEl = backdropDomEl;
             openedWindows.top().value.backdropScope = backdropScope;

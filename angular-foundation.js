@@ -705,14 +705,6 @@ var StackedMap = exports.StackedMap = function () {
             this.stack = this.stack.filter(function (s) {
                 return s.key !== key;
             });
-            // let idx = -1;
-            // for (let i = 0; i < stack.length; i++) {
-            //     if (key === stack[i].key) {
-            //         idx = i;
-            //         break;
-            //     }
-            // }
-            // return stack.splice(idx, 1)[0];
         }
     }, {
         key: 'removeTop',

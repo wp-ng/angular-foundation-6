@@ -66,7 +66,7 @@
      * angular-foundation-6
      * http://circlingthesun.github.io/angular-foundation-6/
     
-     * Version: 0.10.21 - 2016-12-20
+     * Version: 0.10.22 - 2016-12-20
      * License: MIT
      * (c) 
      */
@@ -1018,7 +1018,7 @@
 
             if (options.backdrop) {
                 var backdropScope = $rootScope.$new(true);
-                backdropScope.index = currBackdropIndex;
+                // backdropScope.index = currBackdropIndex + 1000;
                 backdropDomEl = $compile('<div modal-backdrop></div>')(backdropScope);
                 openedWindows.top().value.backdropDomEl = backdropDomEl;
                 openedWindows.top().value.backdropScope = backdropScope;
@@ -1274,7 +1274,7 @@
 
     (function () {
         angular.module("mm.foundation.modal").run(["$templateCache", function ($templateCache) {
-            $templateCache.put("template/modal/backdrop.html", "<div ng-animate-children=\"true\"\n    class=\"reveal-overlay ng-animate\"\n    ng-click=\"close($event)\"\n    ng-style=\"{\'z-index\': index}\"\n    style=\"display: block;\"></div>\n");
+            $templateCache.put("template/modal/backdrop.html", "<div ng-animate-children=\"true\"\n    class=\"reveal-overlay ng-animate\"\n    ng-click=\"close($event)\"\n    style=\"display: block;\"></div>\n");
             $templateCache.put("template/modal/window.html", "<div tabindex=\"-1\" class=\"reveal {{ windowClass }}\" style=\"display: block; visibility: visible;\">\n  <div ng-transclude></div>\n</div>\n");
         }]);
     })();

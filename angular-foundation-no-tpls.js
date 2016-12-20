@@ -3,13 +3,23 @@
 AccordionController.$inject = ['$scope', '$attrs', 'accordionConfig'];
 DropdownToggleController.$inject = ['$scope', '$attrs', 'mediaQueries', '$element', '$position', '$timeout', '$transclude', 'dropdownPaneOffset'];
 dropdownToggle.$inject = ['$document', '$window', '$location'];
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /*
  * angular-foundation-6
  * http://circlingthesun.github.io/angular-foundation-6/
 
- * Version: 0.10.19 - 2016-12-09
+ * Version: 0.10.20 - 2016-12-20
  * License: MIT
  * (c) 
  */
@@ -639,63 +649,71 @@ angular.module('mm.foundation.mediaQueries', []).factory('matchMedia', ['$docume
     };
 }]);
 
-angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
+var StackedMap = exports.StackedMap = function () {
+    function StackedMap() {
+        _classCallCheck(this, StackedMap);
 
-/**
- * A helper, internal data structure that acts as a map but also allows getting / removing
- * elements in the LIFO order
- */
-.factory('$$stackedMap', function () {
-    'ngInject';
+        this.stack = [];
+    }
 
-    return {
-        createNew: function createNew() {
-            var stack = [];
-
-            return {
-                add: function add(key, value) {
-                    stack.push({
-                        key: key,
-                        value: value
-                    });
-                },
-                get: function get(key) {
-                    for (var i = 0; i < stack.length; i++) {
-                        if (key === stack[i].key) {
-                            return stack[i];
-                        }
-                    }
-                },
-                keys: function keys() {
-                    var keys = [];
-                    for (var i = 0; i < stack.length; i++) {
-                        keys.push(stack[i].key);
-                    }
-                    return keys;
-                },
-                top: function top() {
-                    return stack[stack.length - 1];
-                },
-                remove: function remove(key) {
-                    var idx = -1;
-                    for (var i = 0; i < stack.length; i++) {
-                        if (key === stack[i].key) {
-                            idx = i;
-                            break;
-                        }
-                    }
-                    return stack.splice(idx, 1)[0];
-                },
-                removeTop: function removeTop() {
-                    return stack.splice(stack.length - 1, 1)[0];
-                },
-                length: function length() {
-                    return stack.length;
-                }
-            };
+    _createClass(StackedMap, [{
+        key: 'add',
+        value: function add(key, value) {
+            this.stack.push({
+                key: key,
+                value: value
+            });
         }
-    };
-})
+    }, {
+        key: 'get',
+        value: function get(key) {
+            return this.stack.find(function (s) {
+                return s.key === key;
+            });
+        }
+    }, {
+        key: 'keys',
+        value: function keys() {
+            return this.stack.map(function (s) {
+                return s.key;
+            });
+        }
+    }, {
+        key: 'top',
+        value: function top() {
+            return this.stack[this.stack.length - 1];
+        }
+    }, {
+        key: 'remove',
+        value: function remove(key) {
+            this.stack = this.stack.filter(function (s) {
+                return s.key !== key;
+            });
+            // let idx = -1;
+            // for (let i = 0; i < stack.length; i++) {
+            //     if (key === stack[i].key) {
+            //         idx = i;
+            //         break;
+            //     }
+            // }
+            // return stack.splice(idx, 1)[0];
+        }
+    }, {
+        key: 'removeTop',
+        value: function removeTop() {
+            return this.stack.splice(this.stack.length - 1, 1)[0];
+        }
+    }, {
+        key: 'length',
+        value: function length() {
+            return this.stack.length;
+        }
+    }]);
+
+    return StackedMap;
+}();
+
+angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
 
 /**
  * A helper directive for the $modal service. It creates a backdrop element.
@@ -737,7 +755,7 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
             };
         }
     };
-}]).factory('$modalStack', ['$window', '$timeout', '$document', '$compile', '$rootScope', '$$stackedMap', '$animate', '$q', 'mediaQueries', function ($window, $timeout, $document, $compile, $rootScope, $$stackedMap, $animate, $q, mediaQueries) {
+}]).factory('$modalStack', ['$window', '$timeout', '$document', '$compile', '$rootScope', '$animate', '$q', 'mediaQueries', function ($window, $timeout, $document, $compile, $rootScope, $animate, $q, mediaQueries) {
     'ngInject';
 
     var isMobile = mediaQueries.mobileSniff();
@@ -746,9 +764,7 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
     var tabbableSelector = 'a[href], area[href], input:not([disabled]):not([tabindex=\'-1\']), ' + 'button:not([disabled]):not([tabindex=\'-1\']),select:not([disabled]):not([tabindex=\'-1\']), textarea:not([disabled]):not([tabindex=\'-1\']), ' + 'iframe, object, embed, *[tabindex]:not([tabindex=\'-1\']), *[contenteditable=true]';
 
     var originalScrollPos = null; // For mobile scroll hack
-    var backdropDomEl = void 0;
-    var backdropScope = void 0;
-    var openedWindows = $$stackedMap.createNew();
+    var openedWindows = new StackedMap();
     var $modalStack = {};
 
     function backdropIndex() {
@@ -761,12 +777,6 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
         }
         return topBackdropIndex;
     }
-
-    $rootScope.$watch(backdropIndex, function (newBackdropIndex) {
-        if (backdropScope) {
-            backdropScope.index = newBackdropIndex;
-        }
-    });
 
     function resizeHandler() {
         var opened = openedWindows.keys();
@@ -788,19 +798,10 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
         openedWindows.remove(modalInstance);
 
         // Remove backdrop
-        if (backdropDomEl && backdropIndex() === -1) {
-            (function () {
-                var backdropScopeRef = backdropScope;
-
-                $animate.leave(backdropDomEl).then(function () {
-                    if (backdropScopeRef) {
-                        backdropScopeRef.$destroy();
-                    }
-                    backdropScopeRef = null;
-                });
-                backdropDomEl = null;
-                backdropScope = null;
-            })();
+        if (modalWindow.backdropDomEl) {
+            $animate.leave(modalWindow.backdropDomEl).then(function () {
+                modalWindow.backdropScope.$destroy();
+            });
         }
 
         // Remove modal
@@ -862,44 +863,47 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
 
     $document.on('keydown', function (evt) {
         var modal = openedWindows.top();
-        if (modal) {
-            if (evt.which === 27) {
-                if (modal.value.keyboard) {
-                    $rootScope.$apply(function () {
-                        $modalStack.dismiss(modal.key);
-                    });
+        if (!modal) {
+            return;
+        }
+        if (evt.which === 27) {
+            if (modal.value.keyboard) {
+                $rootScope.$apply(function () {
+                    $modalStack.dismiss(modal.key);
+                });
+            }
+        } else if (evt.which === 9) {
+            var list = $modalStack.loadFocusElementList(modal);
+            var focusChanged = false;
+            if (evt.shiftKey) {
+                if ($modalStack.isFocusInFirstItem(evt, list) || $modalStack.isModalFocused(evt, modal)) {
+                    focusChanged = $modalStack.focusLastFocusableElement(list);
                 }
-            } else if (evt.which === 9) {
-                var list = $modalStack.loadFocusElementList(modal);
-                var focusChanged = false;
-                if (evt.shiftKey) {
-                    if ($modalStack.isFocusInFirstItem(evt, list) || $modalStack.isModalFocused(evt, modal)) {
-                        focusChanged = $modalStack.focusLastFocusableElement(list);
-                    }
-                } else {
-                    if ($modalStack.isFocusInLastItem(evt, list)) {
-                        focusChanged = $modalStack.focusFirstFocusableElement(list);
-                    }
+            } else {
+                if ($modalStack.isFocusInLastItem(evt, list)) {
+                    focusChanged = $modalStack.focusFirstFocusableElement(list);
                 }
+            }
 
-                if (focusChanged) {
-                    evt.preventDefault();
-                    evt.stopPropagation();
-                }
+            if (focusChanged) {
+                evt.preventDefault();
+                evt.stopPropagation();
             }
         }
     });
 
     $modalStack.loadFocusElementList = function (modalWindow) {
-        if (modalWindow) {
-            var modalDomE1 = modalWindow.value.modalDomEl;
-            if (modalDomE1 && modalDomE1.length) {
-                var elements = modalDomE1[0].querySelectorAll(tabbableSelector);
-                return elements ? Array.prototype.filter.call(elements, function (element) {
-                    return isVisible(element);
-                }) : elements;
-            }
+        if (!modalWindow) {
+            return [];
         }
+        var modalDomE1 = modalWindow.value.modalDomEl;
+        if (modalDomE1 && modalDomE1.length) {
+            var elements = modalDomE1[0].querySelectorAll(tabbableSelector);
+            return [].concat(_toConsumableArray(elements)).filter(function (e) {
+                return isVisible(element);
+            });
+        }
+        return [];
     };
 
     $modalStack.isModalFocused = function (evt, modalWindow) {
@@ -955,10 +959,14 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
 
         var currBackdropIndex = backdropIndex();
 
-        if (currBackdropIndex >= 0 && !backdropDomEl) {
-            backdropScope = $rootScope.$new(true);
+        var backdropDomEl = void 0;
+
+        if (options.backdrop) {
+            var backdropScope = $rootScope.$new(true);
             backdropScope.index = currBackdropIndex;
             backdropDomEl = $compile('<div modal-backdrop></div>')(backdropScope);
+            openedWindows.top().value.backdropDomEl = backdropDomEl;
+            openedWindows.top().value.backdropScope = backdropScope;
         }
 
         if (openedWindows.length() === 1) {
@@ -1071,7 +1079,7 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
     };
 
     $modalStack.dismissAll = function (reason) {
-        var leaveOpenIds = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+        var leaveOpenIds = arguments.length <= 1 || arguments[1] === undefined ? [] : arguments[1];
         return $q.all(openedWindows.keys().filter(function (key) {
             return leaveOpenIds.indexOf(openedWindows.get(key).value.id) === -1;
         }).map(function (key) {
@@ -1687,11 +1695,11 @@ angular.module('mm.foundation.progressbar', []).constant('progressConfig', {
             //     width: percent + '%'
             // });
         } else {
-            element.css({
-                'transition': 'none',
-                'width': percent + '%'
-            });
-        }
+                element.css({
+                    'transition': 'none',
+                    'width': percent + '%'
+                });
+            }
     };
 
     this.removeBar = function (bar) {

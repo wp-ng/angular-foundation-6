@@ -243,7 +243,8 @@ function build(fileName, opts) {
 
     var s = sq.pipe(concat(fileName))
         .pipe(babel({
-            presets: ['es2015']
+            presets: ['es2015'],
+            plugins: ['transform-es2015-modules-umd'],
         }))
         .pipe(ngAnnotate({
             add: true,

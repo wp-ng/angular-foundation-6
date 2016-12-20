@@ -1,9 +1,9 @@
 import angular from "angular";
 import mocks from "angular-mocks";
 
-import "src/modal/modal.js"
-import "src/modal/window.html.js"
-import "src/modal/backdrop.html.js"
+import {StackedMap} from "src/modal/modal.js";
+import "src/modal/window.html.js";
+import "src/modal/backdrop.html.js";
 
 describe('stacked map', function() {
 
@@ -12,10 +12,9 @@ describe('stacked map', function() {
 
     var stackedMap;
 
-    beforeEach(module('mm.foundation.modal'));
-    beforeEach(inject(function($$stackedMap) {
-        stackedMap = $$stackedMap.createNew();
-    }));
+    beforeEach(function() {
+        stackedMap = new StackedMap();
+    });
 
     it('should add and remove objects by key', function() {
 

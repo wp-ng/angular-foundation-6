@@ -66,7 +66,7 @@
      * angular-foundation-6
      * http://circlingthesun.github.io/angular-foundation-6/
     
-     * Version: 0.10.22 - 2016-12-20
+     * Version: 0.10.23 - 2016-12-21
      * License: MIT
      * (c) 
      */
@@ -955,7 +955,7 @@
             if (modalDomE1 && modalDomE1.length) {
                 var elements = modalDomE1[0].querySelectorAll(tabbableSelector);
                 return [].concat(_toConsumableArray(elements)).filter(function (e) {
-                    return isVisible(element);
+                    return isVisible(e);
                 });
             }
             return [];

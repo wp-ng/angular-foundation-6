@@ -225,7 +225,7 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
         const modalDomE1 = modalWindow.value.modalDomEl;
         if (modalDomE1 && modalDomE1.length) {
             const elements = modalDomE1[0].querySelectorAll(tabbableSelector);
-            return [...elements].filter(e => isVisible(element));
+            return [...elements].filter(e => isVisible(e));
         }
         return [];
     };

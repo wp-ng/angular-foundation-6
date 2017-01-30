@@ -235,7 +235,7 @@
 
     (function () {
         angular.module("mm.foundation.accordion").run(["$templateCache", function ($templateCache) {
-            $templateCache.put("template/accordion/accordion-group.html", "<li class=\"accordion-item\" ng-class=\"{ \'is-active\': $ctrl.isOpen }\">\n  <a ng-click=\"$ctrl.isOpen = !$ctrl.isOpen\" class=\"accordion-title\" accordion-transclude>{{$ctrl.heading}}</a>\n  <div class=\"accordion-content\" style=\"display: block;\" ng-if=\"$ctrl.isOpen\" ng-transclude></div>\n</li>\n");
+            $templateCache.put("template/accordion/accordion-group.html", "<li class=\"accordion-item\" ng-class=\"{ \'is-active\': $ctrl.isOpen }\">\n  <a ng-click=\"$ctrl.isOpen = !$ctrl.isOpen\" class=\"accordion-title\" accordion-transclude>{{$ctrl.heading}}</a>\n  <div class=\"accordion-content\" style=\"display: block;\" ng-show=\"$ctrl.isOpen\" ng-transclude></div>\n</li>\n");
             $templateCache.put("template/accordion/accordion.html", "<ul class=\"accordion\" ng-transclude></ul>\n");
         }]);
     })();

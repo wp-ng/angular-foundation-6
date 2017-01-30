@@ -56,20 +56,13 @@ div[role=main] section.demo {
 .tooltip.ng-leave.ng-leave-active {
   opacity: 0; }
 
-.accordion-content.ng-enter, .accordion-content.ng-leave {
-  transition: max-height 0.3s ease-in-out; }
-
-.accordion-content.ng-enter {
-  opacity: 0;
-  max-height: 0; }
-
-.accordion-content.ng-enter.ng-enter-active, .accordion-content.ng-leave {
-  opacity: 1;
-  max-height: 500px; }
-
-.accordion-content.ng-leave.ng-leave-active {
-  max-height: 0;
-  opacity: 1; }
+.accordion-content {
+  max-height: 499px;
+  transition: 0.3s all ease-in-out; }
+  .accordion-content.ng-hide {
+    max-height: 0; }
+  .accordion-content.ng-hide-add, .accordion-content.ng-hide-remove {
+    display: block !important; }
 
 .reveal-overlay.ng-enter {
   transition-duration: 500ms;

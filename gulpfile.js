@@ -430,7 +430,7 @@ gulp.task('release', (done) => {
 
 gulp.task('server:connect', () => {
     browserSync.init({
-        port: 8080,
+        // port: 8080,
         server: './dist/',
         // browser: ["google-chrome"/*, "firefox"*/],
         middleware: [ history() ]

@@ -66,7 +66,7 @@
      * angular-foundation-6
      * http://circlingthesun.github.io/angular-foundation-6/
     
-     * Version: 0.10.23 - 2016-12-21
+     * Version: 0.10.24 - 2017-01-30
      * License: MIT
      * (c) 
      */
@@ -235,7 +235,7 @@
 
     (function () {
         angular.module("mm.foundation.accordion").run(["$templateCache", function ($templateCache) {
-            $templateCache.put("template/accordion/accordion-group.html", "<li class=\"accordion-item\" ng-class=\"{ \'is-active\': $ctrl.isOpen }\">\n  <a ng-click=\"$ctrl.isOpen = !$ctrl.isOpen\" class=\"accordion-title\" accordion-transclude>{{$ctrl.heading}}</a>\n  <div class=\"accordion-content\" ng-style=\"{display: $ctrl.isOpen ? \'block\' : \'none\'}\" ng-transclude></div>\n</li>\n");
+            $templateCache.put("template/accordion/accordion-group.html", "<li class=\"accordion-item\" ng-class=\"{ \'is-active\': $ctrl.isOpen }\">\n  <a ng-click=\"$ctrl.isOpen = !$ctrl.isOpen\" class=\"accordion-title\" accordion-transclude>{{$ctrl.heading}}</a>\n  <div class=\"accordion-content\" style=\"display: block;\" ng-if=\"$ctrl.isOpen\" ng-transclude></div>\n</li>\n");
             $templateCache.put("template/accordion/accordion.html", "<ul class=\"accordion\" ng-transclude></ul>\n");
         }]);
     })();

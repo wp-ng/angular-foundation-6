@@ -67,26 +67,18 @@ $motion-ui-classes: (
 // class="accordion-item ng-scope ng-isolate-scope ng-animate is-active-add is-active is-active-add-active"
 
 .accordion-content {
-  &.ng-enter,
-    &.ng-leave {
-      transition: max-height 0.3s ease-in-out;
-    }
-    
-    &.ng-enter {
-      opacity: 0;
-      max-height: 0;
-    }
-    
-    &.ng-enter.ng-enter-active,
-    &.ng-leave {
-      opacity: 1;
-      max-height: 500px;
-    }
-    
-    &.ng-leave.ng-leave-active {
-      max-height: 0;
-      opacity: 1;
-    }
+
+  max-height: 499px;
+  transition: 0.3s all ease-in-out;
+
+  &.ng-hide {
+    max-height: 0;
+  }
+
+  &.ng-hide-add,
+  &.ng-hide-remove {
+    display: block !important;
+  }
 }
 
 .reveal-overlay {

@@ -16,6 +16,10 @@
     AccordionController.$inject = ['$scope', '$attrs', 'accordionConfig'];
     DropdownToggleController.$inject = ['$scope', '$attrs', 'mediaQueries', '$element', '$position', '$timeout', '$transclude', 'dropdownPaneOffset'];
     dropdownToggle.$inject = ['$document', '$window', '$location'];
+    orbit.$inject = ['$element'];
+    orbitBullets.$inject = ['$element'];
+    orbitContainer.$inject = ['$element', '$interval', '$scope', '$swipe'];
+    orbitSlide.$inject = ['$element'];
     Object.defineProperty(exports, "__esModule", {
         value: true
     });
@@ -59,14 +63,14 @@
     var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
         return typeof obj;
     } : function (obj) {
-        return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj;
+        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
     };
 
     /*
      * angular-foundation-6
      * http://circlingthesun.github.io/angular-foundation-6/
     
-     * Version: 0.10.24 - 2017-01-30
+     * Version: 0.10.25 - 2017-02-10
      * License: MIT
      * (c) 
      */
@@ -1117,7 +1121,7 @@
         };
 
         $modalStack.dismissAll = function (reason) {
-            var leaveOpenIds = arguments.length <= 1 || arguments[1] === undefined ? [] : arguments[1];
+            var leaveOpenIds = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
             return $q.all(openedWindows.keys().filter(function (key) {
                 return leaveOpenIds.indexOf(openedWindows.get(key).value.id) === -1;
             }).map(function (key) {
@@ -1361,6 +1365,179 @@
                     offCanvas.offCanvasWrapper.hide();
                 });
             }
+        };
+    });
+
+    function orbit($element) {
+        'ngInject';
+
+        var _this2 = this;
+
+        this.container = null;
+        this.$element = $element;
+        $element.css({ overflow: 'hidden' });
+        this.setContainer = function (container_) {
+            _this2.container = container_;
+        };
+    }
+
+    function orbitBullets($element) {
+        'ngInject';
+
+        var vm = this;
+    }
+
+    function orbitContainer($element, $interval, $scope, $swipe) {
+        'ngInject';
+
+        var _this3 = this;
+
+        this.slides = [];
+        this.currentIdx = 0;
+        this.skipInterval = true;
+        $element.css({ position: 'relative' });
+        this.addSlide = function (slide) {
+            _this3.slides.push(slide);
+            var _iteratorNormalCompletion = true;
+            var _didIteratorError = false;
+            var _iteratorError = undefined;
+
+            try {
+                for (var _iterator = _this3.slides[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                    var _slide = _step.value;
+
+                    _slide.element.css({ width: 100 / _this3.slides.length + '%' });
+                }
+            } catch (err) {
+                _didIteratorError = true;
+                _iteratorError = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion && _iterator.return) {
+                        _iterator.return();
+                    }
+                } finally {
+                    if (_didIteratorError) {
+                        throw _iteratorError;
+                    }
+                }
+            }
+
+            $element.css({ width: _this3.slides.length * 100 + '%' });
+        };
+        this.activateState = function (index) {
+            _this3.currentIdx = index;
+            var pct = 100 * _this3.currentIdx / _this3.slides.length;
+            $element.css({ transform: 'translateX(' + -pct + '%)' });
+        };
+        this.stopAutoPlay = function () {
+            $interval.cancel(_this3.autoSlider);
+            _this3.autoSlider = null;
+        };
+        this.restartTimer = function () {
+            _this3.stopAutoPlay();
+            _this3.autoSlider = $interval(function () {
+                _this3.activateState(++_this3.currentIdx % _this3.slides.length);
+            }, 5000);
+        };
+        $element.on('mouseenter', this.stopAutoPlay);
+        $element.on('mouseleave', this.restartTimer);
+        this.$onDestroy = function () {
+            _this3.stopAutoPlay();
+            $element.off('mouseenter', _this3.stopAutoPlay);
+            $element.off('mouseleave', _this3.restartTimer);
+        };
+
+        var startPos = null;
+        var nextIdx = this.currentIdx;
+        var lastPos = null;
+        var vm = this;
+        $swipe.bind($element, {
+            start: function start(pos) {
+                $element.addClass('touching');
+                _this3.stopAutoPlay();
+                startPos = pos;
+                lastPos = pos;
+            },
+            move: function move(pos) {
+                var dist = startPos.x - pos.x;
+                var width = _this3.orbit.$element[0].offsetWidth;
+                var pctDist = 100 * dist / width;
+                var lastPct = 100 * _this3.currentIdx / _this3.slides.length;
+                var pct = lastPct + pctDist / _this3.slides.length;
+                var roundFn = pos.x > lastPos.x ? Math.floor : Math.ceil;
+                lastPos = pos;
+                nextIdx = roundFn(pct / (100 / _this3.slides.length));
+                $element.css({ transform: 'translateX(' + -pct + '%)' });
+            },
+            end: function end(pos) {
+                $element.removeClass('touching');
+                if (nextIdx >= _this3.slides.length) {
+                    nextIdx = _this3.slides.length - 1;
+                } else if (nextIdx < 0) {
+                    nextIdx = 0;
+                }
+                _this3.activateState(nextIdx);
+                _this3.restartTimer();
+                $scope.$apply();
+            },
+            cancel: function cancel() {
+                _this3.restartTimer();
+                $element.removeClass('touching');
+            }
+        });
+        this.$onInit = function () {
+            _this3.orbit.setContainer(_this3);
+            // this.restartTimer();
+            $scope.$watch(function () {
+                return _this3.currentIdx;
+            }, _this3.restartTimer);
+        };
+    }
+    function orbitSlide($element) {
+        'ngInject';
+
+        var vm = this;
+        // transform: translateX(-50%);
+        $element.css({ overflow: 'hidden', float: 'left', position: 'relative' });
+        this.$onInit = function () {
+            vm.orbitContainer.addSlide({ element: $element });
+        };
+    }
+
+    angular.module('mm.foundation.orbit', ['ngTouch']).directive('orbit', function () {
+        return {
+            scope: {},
+            restrict: 'C',
+            controller: orbit
+        };
+    }).directive('orbitContainer', function () {
+        return {
+            scope: {},
+            restrict: 'C',
+            require: { orbit: '^^orbit' },
+            controller: orbitContainer,
+            controllerAs: 'vm',
+            bindToController: true
+        };
+    }).directive('orbitSlide', function () {
+        return {
+            scope: {},
+            restrict: 'C',
+            require: { orbitContainer: '^^orbitContainer' },
+            controller: orbitSlide,
+            controllerAs: 'vm',
+            bindToController: true
+        };
+    }).directive('orbitBullets', function () {
+        return {
+            scope: {},
+            restrict: 'EC',
+            require: { orbit: '^^orbit' },
+            controller: orbitBullets,
+            controllerAs: 'vm',
+            bindToController: true,
+            template: '\n        <button\n            ng-click="vm.orbit.container.activateState($index)"\n            ng-repeat="slide in vm.orbit.container.slides"\n            ng-class="{\'is-active\': $index === vm.orbit.container.currentIdx}">\n            </button>\n    '
         };
     });
 
@@ -1733,11 +1910,11 @@
                 //     width: percent + '%'
                 // });
             } else {
-                    element.css({
-                        'transition': 'none',
-                        'width': percent + '%'
-                    });
-                }
+                element.css({
+                    'transition': 'none',
+                    'width': percent + '%'
+                });
+            }
         };
 
         this.removeBar = function (bar) {
@@ -2545,5 +2722,5 @@
         return $tooltip('tooltipHtmlUnsafe', 'tooltip', 'mouseover');
     }]);
 
-    angular.module("mm.foundation", ["mm.foundation.accordion", "mm.foundation.alert", "mm.foundation.bindHtml", "mm.foundation.buttons", "mm.foundation.dropdownMenu", "mm.foundation.dropdownToggle", "mm.foundation.mediaQueries", "mm.foundation.modal", "mm.foundation.offcanvas", "mm.foundation.pagination", "mm.foundation.position", "mm.foundation.progressbar", "mm.foundation.rating", "mm.foundation.tabs", "mm.foundation.tooltip"]);
+    angular.module("mm.foundation", ["mm.foundation.accordion", "mm.foundation.alert", "mm.foundation.bindHtml", "mm.foundation.buttons", "mm.foundation.dropdownMenu", "mm.foundation.dropdownToggle", "mm.foundation.mediaQueries", "mm.foundation.modal", "mm.foundation.offcanvas", "mm.foundation.orbit", "mm.foundation.pagination", "mm.foundation.position", "mm.foundation.progressbar", "mm.foundation.rating", "mm.foundation.tabs", "mm.foundation.tooltip"]);
 });

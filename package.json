@@ -1,6 +1,6 @@
 {
   "name": "angular-foundation-6",
-  "version": "0.10.25",
+  "version": "0.11.0",
   "homepage": "http://circlingthesun.github.io/angular-foundation-6/",
   "main": "dist/angular-foundation.js",
   "repository": {
@@ -62,13 +62,14 @@
   "jspmNodeConversion": false,
   "jspm": {
     "dependencies": {
-      "angular": "github:angular/bower-angular@~1.5.9",
-      "angular-animate": "github:angular/bower-angular-animate@~1.5.9"
+      "angular": "github:angular/bower-angular@~1.6.1",
+      "angular-animate": "github:angular/bower-angular-animate@~1.6.2",
+      "angular-touch": "github:angular/bower-angular-touch@~1.6.2"
     },
     "devDependencies": {
-      "angular-legacy": "github:angular/bower-angular@~1.5.9",
-      "angular-mocks": "github:angular/bower-angular-mocks@~1.5.9",
-      "angular-mocks-legacy": "github:angular/bower-angular-mocks@~1.5.9",
+      "angular-legacy": "github:angular/bower-angular@~1.6.2",
+      "angular-mocks": "github:angular/bower-angular-mocks@~1.6.2",
+      "angular-mocks-legacy": "github:angular/bower-angular-mocks@~1.6.2",
       "babel": "npm:babel-core@^5.8.24",
       "babel-runtime": "npm:babel-runtime@^5.8.24",
       "core-js": "npm:core-js@^1.1.4"

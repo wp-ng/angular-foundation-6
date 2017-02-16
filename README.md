@@ -11,7 +11,7 @@ Do you want to see this in action? Visit http://circlingthesun.github.io/angular
 
 ## Installation
 
-Installation is easy as angular-foundation-6 has minimal dependencies - only the AngularJS and Foundation's CSS are required.
+Installation is easy as angular-foundation-6 has minimal dependencies - only AngularJS (with angular-touch), and Foundation's CSS are required.
 After downloading dependencies (or better yet, referencing them from your favourite CDN) you need to download build version of this project.
 
 Angular Foundation comes in several flavors:
@@ -32,11 +32,10 @@ angular.module('myModule', ['mm.foundation']);
 * Split Buttons
 * Reveal Modal
 * Alerts
-* Joyride
 * Dropdowns
 * Tabs
 * Offcanvas
-* Interchange
+* Orbit
 
 We'd gladly accept contributions for any remaining components.
 
@@ -51,8 +50,6 @@ Directives **should** work with the following browsers:
 * Safari
 
 Modern mobile browsers should work without problems.
-
-**IE 8 and 9 are not officially supported.**
 
 ## Project philosophy
 
@@ -155,21 +152,6 @@ angular.module('myApp', [
 Then it will work fine!
 
 For more information visit: https://github.com/karlgoldstein/grunt-html2js
-
-### Release
-* Bump up version number in `package.json`
-* Commit the version change with the following message: `chore(release): [version number]`
-* tag
-* push changes and a tag (`git push --tags`)
-* switch to the `gh-pages` branch: `git checkout gh-pages`
-* copy content of the dist folder to the main folder
-* Commit the version change with the following message: `chore(release): [version number]`
-* push changes
-* switch back to the `main branch` and modify `package.json` to bump up version for the next iteration
-* commit (`chore(release): starting [version number]`) and push
-* publish NPM, Bower and NuGet packages
-
-Well done! (If you don't like repeating yourself open a PR with a gulp task taking care of the above!)
 
 ## Credits
 

@@ -63,14 +63,14 @@
     var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
         return typeof obj;
     } : function (obj) {
-        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+        return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj;
     };
 
     /*
      * angular-foundation-6
      * http://circlingthesun.github.io/angular-foundation-6/
     
-     * Version: 0.11.2 - 2017-02-15
+     * Version: 0.11.3 - 2017-02-16
      * License: MIT
      * (c) 
      */
@@ -1121,7 +1121,7 @@
         };
 
         $modalStack.dismissAll = function (reason) {
-            var leaveOpenIds = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+            var leaveOpenIds = arguments.length <= 1 || arguments[1] === undefined ? [] : arguments[1];
             return $q.all(openedWindows.keys().filter(function (key) {
                 return leaveOpenIds.indexOf(openedWindows.get(key).value.id) === -1;
             }).map(function (key) {
@@ -1910,11 +1910,11 @@
                 //     width: percent + '%'
                 // });
             } else {
-                element.css({
-                    'transition': 'none',
-                    'width': percent + '%'
-                });
-            }
+                    element.css({
+                        'transition': 'none',
+                        'width': percent + '%'
+                    });
+                }
         };
 
         this.removeBar = function (bar) {

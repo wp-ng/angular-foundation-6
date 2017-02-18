@@ -70,7 +70,7 @@
      * angular-foundation-6
      * http://circlingthesun.github.io/angular-foundation-6/
     
-     * Version: 0.11.3 - 2017-02-16
+     * Version: 0.11.4 - 2017-02-18
      * License: MIT
      * (c) 
      */
@@ -1450,14 +1450,13 @@
 
         var startPos = null;
         var nextIdx = this.currentIdx;
-        var lastPos = null;
         var vm = this;
+
         $swipe.bind($element, {
             start: function start(pos) {
                 $element.addClass('touching');
                 _this3.stopAutoPlay();
                 startPos = pos;
-                lastPos = pos;
             },
             move: function move(pos) {
                 var dist = startPos.x - pos.x;
@@ -1465,18 +1464,21 @@
                 var pctDist = 100 * dist / width;
                 var lastPct = 100 * _this3.currentIdx / _this3.slides.length;
                 var pct = lastPct + pctDist / _this3.slides.length;
-                var roundFn = pos.x > lastPos.x ? Math.floor : Math.ceil;
-                lastPos = pos;
+                var roundFn = pos.x > startPos.x ? Math.floor : Math.ceil;
+
                 nextIdx = roundFn(pct / (100 / _this3.slides.length));
+
                 $element.css({ transform: 'translateX(' + -pct + '%)' });
             },
             end: function end(pos) {
                 $element.removeClass('touching');
+
                 if (nextIdx >= _this3.slides.length) {
                     nextIdx = _this3.slides.length - 1;
                 } else if (nextIdx < 0) {
                     nextIdx = 0;
                 }
+
                 _this3.activateState(nextIdx);
                 _this3.restartTimer();
                 $scope.$apply();

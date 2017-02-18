@@ -51,14 +51,13 @@ function orbitContainer($element, $interval, $scope, $swipe) {
 
     let startPos = null;
     let nextIdx = this.currentIdx;
-    let lastPos = null;
     const vm = this;
+
     $swipe.bind($element, {
         start: (pos) => {
             $element.addClass('touching');
             this.stopAutoPlay();
             startPos = pos;
-            lastPos = pos;
         },
         move: (pos) => {
             const dist = startPos.x - pos.x;
@@ -66,18 +65,21 @@ function orbitContainer($element, $interval, $scope, $swipe) {
             const pctDist = 100 * dist / width;
             const lastPct = 100 * this.currentIdx / this.slides.length;
             const pct = lastPct + (pctDist / this.slides.length);
-            const roundFn = pos.x > lastPos.x ? Math.floor : Math.ceil;
-            lastPos = pos;
+            const roundFn = pos.x > startPos.x ? Math.floor : Math.ceil;
+
             nextIdx = roundFn(pct / (100 / this.slides.length));
+
             $element.css({ transform: `translateX(${-pct}%)` });
         },
         end: (pos) => {
             $element.removeClass('touching');
+
             if (nextIdx >= this.slides.length) {
                 nextIdx = this.slides.length - 1;
             } else if (nextIdx < 0) {
                 nextIdx = 0;
             }
+
             this.activateState(nextIdx);
             this.restartTimer();
             $scope.$apply();

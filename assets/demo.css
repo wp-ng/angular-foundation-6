@@ -30,7 +30,7 @@ div[role=main] section.demo {
 
 /**
  * Foundation for Sites by ZURB
- * Version 6.2.3
+ * Version 6.4.2
  * foundation.zurb.com
  * Licensed under MIT Open Source
  */
@@ -91,6 +91,7 @@ div[role=main] section.demo {
   transform: translateY(-100%);
   transition-property: transform, opacity;
   opacity: 0;
+  -webkit-backface-visibility: hidden;
   backface-visibility: hidden; }
 
 .reveal.ng-enter.ng-enter-active {
@@ -113,8 +114,14 @@ div[role=main] section.demo {
   background-color: #5592BB; }
 
 .ng-submitted .ng-invalid:not(:focus), .ng-touched.ng-invalid:not(:focus) {
-  background-color: rgba(236, 88, 64, 0.1);
-  border-color: #ec5840; }
+  border-color: #cc4b37;
+  background-color: #f9ecea; }
+  .ng-submitted .ng-invalid:not(:focus)::-webkit-input-placeholder, .ng-touched.ng-invalid:not(:focus)::-webkit-input-placeholder {
+    color: #cc4b37; }
+  .ng-submitted .ng-invalid:not(:focus):-ms-input-placeholder, .ng-touched.ng-invalid:not(:focus):-ms-input-placeholder {
+    color: #cc4b37; }
+  .ng-submitted .ng-invalid:not(:focus)::placeholder, .ng-touched.ng-invalid:not(:focus)::placeholder {
+    color: #cc4b37; }
 
 .marketing-topbar {
   background: #121212;
@@ -123,8 +130,12 @@ div[role=main] section.demo {
   z-index: 2;
   position: relative; }
   .marketing-topbar::before, .marketing-topbar::after {
+    display: table;
     content: ' ';
-    display: table; }
+    -ms-flex-preferred-size: 0;
+    flex-basis: 0;
+    -ms-flex-order: 1;
+    order: 1; }
   .marketing-topbar::after {
     clear: both; }
   .marketing-topbar ul:first-child {

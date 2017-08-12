@@ -63,14 +63,14 @@
     var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
         return typeof obj;
     } : function (obj) {
-        return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj;
+        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
     };
 
     /*
      * angular-foundation-6
      * http://circlingthesun.github.io/angular-foundation-6/
     
-     * Version: 0.11.4 - 2017-02-18
+     * Version: 0.11.5 - 2017-08-12
      * License: MIT
      * (c) 
      */
@@ -494,6 +494,10 @@
             }
         };
 
+        $ctrl.close = function () {
+            return close();
+        };
+
         $ctrl.toggle = function () {
             if ($ctrl.active) {
                 close();
@@ -576,7 +580,7 @@
 
     (function () {
         angular.module("mm.foundation.dropdownToggle").run(["$templateCache", function ($templateCache) {
-            $templateCache.put("template/dropdownToggle/dropdownToggle.html", "<span\n    ng-class=\"{\'is-open\': $ctrl.active}\"\n    ng-click=\"!$ctrl.toggleOnHover && $ctrl.toggle()\"\n    ng-mouseover=\"$ctrl.toggleOnHover && $ctrl.mouseover()\"\n    ng-mouseleave=\"$ctrl.toggleOnHover && $ctrl.mouseleave($event)\"></span>\n<div\n    ng-style=\"$ctrl.css\"\n    ng-class=\"{\'is-open\': $ctrl.active}\"\n    ng-attr-aria-hidden=\"$ctrl.active\"\n    ng-mouseover=\"$ctrl.toggleOnHover && $ctrl.mouseover()\"\n    ng-mouseleave=\"$ctrl.toggleOnHover && $ctrl.mouseleave($event)\"\n    class=\"dropdown-pane{{$ctrl.paneAlign && \' dropdown-pane-\' + $ctrl.paneAlign}}\"></div>\n");
+            $templateCache.put("template/dropdownToggle/dropdownToggle.html", "<span\n    ng-class=\"{\'is-open\': $ctrl.active}\"\n    ng-click=\"$ctrl.toggle()\"\n    ng-mouseover=\"$ctrl.toggleOnHover && $ctrl.mouseover()\"\n    ng-mouseleave=\"$ctrl.toggleOnHover && $ctrl.mouseleave($event)\"></span>\n<div\n    ng-style=\"$ctrl.css\"\n    ng-class=\"{\'is-open\': $ctrl.active}\"\n    ng-attr-aria-hidden=\"$ctrl.active\"\n    ng-mouseover=\"$ctrl.toggleOnHover && $ctrl.mouseover()\"\n    ng-mouseleave=\"$ctrl.toggleOnHover && $ctrl.mouseleave($event)\"\n    class=\"dropdown-pane{{$ctrl.paneAlign && \' dropdown-pane-\' + $ctrl.paneAlign}}\"></div>\n");
         }]);
     })();
     angular.module('mm.foundation.mediaQueries', []).factory('matchMedia', ['$document', '$window', function ($document, $window) {
@@ -1137,7 +1141,7 @@
         };
 
         $modalStack.dismissAll = function (reason) {
-            var leaveOpenIds = arguments.length <= 1 || arguments[1] === undefined ? [] : arguments[1];
+            var leaveOpenIds = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
             return $q.all(openedWindows.keys().filter(function (key) {
                 return leaveOpenIds.indexOf(openedWindows.get(key).value.id) === -1;
             }).map(function (key) {
@@ -1940,11 +1944,11 @@
                 //     width: percent + '%'
                 // });
             } else {
-                    element.css({
-                        'transition': 'none',
-                        'width': percent + '%'
-                    });
-                }
+                element.css({
+                    'transition': 'none',
+                    'width': percent + '%'
+                });
+            }
         };
 
         this.removeBar = function (bar) {
@@ -2380,7 +2384,7 @@
 
     (function () {
         angular.module("mm.foundation.tabs").run(["$templateCache", function ($templateCache) {
-            $templateCache.put("template/tabs/tab.html", "<li class=\"tabs-title\" ng-class=\"{\'is-active\': active}\">\n  <a ng-click=\"select()\" ng-attr-aria-selected=\"{{active}}\" tab-heading-transclude>{{heading}}</a>\n</li>\n");
+            $templateCache.put("template/tabs/tab.html", "<li class=\"tabs-title\" ng-class=\"{\'is-active\': active}\">\n    <a href=\"\" ng-click=\"select()\" ng-attr-aria-selected=\"{{active}}\" tab-heading-transclude>{{heading}}</a>\n</li>\n");
             $templateCache.put("template/tabs/tabset-horizontal.html", "<div class=\"tabbable\">\n  <ul class=\"tabs\" ng-transclude></ul>\n  <div class=\"tabs-content\">\n    <div class=\"tabs-panel\"\n      ng-repeat=\"tab in tabs\"\n      ng-class=\"{\'is-active\': tab.active}\">\n      <div tab-content-transclude=\"tab\"></div>\n    </div>\n  </div>\n</div>\n");
             $templateCache.put("template/tabs/tabset-vertical.html", "<div class=\"tabbable row collapse\">\n  <div class=\"medium-3 columns\">\n    <ul class=\"tabs vertical\" ng-transclude></ul>\n  </div>\n  <div class=\"medium-9 columns\">\n    <div class=\"tabs-content vertical\">\n      <div class=\"tabs-panel\"\n        ng-repeat=\"tab in tabs\"\n        ng-class=\"{\'is-active\': tab.active}\">\n        <div tab-content-transclude=\"tab\"></div>\n      </div>\n    </div>\n  </div>\n</div>\n");
         }]);

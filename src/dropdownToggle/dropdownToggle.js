@@ -60,6 +60,8 @@ function DropdownToggleController($scope, $attrs, mediaQueries, $element, $posit
     };
 
 
+    $ctrl.close = () => close();
+
     $ctrl.toggle = () => {
         if ($ctrl.active) {
             close();

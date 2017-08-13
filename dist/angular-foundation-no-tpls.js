@@ -70,7 +70,7 @@
      * angular-foundation-6
      * http://circlingthesun.github.io/angular-foundation-6/
     
-     * Version: 0.11.5 - 2017-08-12
+     * Version: 0.11.6 - 2017-08-13
      * License: MIT
      * (c) 
      */
@@ -483,10 +483,6 @@
             }
         };
 
-        $ctrl.close = function () {
-            return close();
-        };
-
         $ctrl.toggle = function () {
             if ($ctrl.active) {
                 close();
@@ -497,7 +493,9 @@
 
         $ctrl.mouseover = function () {
             $timeout.cancel(hoverTimeout);
-            $ctrl.active = true;
+            $timeout(function () {
+                $ctrl.active = true;
+            });
             positionPane(dropdownPaneOffset);
         };
 

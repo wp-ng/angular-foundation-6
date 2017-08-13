@@ -60,8 +60,6 @@ function DropdownToggleController($scope, $attrs, mediaQueries, $element, $posit
     };
 
 
-    $ctrl.close = () => close();
-
     $ctrl.toggle = () => {
         if ($ctrl.active) {
             close();
@@ -72,7 +70,9 @@ function DropdownToggleController($scope, $attrs, mediaQueries, $element, $posit
 
     $ctrl.mouseover = () => {
         $timeout.cancel(hoverTimeout);
-        $ctrl.active = true;
+        $timeout(() => {
+            $ctrl.active = true;
+        });
         positionPane(dropdownPaneOffset);
     };
 

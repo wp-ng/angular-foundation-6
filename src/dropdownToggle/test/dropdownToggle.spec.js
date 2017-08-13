@@ -138,23 +138,31 @@ describe('dropdownToggle', function() {
 
     it('should add/remove the "is-open" class on hover', function() {
       toggleElm.triggerHandler('mouseover');
+      
+      $timeout.flush();
       $scope.$apply();
+      
       expect(targetElm.hasClass('is-open')).toBe(true);
+
       toggleElm.triggerHandler('mouseleave');
+      
+      $timeout.flush();
       $scope.$apply();
-      $timeout(function() {
-        expect(targetElm.hasClass('is-open')).toBe(false);
-      }, 250);
+      
+      expect(targetElm.hasClass('is-open')).toBe(false);
     });
 
     it('should not remove the "is-open" class when moving to pane', function() {
       toggleElm.triggerHandler('mouseover');
+      $timeout.flush();
       $scope.$apply();
+
       targetElm.triggerHandler('mouseover');
+      
+      $timeout.flush();
       $scope.$apply();
-      $timeout(function() {
-        expect(targetElm.hasClass('is-open')).toBe(true);
-      }, 250);
+
+      expect(targetElm.hasClass('is-open')).toBe(true);
     });
   });
 

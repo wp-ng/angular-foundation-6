@@ -70,7 +70,7 @@
      * angular-foundation-6
      * http://circlingthesun.github.io/angular-foundation-6/
     
-     * Version: 0.11.6 - 2017-08-13
+     * Version: 0.11.7 - 2017-08-29
      * License: MIT
      * (c) 
      */
@@ -2383,8 +2383,8 @@
     (function () {
         angular.module("mm.foundation.tabs").run(["$templateCache", function ($templateCache) {
             $templateCache.put("template/tabs/tab.html", "<li class=\"tabs-title\" ng-class=\"{\'is-active\': active}\">\n    <a href=\"\" ng-click=\"select()\" ng-attr-aria-selected=\"{{active}}\" tab-heading-transclude>{{heading}}</a>\n</li>\n");
-            $templateCache.put("template/tabs/tabset-horizontal.html", "<div class=\"tabbable\">\n  <ul class=\"tabs\" ng-transclude></ul>\n  <div class=\"tabs-content\">\n    <div class=\"tabs-panel\"\n      ng-repeat=\"tab in tabs\"\n      ng-class=\"{\'is-active\': tab.active}\">\n      <div tab-content-transclude=\"tab\"></div>\n    </div>\n  </div>\n</div>\n");
-            $templateCache.put("template/tabs/tabset-vertical.html", "<div class=\"tabbable row collapse\">\n  <div class=\"medium-3 columns\">\n    <ul class=\"tabs vertical\" ng-transclude></ul>\n  </div>\n  <div class=\"medium-9 columns\">\n    <div class=\"tabs-content vertical\">\n      <div class=\"tabs-panel\"\n        ng-repeat=\"tab in tabs\"\n        ng-class=\"{\'is-active\': tab.active}\">\n        <div tab-content-transclude=\"tab\"></div>\n      </div>\n    </div>\n  </div>\n</div>\n");
+            $templateCache.put("template/tabs/tabset-horizontal.html", "<div class=\"tabbable\">\n  <ul class=\"tabs\" ng-transclude></ul>\n  <div class=\"tabs-content\">\n    <div class=\"tabs-panel\"\n      ng-repeat=\"tab in tabs\"\n      ng-class=\"{\'is-active\': tab.active}\" \n      aria-hidden=\\\"{{!tab.active}}\\\">\n      <div tab-content-transclude=\"tab\"></div>\n    </div>\n  </div>\n</div>\n");
+            $templateCache.put("template/tabs/tabset-vertical.html", "<div class=\"tabbable row collapse\">\n  <div class=\"medium-3 columns\">\n    <ul class=\"tabs vertical\" ng-transclude></ul>\n  </div>\n  <div class=\"medium-9 columns\">\n    <div class=\"tabs-content vertical\">\n      <div class=\"tabs-panel\"\n        ng-repeat=\"tab in tabs\"\n        ng-class=\"{\'is-active\': tab.active}\" aria-hidden=\\\"{{!tab.active}}\\\">\n        <div tab-content-transclude=\"tab\"></div>\n      </div>\n    </div>\n  </div>\n</div>\n");
         }]);
     })();
     /**

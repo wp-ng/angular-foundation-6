@@ -6,7 +6,7 @@
     <div class="tabs-content vertical">
       <div class="tabs-panel"
         ng-repeat="tab in tabs"
-        ng-class="{'is-active': tab.active}">
+        ng-class="{'is-active': tab.active}" aria-hidden=\"{{!tab.active}}\">
         <div tab-content-transclude="tab"></div>
       </div>
     </div>

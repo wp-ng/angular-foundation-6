@@ -8,7 +8,7 @@
   <meta name="description" content="AngularJS (Angular) native
   directives for Foundation. Small footprint (5kB gzipped!),
   no 3rd party JS dependencies (jQuery, Foundation JS) required!
-  Widgets: Accordion, Alert, Buttons, Dropdown Menu, Dropdown Toggle, Modal, Offcanvas, Orbit, Pagination, Progressbar, Rating, Tabs, Tooltip, ">
+  Widgets: Accordion, Alert, Buttons, Drilldown Menu, Dropdown Menu, Dropdown Toggle, Modal, Offcanvas, Orbit, Pagination, Progressbar, Rating, Tabs, Tooltip, ">
 
   <script src="//cdnjs.cloudflare.com/ajax/libs/fastclick/0.6.7/fastclick.min.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.5.10/angular.min.js"></script>
@@ -19,8 +19,8 @@
   <script src="angular-foundation.js"></script>
   <script src="assets/plunker.js"></script>
   <script src="assets/app.js"></script>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.2.3/foundation.css" rel="stylesheet"/>
-  <!-- <link href="//cdnjs.cloudflare.com/ajax/libs/foundation/6.2.3/css/foundation.min.css" rel="stylesheet"/> -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.4.3/css/foundation-float.css" rel="stylesheet"/>
+  <!-- <link href="//cdnjs.cloudflare.com/ajax/libs/foundation/6.4.3/css/foundation-float.min.css" rel="stylesheet"/> -->
   <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet"/>
   <link rel="stylesheet" href="assets/rainbow.css"/>
   <link rel="stylesheet" href="assets/demo.css"/>
@@ -41,7 +41,7 @@
             <li>
               <a href="#">Directives</a>
               <ul id="directives-list" class="submenu menu vertical">
-                <li><a href="#accordion">Accordion</a></li><li><a href="#alert">Alert</a></li><li><a href="#buttons">Buttons</a></li><li><a href="#dropdownMenu">Dropdown Menu</a></li><li><a href="#dropdownToggle">Dropdown Toggle</a></li><li><a href="#modal">Modal</a></li><li><a href="#offcanvas">Offcanvas</a></li><li><a href="#orbit">Orbit</a></li><li><a href="#pagination">Pagination</a></li><li><a href="#progressbar">Progressbar</a></li><li><a href="#rating">Rating</a></li><li><a href="#tabs">Tabs</a></li><li><a href="#tooltip">Tooltip</a></li>
+                <li><a href="#accordion">Accordion</a></li><li><a href="#alert">Alert</a></li><li><a href="#buttons">Buttons</a></li><li><a href="#drilldownMenu">Drilldown Menu</a></li><li><a href="#dropdownMenu">Dropdown Menu</a></li><li><a href="#dropdownToggle">Dropdown Toggle</a></li><li><a href="#modal">Modal</a></li><li><a href="#offcanvas">Offcanvas</a></li><li><a href="#orbit">Orbit</a></li><li><a href="#pagination">Pagination</a></li><li><a href="#progressbar">Progressbar</a></li><li><a href="#rating">Rating</a></li><li><a href="#tabs">Tabs</a></li><li><a href="#tooltip">Tooltip</a></li>
               </ul>
             </li>
             <li><a href="#animations">Animations</a></li>
@@ -59,7 +59,7 @@
               <li>
                 <a href="#">Directives</a>
                 <ul id="directives-list" class="menu">
-                  <li><a href="#accordion">Accordion</a></li><li><a href="#alert">Alert</a></li><li><a href="#buttons">Buttons</a></li><li><a href="#dropdownMenu">Dropdown Menu</a></li><li><a href="#dropdownToggle">Dropdown Toggle</a></li><li><a href="#modal">Modal</a></li><li><a href="#offcanvas">Offcanvas</a></li><li><a href="#orbit">Orbit</a></li><li><a href="#pagination">Pagination</a></li><li><a href="#progressbar">Progressbar</a></li><li><a href="#rating">Rating</a></li><li><a href="#tabs">Tabs</a></li><li><a href="#tooltip">Tooltip</a></li>
+                  <li><a href="#accordion">Accordion</a></li><li><a href="#alert">Alert</a></li><li><a href="#buttons">Buttons</a></li><li><a href="#drilldownMenu">Drilldown Menu</a></li><li><a href="#dropdownMenu">Dropdown Menu</a></li><li><a href="#dropdownToggle">Dropdown Toggle</a></li><li><a href="#modal">Modal</a></li><li><a href="#offcanvas">Offcanvas</a></li><li><a href="#orbit">Orbit</a></li><li><a href="#pagination">Pagination</a></li><li><a href="#progressbar">Progressbar</a></li><li><a href="#rating">Rating</a></li><li><a href="#tabs">Tabs</a></li><li><a href="#tooltip">Tooltip</a></li>
                 </ul>
               </li>
               <li><a href="#animations">Animations</a></li>
@@ -107,7 +107,7 @@
                   </p>
                   <ul>
                     <li><strong>AngularJS</strong> 1.5 (tested with <!-- 1.5.10 and --> 1.5.10)</li>
-                    <li><strong>Foundation 6 CSS</strong> (tested with version 6.2.3).</li>
+                    <li><strong>Foundation 6 CSS</strong> (tested with version 6.4.3).</li>
                   </ul>
                   <h3>Downloading</h3>
                   <p>
@@ -173,7 +173,7 @@
                     <div class="row code">
                       <div class="columns medium-12" ng-controller="PlunkerCtrl">
                         <div class="float-right">
-                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.2.3', '0.11.8', 'accordion')">
+                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.8', 'accordion')">
                             <i class="fa fa-edit"></i> Edit in plunker
                           </button>
                         </div>
@@ -284,7 +284,7 @@
                     <div class="row code">
                       <div class="columns medium-12" ng-controller="PlunkerCtrl">
                         <div class="float-right">
-                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.2.3', '0.11.8', 'alert')">
+                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.8', 'alert')">
                             <i class="fa fa-edit"></i> Edit in plunker
                           </button>
                         </div>
@@ -382,7 +382,7 @@
                     <div class="row code">
                       <div class="columns medium-12" ng-controller="PlunkerCtrl">
                         <div class="float-right">
-                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.2.3', '0.11.8', 'buttons')">
+                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.8', 'buttons')">
                             <i class="fa fa-edit"></i> Edit in plunker
                           </button>
                         </div>
@@ -445,6 +445,207 @@
     middle: true,
     right: false
   };
+});
+</script>
+                
+                  <section class="demo" id="drilldownMenu">
+                    <div class="page-header">
+                      <h1>Drilldown Menu
+                        <small>
+                          (<a target="_blank" href="https://github.com/circlingthesun/angular-foundation-6/tree/master/src/drilldownMenu">mm.foundation.drilldownMenu</a>)
+                        </small>
+                      </h1>
+                    </div>
+                    <hr>
+                    <div class="row">
+                      <div class="columns medium-6 show-grid">
+                        <div ng-controller="DrillDownDemoCtrl">
+  <h4>Auto `Wrapper` and `Back` Links</h4>
+  <ul class="drilldown menu" drilldown-menu>
+    <li>
+      <a>Item 1</a>
+      <ul class="menu">
+        <li><a href="#">Item 1A</a></li>
+        <li>
+          <a href="#">Item 1B</a>
+          <ul class="menu">
+            <li><a href="#">Item 1B i</a></li>
+            <li><a href="#">Item 1B ii</a></li>
+            <li>
+              <a href="#">Item 1B iii</a>
+              <ul class="menu">
+                <li><a href="#">Item 1B iii alpha</a></li>
+                <li><a href="#">Item 1B iii omega</a></li>
+              </ul>
+            </li>
+            <li>
+              <a href="#">Item 1B iv</a>
+              <ul class="menu">
+                <li><a href="#">Item 1B iv alpha</a></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li><a href="#">Item 1C</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#">Item 2</a>
+      <ul class="menu">
+        <li><a href="#">Item 2A</a></li>
+        <li><a href="#">Item 2B</a></li>
+      </ul>
+    </li>
+    <li><a href="#">Item 3</a></li>
+    <li><a href="#">Item 4</a></li>
+  </ul>
+
+  <!-- Manual Wrapper and Back Links -->
+  <h4>Manual `Wrapper` and `Back` Links</h4>
+  <!-- Manually added wrapper MUST be `div` with class `is-drilldown` -->
+  <div class="is-drilldown">
+    <ul class="drilldown menu" drilldown-menu>
+      <li>
+        <a>Item 1</a>
+        <ul class="menu">
+          <!-- Manual back link MUST be `li` with class `.js-drilldown-back` -->
+          <li class="js-drilldown-back"><a href="#">Manual Back To Top</a></li>
+          <li><a href="#">Item 1A</a></li>
+          <li>
+            <a href="#">Item 1B</a>
+            <ul class="menu">
+              <li class="js-drilldown-back"><a href="#">Manual Back To Level 1</a></li>
+              <li><a href="#">Item 1B i</a></li>
+              <li><a href="#">Item 1B ii</a></li>
+            </ul>
+          </li>
+          <li><a href="#">Item 1C</a></li>
+        </ul>
+      </li>
+      <li><a href="#">Item 2</a></li>
+    </ul>
+  </div>
+</div>
+
+                      </div>
+                      <div class="columns medium-6">
+                        <p>A directive that provides the <a href="http://foundation.zurb.com/sites/docs/drilldown-menu.html">Foundation Drilldown Menu</a> component.</p>
+<p>The directive relies on the same markup as the original Foundation Drilldown Menu. It implements some, but not all of the features of the Foundation Drilldown Menu.</p>
+<h4 id="implemented-">Implemented:</h4>
+<ul>
+<li>Automatically add a wrapper div around the menu, <em>if not already provided in the html</em></li>
+<li>Automatically add <em>back</em> entries to the top of submenus, <em>if not already provided in the html</em></li>
+<li>Wrapper div sized to the min-height required to show the largest sub-menu</li>
+</ul>
+<h4 id="not-implemented-">NOT implemented:</h4>
+<ul>
+<li><em>back</em> entries at the bottom of submenus</li>
+<li>templates for auto-added <em>back</em> entries</li>
+<li><code>autoHeight</code></li>
+<li><code>ScrollTop</code></li>
+<li>Handling of keyboard events (up/down/etc.)</li>
+<li>Automatic addition of aria attributes</li>
+<li>Any of the plugin options, events, or methods</li>
+</ul>
+<p>See the demo page for example on how to use this and visit the <a href="http://foundation.zurb.com/sites/docs/drilldown-menu.html">Foundation docs</a> for more details.</p>
+
+                      </div>
+                    </div>
+                    <!-- <hr> -->
+                    <div class="row code">
+                      <div class="columns medium-12" ng-controller="PlunkerCtrl">
+                        <div class="float-right">
+                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.8', 'drilldownMenu')">
+                            <i class="fa fa-edit"></i> Edit in plunker
+                          </button>
+                        </div>
+                        <tabset>
+                          <tab heading="Markup">
+                            <div plunker-content="markup">
+                              <pre ng-non-bindable><code data-language="html">&lt;div ng-controller=&quot;DrillDownDemoCtrl&quot;&gt;
+  &lt;h4&gt;Auto &#96;Wrapper&#96; and &#96;Back&#96; Links&lt;/h4&gt;
+  &lt;ul class=&quot;drilldown menu&quot; drilldown-menu&gt;
+    &lt;li&gt;
+      &lt;a&gt;Item 1&lt;/a&gt;
+      &lt;ul class=&quot;menu&quot;&gt;
+        &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Item 1A&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;
+          &lt;a href=&quot;#&quot;&gt;Item 1B&lt;/a&gt;
+          &lt;ul class=&quot;menu&quot;&gt;
+            &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Item 1B i&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Item 1B ii&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;
+              &lt;a href=&quot;#&quot;&gt;Item 1B iii&lt;/a&gt;
+              &lt;ul class=&quot;menu&quot;&gt;
+                &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Item 1B iii alpha&lt;/a&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Item 1B iii omega&lt;/a&gt;&lt;/li&gt;
+              &lt;/ul&gt;
+            &lt;/li&gt;
+            &lt;li&gt;
+              &lt;a href=&quot;#&quot;&gt;Item 1B iv&lt;/a&gt;
+              &lt;ul class=&quot;menu&quot;&gt;
+                &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Item 1B iv alpha&lt;/a&gt;&lt;/li&gt;
+              &lt;/ul&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/li&gt;
+        &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Item 1C&lt;/a&gt;&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/li&gt;
+    &lt;li&gt;
+      &lt;a href=&quot;#&quot;&gt;Item 2&lt;/a&gt;
+      &lt;ul class=&quot;menu&quot;&gt;
+        &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Item 2A&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Item 2B&lt;/a&gt;&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/li&gt;
+    &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Item 3&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Item 4&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+
+  &lt;!-- Manual Wrapper and Back Links --&gt;
+  &lt;h4&gt;Manual &#96;Wrapper&#96; and &#96;Back&#96; Links&lt;/h4&gt;
+  &lt;!-- Manually added wrapper MUST be &#96;div&#96; with class &#96;is-drilldown&#96; --&gt;
+  &lt;div class=&quot;is-drilldown&quot;&gt;
+    &lt;ul class=&quot;drilldown menu&quot; drilldown-menu&gt;
+      &lt;li&gt;
+        &lt;a&gt;Item 1&lt;/a&gt;
+        &lt;ul class=&quot;menu&quot;&gt;
+          &lt;!-- Manual back link MUST be &#96;li&#96; with class &#96;.js-drilldown-back&#96; --&gt;
+          &lt;li class=&quot;js-drilldown-back&quot;&gt;&lt;a href=&quot;#&quot;&gt;Manual Back To Top&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Item 1A&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;
+            &lt;a href=&quot;#&quot;&gt;Item 1B&lt;/a&gt;
+            &lt;ul class=&quot;menu&quot;&gt;
+              &lt;li class=&quot;js-drilldown-back&quot;&gt;&lt;a href=&quot;#&quot;&gt;Manual Back To Level 1&lt;/a&gt;&lt;/li&gt;
+              &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Item 1B i&lt;/a&gt;&lt;/li&gt;
+              &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Item 1B ii&lt;/a&gt;&lt;/li&gt;
+            &lt;/ul&gt;
+          &lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Item 1C&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Item 2&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+                            </div>
+                          </tab>
+                          <tab heading="JavaScript">
+                            <div plunker-content="javascript">
+                              <pre ng-non-bindable><code data-language="javascript">angular.module(&#39;foundationDemoApp&#39;).controller(&#39;DrillDownDemoCtrl&#39;, function ($scope) {
+
+});
+</code></pre>
+                            </div>
+                          </tab>
+                        </tabset>
+                      </div>
+                    </div>
+                  </section>
+                  <script>angular.module('foundationDemoApp').controller('DrillDownDemoCtrl', function ($scope) {
+
 });
 </script>
                 
@@ -579,7 +780,7 @@
                     <div class="row code">
                       <div class="columns medium-12" ng-controller="PlunkerCtrl">
                         <div class="float-right">
-                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.2.3', '0.11.8', 'dropdownMenu')">
+                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.8', 'dropdownMenu')">
                             <i class="fa fa-edit"></i> Edit in plunker
                           </button>
                         </div>
@@ -798,7 +999,7 @@
                     <div class="row code">
                       <div class="columns medium-12" ng-controller="PlunkerCtrl">
                         <div class="float-right">
-                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.2.3', '0.11.8', 'dropdownToggle')">
+                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.8', 'dropdownToggle')">
                             <i class="fa fa-edit"></i> Edit in plunker
                           </button>
                         </div>
@@ -980,7 +1181,7 @@ Creating custom modals is straightforward: create a partial view, its controller
                     <div class="row code">
                       <div class="columns medium-12" ng-controller="PlunkerCtrl">
                         <div class="float-right">
-                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.2.3', '0.11.8', 'modal')">
+                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.8', 'modal')">
                             <i class="fa fa-edit"></i> Edit in plunker
                           </button>
                         </div>
@@ -1266,7 +1467,7 @@ Creating custom modals is straightforward: create a partial view, its controller
                     <div class="row code">
                       <div class="columns medium-12" ng-controller="PlunkerCtrl">
                         <div class="float-right">
-                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.2.3', '0.11.8', 'offcanvas')">
+                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.8', 'offcanvas')">
                             <i class="fa fa-edit"></i> Edit in plunker
                           </button>
                         </div>
@@ -1377,7 +1578,7 @@ Creating custom modals is straightforward: create a partial view, its controller
                       <div class="columns medium-6 show-grid">
                         <div ng-controller="OrbitDemoCtrl">
   <div class="orbit">
-    <ul class="orbit-container">
+    <ul class="orbit-container" style="height: auto">
       <li class="orbit-slide is-active">
         <div style="background-color: #20b2aa; padding: 2rem 4rem; color: #fefefe;">
           Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
@@ -1416,7 +1617,7 @@ Creating custom modals is straightforward: create a partial view, its controller
                     <div class="row code">
                       <div class="columns medium-12" ng-controller="PlunkerCtrl">
                         <div class="float-right">
-                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.2.3', '0.11.8', 'orbit')">
+                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.8', 'orbit')">
                             <i class="fa fa-edit"></i> Edit in plunker
                           </button>
                         </div>
@@ -1425,7 +1626,7 @@ Creating custom modals is straightforward: create a partial view, its controller
                             <div plunker-content="markup">
                               <pre ng-non-bindable><code data-language="html">&lt;div ng-controller=&quot;OrbitDemoCtrl&quot;&gt;
   &lt;div class=&quot;orbit&quot;&gt;
-    &lt;ul class=&quot;orbit-container&quot;&gt;
+    &lt;ul class=&quot;orbit-container&quot; style=&quot;height: auto&quot;&gt;
       &lt;li class=&quot;orbit-slide is-active&quot;&gt;
         &lt;div style=&quot;background-color: #20b2aa; padding: 2rem 4rem; color: #fefefe;&quot;&gt;
           Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
@@ -1586,7 +1787,7 @@ Creating custom modals is straightforward: create a partial view, its controller
                     <div class="row code">
                       <div class="columns medium-12" ng-controller="PlunkerCtrl">
                         <div class="float-right">
-                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.2.3', '0.11.8', 'pagination')">
+                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.8', 'pagination')">
                             <i class="fa fa-edit"></i> Edit in plunker
                           </button>
                         </div>
@@ -1719,7 +1920,7 @@ Creating custom modals is straightforward: create a partial view, its controller
                     <div class="row code">
                       <div class="columns medium-12" ng-controller="PlunkerCtrl">
                         <div class="float-right">
-                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.2.3', '0.11.8', 'progressbar')">
+                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.8', 'progressbar')">
                             <i class="fa fa-edit"></i> Edit in plunker
                           </button>
                         </div>
@@ -1896,7 +2097,7 @@ Creating custom modals is straightforward: create a partial view, its controller
                     <div class="row code">
                       <div class="columns medium-12" ng-controller="PlunkerCtrl">
                         <div class="float-right">
-                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.2.3', '0.11.8', 'rating')">
+                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.8', 'rating')">
                             <i class="fa fa-edit"></i> Edit in plunker
                           </button>
                         </div>
@@ -2053,7 +2254,7 @@ Whether to open an active tab automatically.</p>
                     <div class="row code">
                       <div class="columns medium-12" ng-controller="PlunkerCtrl">
                         <div class="float-right">
-                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.2.3', '0.11.8', 'tabs')">
+                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.8', 'tabs')">
                             <i class="fa fa-edit"></i> Edit in plunker
                           </button>
                         </div>
@@ -2229,7 +2430,7 @@ appendToBody: false
                     <div class="row code">
                       <div class="columns medium-12" ng-controller="PlunkerCtrl">
                         <div class="float-right">
-                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.2.3', '0.11.8', 'tooltip')">
+                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.8', 'tooltip')">
                             <i class="fa fa-edit"></i> Edit in plunker
                           </button>
                         </div>

@@ -14,6 +14,19 @@ beforeEach(function() {
 
       return {compare: compare};
     },
+    toHaveText: function(util, customEqualityTesters) {
+
+      function compare(actual, expected) {
+        const actualText = actual.text();
+        var passed = actualText === expected;
+        return {
+          pass: passed,
+          message: 'Expected "' + actualText + '" to equal "' + expected + '".',
+        };
+      }
+
+      return { compare: compare };
+    },
     toBeHidden: function (util, customEqualityTesters) {
 
       function compare(actual, expected){

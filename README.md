@@ -32,10 +32,12 @@ angular.module('myModule', ['mm.foundation']);
 * Split Buttons
 * Reveal Modal
 * Alerts
-* Dropdowns
+* Dropdown Toggle
 * Tabs
 * Offcanvas
 * Orbit
+* Dropdown Menu
+* Drilldown Menu
 
 We'd gladly accept contributions for any remaining components.
 

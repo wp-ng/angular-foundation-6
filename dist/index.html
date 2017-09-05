@@ -81,7 +81,7 @@
                   <h3>With love, from <a href="http://github.com/pineconellc/">Pinecone</a></h3>
                   <hr>
                   <p>
-                  <a class="button radius large" href="https://github.com/circlingthesun/angular-foundation-6/tree/gh-pages"><i class="fa fa-download"></i> Download v0.11.9</a>
+                  <a class="button radius large" href="https://github.com/circlingthesun/angular-foundation-6/tree/gh-pages"><i class="fa fa-download"></i> Download v0.11.10</a>
                     <a class="button radius large" href="https://github.com/circlingthesun/angular-foundation-6"><i class="fa fa-github"></i> Contribute</a>
                   </p>
                 </div>
@@ -173,7 +173,7 @@
                     <div class="row code">
                       <div class="columns medium-12" ng-controller="PlunkerCtrl">
                         <div class="float-right">
-                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.9', 'accordion')">
+                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.10', 'accordion')">
                             <i class="fa fa-edit"></i> Edit in plunker
                           </button>
                         </div>
@@ -284,7 +284,7 @@
                     <div class="row code">
                       <div class="columns medium-12" ng-controller="PlunkerCtrl">
                         <div class="float-right">
-                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.9', 'alert')">
+                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.10', 'alert')">
                             <i class="fa fa-edit"></i> Edit in plunker
                           </button>
                         </div>
@@ -382,7 +382,7 @@
                     <div class="row code">
                       <div class="columns medium-12" ng-controller="PlunkerCtrl">
                         <div class="float-right">
-                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.9', 'buttons')">
+                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.10', 'buttons')">
                             <i class="fa fa-edit"></i> Edit in plunker
                           </button>
                         </div>
@@ -460,94 +460,184 @@
                     <div class="row">
                       <div class="columns medium-6 show-grid">
                         <div ng-controller="DrillDownDemoCtrl">
-  <h4>Auto `Wrapper` and `Back` Links</h4>
-  <ul class="drilldown menu" drilldown-menu>
-    <li>
-      <a>Item 1</a>
-      <ul class="menu">
-        <li><a href="#">Item 1A</a></li>
-        <li>
-          <a href="#">Item 1B</a>
-          <ul class="menu">
-            <li><a href="#">Item 1B i</a></li>
-            <li><a href="#">Item 1B ii</a></li>
-            <li>
-              <a href="#">Item 1B iii</a>
-              <ul class="menu">
-                <li><a href="#">Item 1B iii alpha</a></li>
-                <li><a href="#">Item 1B iii omega</a></li>
-              </ul>
-            </li>
-            <li>
-              <a href="#">Item 1B iv</a>
-              <ul class="menu">
-                <li><a href="#">Item 1B iv alpha</a></li>
-              </ul>
-            </li>
-          </ul>
-        </li>
-        <li><a href="#">Item 1C</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#">Item 2</a>
-      <ul class="menu">
-        <li><a href="#">Item 2A</a></li>
-        <li><a href="#">Item 2B</a></li>
-      </ul>
-    </li>
-    <li><a href="#">Item 3</a></li>
-    <li><a href="#">Item 4</a></li>
-  </ul>
-
-  <!-- Manual Wrapper and Back Links -->
-  <h4>Manual `Wrapper` and `Back` Links</h4>
-  <!-- Manually added wrapper MUST be `div` with class `is-drilldown` -->
-  <div class="is-drilldown">
+  <div class="callout">
+    <h4>Auto `Wrapper` and `Back` Links</h4>
     <ul class="drilldown menu" drilldown-menu>
+
       <li>
         <a>Item 1</a>
         <ul class="menu">
-          <!-- Manual back link MUST be `li` with class `.js-drilldown-back` -->
-          <li class="js-drilldown-back"><a href="#">Manual Back To Top</a></li>
           <li><a href="#">Item 1A</a></li>
           <li>
             <a href="#">Item 1B</a>
             <ul class="menu">
-              <li class="js-drilldown-back"><a href="#">Manual Back To Level 1</a></li>
-              <li><a href="#">Item 1B i</a></li>
+              <li><a href="#">Item 1B i make this really long so that it will overflow a line</a></li>
               <li><a href="#">Item 1B ii</a></li>
+              <li>
+                <a href="#">Item 1B iii - this one is also extended to overflow a line</a>
+                <ul class="menu">
+                  <li><a href="#">Item 1B iii alpha</a></li>
+                  <li><a href="#">Item 1B iii omega</a></li>
+                </ul>
+              </li>
+              <li>
+                <a href="#">Item 1B iv</a>
+                <ul class="menu">
+                  <li><a href="#">Item 1B iv alpha</a></li>
+                </ul>
+              </li>
             </ul>
           </li>
           <li><a href="#">Item 1C</a></li>
         </ul>
       </li>
-      <li><a href="#">Item 2</a></li>
+      <li>
+        <a href="#">Search Engines</a>
+        <ul class="menu">
+          <li><a href="https://www.google.com/">Google</a></li>
+          <li><a href="https://www.bing.com/">Bing</a></li>
+          <li><a href="https://www.duckduckgo.com/">DuckDuckGo</a></li>
+        </ul>
+      </li>
+      <li><a href="http://foundation.zurb.com/">Foundation</a></li>
+      <li><a href="#">Item 4</a></li>
     </ul>
   </div>
+
+  <div class="callout">
+
+    <!-- Manual Wrapper and Back Links -->
+    <h4>Manual `Wrapper` and `Back` Links</h4>
+    <!-- Manually added wrapper MUST be `div` with class `is-drilldown` -->
+    <div class="is-drilldown">
+      <ul class="drilldown menu" drilldown-menu>
+        <li>
+          <a>Item 1</a>
+          <ul class="menu">
+            <!-- Manual back link MUST be `li` with class `.js-drilldown-back` -->
+            <li class="js-drilldown-back"><a href="#">Manual Back To Top</a></li>
+            <li><a href="#">Item 1A</a></li>
+            <li>
+              <a href="#">Item 1B</a>
+              <ul class="menu">
+                <li class="js-drilldown-back"><a href="#">Manual Back To Level 1</a></li>
+                <li><a href="#">Item 1B i</a></li>
+                <li><a href="#">Item 1B ii</a></li>
+              </ul>
+            </li>
+            <li><a href="#">Item 1C</a></li>
+          </ul>
+        </li>
+        <li><a href="#">Item 2</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout" id="drilldown-api">
+
+    <!-- API usage -->
+    <h4>API Usage</h4>
+    <alert ng-repeat="alert in vm.alerts" type="alert.type" close="vm.closeAlert($index)">
+      {{alert.msg}}
+    </alert>
+
+    <div>
+      <button class="button" ng-click="vm.showHideMenu()">Show / Hide the Menu</button>
+      <button class="button" ng-click="vm.ddmApi.resizeMenu()" ng-show="vm.haveShown">Resize</button>
+    </div>
+
+    <div class="callout ng-hide" ng-show="vm.shouldShow">
+      <ul class="drilldown menu" id="drilldown-api-menu" drilldown-menu drilldown-menu-api="vm.ddmApi">
+        <li>
+          <a href="#">Item 1</a>
+          <ul class="menu" id="drilldown-api-submenu-1">
+            <li><a href="#">Item 1A</a></li>
+            <li>
+              <a href="#">Item 1B</a>
+              <ul class="menu">
+                <li><a href="#">Item 1B i</a></li>
+                <li><a href="#">Item 1B ii</a></li>
+              </ul>
+            </li>
+            <li><a href="#">Item 1C</a></li>
+          </ul>
+        </li>
+        <li><a href="#">Item 2</a></li>
+      </ul>
+
+      <div ng-show="vm.haveResized">
+        <h5>Other API functions</h5>
+        <button class="button" ng-click="vm.showSubmenu1()">Open Submenu 1</button>
+        <button class="button" ng-click="vm.hideSubmenu1()">Close Submenu 1</button>
+        <button class="button" ng-click="vm.ddmApi.hideAll()">Close All Submenus</button>
+      </div>
+    </div>
+  </div>
+
 </div>
 
                       </div>
                       <div class="columns medium-6">
                         <p>A directive that provides the <a href="http://foundation.zurb.com/sites/docs/drilldown-menu.html">Foundation Drilldown Menu</a> component.</p>
 <p>The directive relies on the same markup as the original Foundation Drilldown Menu. It implements some, but not all of the features of the Foundation Drilldown Menu.</p>
-<h4 id="implemented-">Implemented:</h4>
-<ul>
-<li>Automatically add a wrapper div around the menu, <em>if not already provided in the html</em></li>
-<li>Automatically add <em>back</em> entries to the top of submenus, <em>if not already provided in the html</em></li>
-<li>Wrapper div sized to the min-height required to show the largest sub-menu</li>
-</ul>
-<h4 id="not-implemented-">NOT implemented:</h4>
-<ul>
-<li><em>back</em> entries at the bottom of submenus</li>
-<li>templates for auto-added <em>back</em> entries</li>
-<li><code>autoHeight</code></li>
-<li><code>ScrollTop</code></li>
-<li>Handling of keyboard events (up/down/etc.)</li>
-<li>Automatic addition of aria attributes</li>
-<li>Any of the plugin options, events, or methods</li>
-</ul>
 <p>See the demo page for example on how to use this and visit the <a href="http://foundation.zurb.com/sites/docs/drilldown-menu.html">Foundation docs</a> for more details.</p>
+<h4 id="supported-features-">Supported Features:</h4>
+<ul>
+<li>Automatically add a wrapper div around the menu, <em>if not already provided in the html</em>.</li>
+<li>Automatically add <em>back</em> entries to the top of submenus, <em>if not already provided in the html</em>.</li>
+<li>Wrapper div sized to the min-height required to show the largest sub-menu.<ul>
+<li>Automatically resizes as the viewport size changes.</li>
+<li>WARNING: show/hide via <code>ng-show</code> or similar <strong>DOES NOT</strong> cause a resize.  See notes below.</li>
+</ul>
+</li>
+<li>API exposed via <code>drilldown-menu-api</code> two-way binding.</li>
+<li>Events <code>emit</code>-ed on the $scope (i.e. upwards towards parent scopes).</li>
+</ul>
+<h4 id="api">API</h4>
+<p>The API for programmatic control of the drilldown menu is exposed to the parent
+scope via the <code>drilldown-menu-api</code> two-way binding. See the 3rd example html and
+associated js for an example.</p>
+<p>The available methods are:</p>
+<ul>
+<li><code>resizeMenu()</code> to trigger a resize.</li>
+<li><code>show(element)</code> to show the submenu under the given <em>angular.element</em>.</li>
+<li><code>hide(element)</code> to hide the submenu under the given <em>angular.element</em>.</li>
+<li><code>hideAll()</code> to collapse all submenus.</li>
+</ul>
+<h4 id="events">Events</h4>
+<p>The controller <code>emit-s</code> events on the $scope (i.e. upwards towards the parent scope).  The available events are similarly named to the Foundation for Sites equivalents.</p>
+<ul>
+<li><code>&#39;resize.mm.foundation.drilldownMenu&#39;</code> when the menu resizes. The event listener function format is <code>function(event, menuElement)</code>:<ul>
+<li><code>event</code> - Standard <a href="https://code.angularjs.org/1.6.5/docs/api/ng/type/$rootScope.Scope#$on">Angular <code>event</code> object</a></li>
+<li><code>menuElement</code> - <a href="https://code.angularjs.org/1.6.5/docs/api/ng/function/angular.element">angular.element</a> for the top level <em>UL</em> element of the menu.</li>
+</ul>
+</li>
+<li><code>&#39;open.mm.foundation.drilldownMenu&#39;</code> when a submenu is opened. The event listener function format is <code>function(event, menuElement, submenuElement)</code>:<ul>
+<li><code>event</code> - Standard <a href="https://code.angularjs.org/1.6.5/docs/api/ng/type/$rootScope.Scope#$on">Angular <code>event</code> object</a></li>
+<li><code>menuElement</code> - <a href="https://code.angularjs.org/1.6.5/docs/api/ng/function/angular.element">angular.element</a> for the top level <em>UL</em> element of the menu.</li>
+<li><code>submenuElement</code> - <a href="https://code.angularjs.org/1.6.5/docs/api/ng/function/angular.element">angular.element</a> for the <em>UL</em> element at the top of the submenu that has just been opened.</li>
+</ul>
+</li>
+<li><code>&#39;hide.mm.foundation.drilldownMenu&#39;</code> when a submenu is closed. The event listener function format is <code>function(event, menuElement, submenuElement)</code> as above.</li>
+</ul>
+<h4 id="usage-notes">Usage Notes</h4>
+<p>Be careful when dynamically showing and hiding this component.  The component only resizes when created, when the viewport size changes, or when the resize() API is triggered. If it is hidden via css when created it will initialse with 0 height and width.  If it is then shown (using <code>ng-show</code> or similar), it will remain as 0 height and width and thus not appear to be visible!</p>
+<p>This can be resolved by using the API to resize as part of the reveal.</p>
+<p>Alternatively, use <code>ng-if</code> instead of <code>ng-show</code>.  This re-creates the component when showing, and
+thus the size is set correctly as part of the initialisation.</p>
+<h4 id="not-implemented-">NOT implemented:</h4>
+<p>The following features of the Foundation Drilldown Menu are NOT implemented:</p>
+<ul>
+<li><em>back</em> entries at the bottom of submenus.</li>
+<li>templates for auto-added <em>back</em> entries.</li>
+<li><code>autoHeight</code>.</li>
+<li><code>ScrollTop</code>.</li>
+<li>Handling of keyboard events (up/down/etc.)</li>
+<li>Automatic addition of aria attributes.</li>
+<li>Any of the plugin options.</li>
+<li><code>scrollme</code> and <code>closed</code> events.</li>
+<li><code>_scrollTop</code> and <code>_destroy</code> methods.</li>
+</ul>
 
                       </div>
                     </div>
@@ -555,7 +645,7 @@
                     <div class="row code">
                       <div class="columns medium-12" ng-controller="PlunkerCtrl">
                         <div class="float-right">
-                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.9', 'drilldownMenu')">
+                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.10', 'drilldownMenu')">
                             <i class="fa fa-edit"></i> Edit in plunker
                           </button>
                         </div>
@@ -563,79 +653,289 @@
                           <tab heading="Markup">
                             <div plunker-content="markup">
                               <pre ng-non-bindable><code data-language="html">&lt;div ng-controller=&quot;DrillDownDemoCtrl&quot;&gt;
-  &lt;h4&gt;Auto &#96;Wrapper&#96; and &#96;Back&#96; Links&lt;/h4&gt;
-  &lt;ul class=&quot;drilldown menu&quot; drilldown-menu&gt;
-    &lt;li&gt;
-      &lt;a&gt;Item 1&lt;/a&gt;
-      &lt;ul class=&quot;menu&quot;&gt;
-        &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Item 1A&lt;/a&gt;&lt;/li&gt;
-        &lt;li&gt;
-          &lt;a href=&quot;#&quot;&gt;Item 1B&lt;/a&gt;
-          &lt;ul class=&quot;menu&quot;&gt;
-            &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Item 1B i&lt;/a&gt;&lt;/li&gt;
-            &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Item 1B ii&lt;/a&gt;&lt;/li&gt;
-            &lt;li&gt;
-              &lt;a href=&quot;#&quot;&gt;Item 1B iii&lt;/a&gt;
-              &lt;ul class=&quot;menu&quot;&gt;
-                &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Item 1B iii alpha&lt;/a&gt;&lt;/li&gt;
-                &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Item 1B iii omega&lt;/a&gt;&lt;/li&gt;
-              &lt;/ul&gt;
-            &lt;/li&gt;
-            &lt;li&gt;
-              &lt;a href=&quot;#&quot;&gt;Item 1B iv&lt;/a&gt;
-              &lt;ul class=&quot;menu&quot;&gt;
-                &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Item 1B iv alpha&lt;/a&gt;&lt;/li&gt;
-              &lt;/ul&gt;
-            &lt;/li&gt;
-          &lt;/ul&gt;
-        &lt;/li&gt;
-        &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Item 1C&lt;/a&gt;&lt;/li&gt;
-      &lt;/ul&gt;
-    &lt;/li&gt;
-    &lt;li&gt;
-      &lt;a href=&quot;#&quot;&gt;Item 2&lt;/a&gt;
-      &lt;ul class=&quot;menu&quot;&gt;
-        &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Item 2A&lt;/a&gt;&lt;/li&gt;
-        &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Item 2B&lt;/a&gt;&lt;/li&gt;
-      &lt;/ul&gt;
-    &lt;/li&gt;
-    &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Item 3&lt;/a&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Item 4&lt;/a&gt;&lt;/li&gt;
-  &lt;/ul&gt;
-
-  &lt;!-- Manual Wrapper and Back Links --&gt;
-  &lt;h4&gt;Manual &#96;Wrapper&#96; and &#96;Back&#96; Links&lt;/h4&gt;
-  &lt;!-- Manually added wrapper MUST be &#96;div&#96; with class &#96;is-drilldown&#96; --&gt;
-  &lt;div class=&quot;is-drilldown&quot;&gt;
+  &lt;div class=&quot;callout&quot;&gt;
+    &lt;h4&gt;Auto &#96;Wrapper&#96; and &#96;Back&#96; Links&lt;/h4&gt;
     &lt;ul class=&quot;drilldown menu&quot; drilldown-menu&gt;
+
       &lt;li&gt;
         &lt;a&gt;Item 1&lt;/a&gt;
         &lt;ul class=&quot;menu&quot;&gt;
-          &lt;!-- Manual back link MUST be &#96;li&#96; with class &#96;.js-drilldown-back&#96; --&gt;
-          &lt;li class=&quot;js-drilldown-back&quot;&gt;&lt;a href=&quot;#&quot;&gt;Manual Back To Top&lt;/a&gt;&lt;/li&gt;
           &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Item 1A&lt;/a&gt;&lt;/li&gt;
           &lt;li&gt;
             &lt;a href=&quot;#&quot;&gt;Item 1B&lt;/a&gt;
             &lt;ul class=&quot;menu&quot;&gt;
-              &lt;li class=&quot;js-drilldown-back&quot;&gt;&lt;a href=&quot;#&quot;&gt;Manual Back To Level 1&lt;/a&gt;&lt;/li&gt;
-              &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Item 1B i&lt;/a&gt;&lt;/li&gt;
+              &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Item 1B i make this really long so that it will overflow a line&lt;/a&gt;&lt;/li&gt;
               &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Item 1B ii&lt;/a&gt;&lt;/li&gt;
+              &lt;li&gt;
+                &lt;a href=&quot;#&quot;&gt;Item 1B iii - this one is also extended to overflow a line&lt;/a&gt;
+                &lt;ul class=&quot;menu&quot;&gt;
+                  &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Item 1B iii alpha&lt;/a&gt;&lt;/li&gt;
+                  &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Item 1B iii omega&lt;/a&gt;&lt;/li&gt;
+                &lt;/ul&gt;
+              &lt;/li&gt;
+              &lt;li&gt;
+                &lt;a href=&quot;#&quot;&gt;Item 1B iv&lt;/a&gt;
+                &lt;ul class=&quot;menu&quot;&gt;
+                  &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Item 1B iv alpha&lt;/a&gt;&lt;/li&gt;
+                &lt;/ul&gt;
+              &lt;/li&gt;
             &lt;/ul&gt;
           &lt;/li&gt;
           &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Item 1C&lt;/a&gt;&lt;/li&gt;
         &lt;/ul&gt;
       &lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Item 2&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;
+        &lt;a href=&quot;#&quot;&gt;Search Engines&lt;/a&gt;
+        &lt;ul class=&quot;menu&quot;&gt;
+          &lt;li&gt;&lt;a href=&quot;https://www.google.com/&quot;&gt;Google&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;https://www.bing.com/&quot;&gt;Bing&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;https://www.duckduckgo.com/&quot;&gt;DuckDuckGo&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;http://foundation.zurb.com/&quot;&gt;Foundation&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Item 4&lt;/a&gt;&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/div&gt;
+
+  &lt;div class=&quot;callout&quot;&gt;
+
+    &lt;!-- Manual Wrapper and Back Links --&gt;
+    &lt;h4&gt;Manual &#96;Wrapper&#96; and &#96;Back&#96; Links&lt;/h4&gt;
+    &lt;!-- Manually added wrapper MUST be &#96;div&#96; with class &#96;is-drilldown&#96; --&gt;
+    &lt;div class=&quot;is-drilldown&quot;&gt;
+      &lt;ul class=&quot;drilldown menu&quot; drilldown-menu&gt;
+        &lt;li&gt;
+          &lt;a&gt;Item 1&lt;/a&gt;
+          &lt;ul class=&quot;menu&quot;&gt;
+            &lt;!-- Manual back link MUST be &#96;li&#96; with class &#96;.js-drilldown-back&#96; --&gt;
+            &lt;li class=&quot;js-drilldown-back&quot;&gt;&lt;a href=&quot;#&quot;&gt;Manual Back To Top&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Item 1A&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;
+              &lt;a href=&quot;#&quot;&gt;Item 1B&lt;/a&gt;
+              &lt;ul class=&quot;menu&quot;&gt;
+                &lt;li class=&quot;js-drilldown-back&quot;&gt;&lt;a href=&quot;#&quot;&gt;Manual Back To Level 1&lt;/a&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Item 1B i&lt;/a&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Item 1B ii&lt;/a&gt;&lt;/li&gt;
+              &lt;/ul&gt;
+            &lt;/li&gt;
+            &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Item 1C&lt;/a&gt;&lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/li&gt;
+        &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Item 2&lt;/a&gt;&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;div class=&quot;callout&quot; id=&quot;drilldown-api&quot;&gt;
+
+    &lt;!-- API usage --&gt;
+    &lt;h4&gt;API Usage&lt;/h4&gt;
+    &lt;alert ng-repeat=&quot;alert in vm.alerts&quot; type=&quot;alert.type&quot; close=&quot;vm.closeAlert($index)&quot;&gt;
+      {{alert.msg}}
+    &lt;/alert&gt;
+
+    &lt;div&gt;
+      &lt;button class=&quot;button&quot; ng-click=&quot;vm.showHideMenu()&quot;&gt;Show / Hide the Menu&lt;/button&gt;
+      &lt;button class=&quot;button&quot; ng-click=&quot;vm.ddmApi.resizeMenu()&quot; ng-show=&quot;vm.haveShown&quot;&gt;Resize&lt;/button&gt;
+    &lt;/div&gt;
+
+    &lt;div class=&quot;callout ng-hide&quot; ng-show=&quot;vm.shouldShow&quot;&gt;
+      &lt;ul class=&quot;drilldown menu&quot; id=&quot;drilldown-api-menu&quot; drilldown-menu drilldown-menu-api=&quot;vm.ddmApi&quot;&gt;
+        &lt;li&gt;
+          &lt;a href=&quot;#&quot;&gt;Item 1&lt;/a&gt;
+          &lt;ul class=&quot;menu&quot; id=&quot;drilldown-api-submenu-1&quot;&gt;
+            &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Item 1A&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;
+              &lt;a href=&quot;#&quot;&gt;Item 1B&lt;/a&gt;
+              &lt;ul class=&quot;menu&quot;&gt;
+                &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Item 1B i&lt;/a&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Item 1B ii&lt;/a&gt;&lt;/li&gt;
+              &lt;/ul&gt;
+            &lt;/li&gt;
+            &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Item 1C&lt;/a&gt;&lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/li&gt;
+        &lt;li&gt;&lt;a href=&quot;#&quot;&gt;Item 2&lt;/a&gt;&lt;/li&gt;
+      &lt;/ul&gt;
+
+      &lt;div ng-show=&quot;vm.haveResized&quot;&gt;
+        &lt;h5&gt;Other API functions&lt;/h5&gt;
+        &lt;button class=&quot;button&quot; ng-click=&quot;vm.showSubmenu1()&quot;&gt;Open Submenu 1&lt;/button&gt;
+        &lt;button class=&quot;button&quot; ng-click=&quot;vm.hideSubmenu1()&quot;&gt;Close Submenu 1&lt;/button&gt;
+        &lt;button class=&quot;button&quot; ng-click=&quot;vm.ddmApi.hideAll()&quot;&gt;Close All Submenus&lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
 &lt;/div&gt;
 </code></pre>
                             </div>
                           </tab>
                           <tab heading="JavaScript">
                             <div plunker-content="javascript">
-                              <pre ng-non-bindable><code data-language="javascript">angular.module(&#39;foundationDemoApp&#39;).controller(&#39;DrillDownDemoCtrl&#39;, function ($scope) {
+                              <pre ng-non-bindable><code data-language="javascript">angular.module(&#39;foundationDemoApp&#39;)
+.controller(&#39;DrillDownDemoCtrl&#39;, function($scope, $element, $timeout, $log) {
+    &#39;ngInject&#39;;
+    const vm = {
+        ddmApi: null,
+        shouldShow: false,
+        haveShown: false,
+        haveResized: false,
+        alerts: [],
 
+        showHideMenu: showHideMenu,
+
+        showSubmenu1: showSubmenu1,
+        hideSubmenu1: hideSubmenu1,
+
+        closeAlert: closeAlert,
+    };
+    $scope.vm = vm;
+
+    /**
+     * Initial alert used as part of the API Usage demo
+     */
+    vm.alerts = [{
+        type: &#39;alert&#39;,
+        msg: &#39;The menu below is hidden with css. Press the button to show it (using ng-show).&#39;,
+    }];
+
+    /**
+     * Event handlers for the menu events
+     */
+    $scope.$on(&#39;resize.mm.foundation.drilldownMenu&#39;, onMenuResized);
+    $scope.$on(&#39;open.mm.foundation.drilldownMenu&#39;, onSubmenuOpen);
+    $scope.$on(&#39;hide.mm.foundation.drilldownMenu&#39;, onSubmenuClosed);
+
+    /**
+     * Sets the variable to show or hide the menu block
+     */
+    function showHideMenu() {
+        vm.shouldShow = !vm.shouldShow;
+
+        if (!vm.haveShown) {
+            closeAlert(0);
+            addAlert(
+                &#39;alert&#39;,
+                &#39;The menu is now &quot;shown&quot;, but because it was hidden initially it will start with &#39; +
+                &#39;&quot;max-width: 0px&quot; and doesn\&#39;t appear! Press the resize button to trigger &#39; +
+                &#39;a resize via the API&#39;
+            );
+            vm.haveShown = true;
+        }
+    }
+
+    /**
+     * Get the UL for submenu 1.
+     * NOTE: You MUST use the UL for the submenu to show/hide, NOT the parent LI!
+     *
+     * @returns {angular.element}   - The element for submenu 1 in the API section
+     */
+    function getSubmenu1() {
+        return angular.element($element[0].querySelector(&#39;ul#drilldown-api-submenu-1&#39;));
+    }
+
+    /**
+     * Function to use the API to open a specific menu item
+     */
+    function showSubmenu1() {
+        //
+        // Find the item
+        //
+        var element = getSubmenu1();
+
+        //
+        // Use the API to open it
+        //
+        vm.ddmApi.show(element);
+    }
+
+    /**
+     * Function to use the API to close a specific menu item
+     */
+    function hideSubmenu1() {
+        //
+        // Find the item
+        //
+        var element = getSubmenu1();
+
+        //
+        // Use the API to open it
+        //
+        vm.ddmApi.hide(element);
+    }
+
+    /**
+     * Handler for the resized event from the menu
+     *
+     * @param {Object} event                - Angular &#96;event&#96; object (see $rootScope.$on)
+     * @param {angular.element} menuElement - The root element of the menu
+     */
+    function onMenuResized(event, menuElement) {
+        if (menuElement.attr(&#39;id&#39;) !== &#39;drilldown-api-menu&#39;) {
+            return; // One of the other menus
+        }
+        if (vm.haveShown &amp;&amp; !vm.haveResized) {
+            closeAlert(0);
+            addAlert(
+                &#39;success&#39;,
+                &#39;Congratulations! The menu should now be visible!&#39;
+            );
+            addAlert(
+                &#39;alert&#39;,
+                &#39;The same 0-width problem will happen again if the menu is hidden then &#39; +
+                &#39;resized (via the API or via a viewport size change). &#39; +
+                &#39;You MUST trigger a resize via the API after showing it again if this happens.&#39;
+            );
+            vm.haveResized = true;
+        }
+    }
+
+    /**
+     * Example handler for the submenu open event
+     *
+     * @param {Object} event                    - Angular &#96;event&#96; object (see $rootScope.$on)
+     * @param {angular.element} menuElement     - The root element of the menu
+     * @param {angular.element} submenuElement  - The submenu element that has just opened
+     */
+    function onSubmenuOpen(event, menuElement, submenuElement) {
+        if (submenuElement.attr(&#39;id&#39;) === &#39;drilldown-api-submenu-1&#39;) {
+            $log.log(&#39;Submenu 1 has been opened!&#39;);
+        }
+    }
+
+    /**
+     * Example handler for the submenu close event
+     *
+     * @param {Object} event                    - Angular &#96;event&#96; object (see $rootScope.$on)
+     * @param {angular.element} menuElement     - The root element of the menu
+     * @param {angular.element} submenuElement  - The submenu element that has just closed
+     */
+    function onSubmenuClosed(event, menuElement, submenuElement) {
+        if (submenuElement.attr(&#39;id&#39;) === &#39;drilldown-api-submenu-1&#39;) {
+            $log.log(&#39;Submenu 1 has been closed!&#39;);
+        }
+    }
+
+    /**
+     * Closes the specific alert
+     *
+     * @param {number} index    - The index of the alert to close
+     */
+    function closeAlert(index) {
+        vm.alerts.splice(index, 1);
+    }
+
+    /**
+     * Adds a new alert programmatically.
+     * Used of the explanations of the drilldown menu API and functionality.
+     *
+     * @param {string} type     - the type of alert
+     * @param {string} msg      - the alert message
+     */
+    function addAlert(type, msg) {
+        vm.alerts.push({ type: type, msg: msg });
+    }
 });
 </code></pre>
                             </div>
@@ -644,8 +944,169 @@
                       </div>
                     </div>
                   </section>
-                  <script>angular.module('foundationDemoApp').controller('DrillDownDemoCtrl', function ($scope) {
+                  <script>angular.module('foundationDemoApp')
+.controller('DrillDownDemoCtrl', function($scope, $element, $timeout, $log) {
+    'ngInject';
+    const vm = {
+        ddmApi: null,
+        shouldShow: false,
+        haveShown: false,
+        haveResized: false,
+        alerts: [],
 
+        showHideMenu: showHideMenu,
+
+        showSubmenu1: showSubmenu1,
+        hideSubmenu1: hideSubmenu1,
+
+        closeAlert: closeAlert,
+    };
+    $scope.vm = vm;
+
+    /**
+     * Initial alert used as part of the API Usage demo
+     */
+    vm.alerts = [{
+        type: 'alert',
+        msg: 'The menu below is hidden with css. Press the button to show it (using ng-show).',
+    }];
+
+    /**
+     * Event handlers for the menu events
+     */
+    $scope.$on('resize.mm.foundation.drilldownMenu', onMenuResized);
+    $scope.$on('open.mm.foundation.drilldownMenu', onSubmenuOpen);
+    $scope.$on('hide.mm.foundation.drilldownMenu', onSubmenuClosed);
+
+    /**
+     * Sets the variable to show or hide the menu block
+     */
+    function showHideMenu() {
+        vm.shouldShow = !vm.shouldShow;
+
+        if (!vm.haveShown) {
+            closeAlert(0);
+            addAlert(
+                'alert',
+                'The menu is now "shown", but because it was hidden initially it will start with ' +
+                '"max-width: 0px" and doesn\'t appear! Press the resize button to trigger ' +
+                'a resize via the API'
+            );
+            vm.haveShown = true;
+        }
+    }
+
+    /**
+     * Get the UL for submenu 1.
+     * NOTE: You MUST use the UL for the submenu to show/hide, NOT the parent LI!
+     *
+     * @returns {angular.element}   - The element for submenu 1 in the API section
+     */
+    function getSubmenu1() {
+        return angular.element($element[0].querySelector('ul#drilldown-api-submenu-1'));
+    }
+
+    /**
+     * Function to use the API to open a specific menu item
+     */
+    function showSubmenu1() {
+        //
+        // Find the item
+        //
+        var element = getSubmenu1();
+
+        //
+        // Use the API to open it
+        //
+        vm.ddmApi.show(element);
+    }
+
+    /**
+     * Function to use the API to close a specific menu item
+     */
+    function hideSubmenu1() {
+        //
+        // Find the item
+        //
+        var element = getSubmenu1();
+
+        //
+        // Use the API to open it
+        //
+        vm.ddmApi.hide(element);
+    }
+
+    /**
+     * Handler for the resized event from the menu
+     *
+     * @param {Object} event                - Angular `event` object (see $rootScope.$on)
+     * @param {angular.element} menuElement - The root element of the menu
+     */
+    function onMenuResized(event, menuElement) {
+        if (menuElement.attr('id') !== 'drilldown-api-menu') {
+            return; // One of the other menus
+        }
+        if (vm.haveShown && !vm.haveResized) {
+            closeAlert(0);
+            addAlert(
+                'success',
+                'Congratulations! The menu should now be visible!'
+            );
+            addAlert(
+                'alert',
+                'The same 0-width problem will happen again if the menu is hidden then ' +
+                'resized (via the API or via a viewport size change). ' +
+                'You MUST trigger a resize via the API after showing it again if this happens.'
+            );
+            vm.haveResized = true;
+        }
+    }
+
+    /**
+     * Example handler for the submenu open event
+     *
+     * @param {Object} event                    - Angular `event` object (see $rootScope.$on)
+     * @param {angular.element} menuElement     - The root element of the menu
+     * @param {angular.element} submenuElement  - The submenu element that has just opened
+     */
+    function onSubmenuOpen(event, menuElement, submenuElement) {
+        if (submenuElement.attr('id') === 'drilldown-api-submenu-1') {
+            $log.log('Submenu 1 has been opened!');
+        }
+    }
+
+    /**
+     * Example handler for the submenu close event
+     *
+     * @param {Object} event                    - Angular `event` object (see $rootScope.$on)
+     * @param {angular.element} menuElement     - The root element of the menu
+     * @param {angular.element} submenuElement  - The submenu element that has just closed
+     */
+    function onSubmenuClosed(event, menuElement, submenuElement) {
+        if (submenuElement.attr('id') === 'drilldown-api-submenu-1') {
+            $log.log('Submenu 1 has been closed!');
+        }
+    }
+
+    /**
+     * Closes the specific alert
+     *
+     * @param {number} index    - The index of the alert to close
+     */
+    function closeAlert(index) {
+        vm.alerts.splice(index, 1);
+    }
+
+    /**
+     * Adds a new alert programmatically.
+     * Used of the explanations of the drilldown menu API and functionality.
+     *
+     * @param {string} type     - the type of alert
+     * @param {string} msg      - the alert message
+     */
+    function addAlert(type, msg) {
+        vm.alerts.push({ type: type, msg: msg });
+    }
 });
 </script>
                 
@@ -780,7 +1241,7 @@
                     <div class="row code">
                       <div class="columns medium-12" ng-controller="PlunkerCtrl">
                         <div class="float-right">
-                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.9', 'dropdownMenu')">
+                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.10', 'dropdownMenu')">
                             <i class="fa fa-edit"></i> Edit in plunker
                           </button>
                         </div>
@@ -999,7 +1460,7 @@
                     <div class="row code">
                       <div class="columns medium-12" ng-controller="PlunkerCtrl">
                         <div class="float-right">
-                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.9', 'dropdownToggle')">
+                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.10', 'dropdownToggle')">
                             <i class="fa fa-edit"></i> Edit in plunker
                           </button>
                         </div>
@@ -1181,7 +1642,7 @@ Creating custom modals is straightforward: create a partial view, its controller
                     <div class="row code">
                       <div class="columns medium-12" ng-controller="PlunkerCtrl">
                         <div class="float-right">
-                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.9', 'modal')">
+                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.10', 'modal')">
                             <i class="fa fa-edit"></i> Edit in plunker
                           </button>
                         </div>
@@ -1467,7 +1928,7 @@ Creating custom modals is straightforward: create a partial view, its controller
                     <div class="row code">
                       <div class="columns medium-12" ng-controller="PlunkerCtrl">
                         <div class="float-right">
-                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.9', 'offcanvas')">
+                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.10', 'offcanvas')">
                             <i class="fa fa-edit"></i> Edit in plunker
                           </button>
                         </div>
@@ -1617,7 +2078,7 @@ Creating custom modals is straightforward: create a partial view, its controller
                     <div class="row code">
                       <div class="columns medium-12" ng-controller="PlunkerCtrl">
                         <div class="float-right">
-                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.9', 'orbit')">
+                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.10', 'orbit')">
                             <i class="fa fa-edit"></i> Edit in plunker
                           </button>
                         </div>
@@ -1787,7 +2248,7 @@ Creating custom modals is straightforward: create a partial view, its controller
                     <div class="row code">
                       <div class="columns medium-12" ng-controller="PlunkerCtrl">
                         <div class="float-right">
-                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.9', 'pagination')">
+                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.10', 'pagination')">
                             <i class="fa fa-edit"></i> Edit in plunker
                           </button>
                         </div>
@@ -1920,7 +2381,7 @@ Creating custom modals is straightforward: create a partial view, its controller
                     <div class="row code">
                       <div class="columns medium-12" ng-controller="PlunkerCtrl">
                         <div class="float-right">
-                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.9', 'progressbar')">
+                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.10', 'progressbar')">
                             <i class="fa fa-edit"></i> Edit in plunker
                           </button>
                         </div>
@@ -2097,7 +2558,7 @@ Creating custom modals is straightforward: create a partial view, its controller
                     <div class="row code">
                       <div class="columns medium-12" ng-controller="PlunkerCtrl">
                         <div class="float-right">
-                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.9', 'rating')">
+                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.10', 'rating')">
                             <i class="fa fa-edit"></i> Edit in plunker
                           </button>
                         </div>
@@ -2254,7 +2715,7 @@ Whether to open an active tab automatically.</p>
                     <div class="row code">
                       <div class="columns medium-12" ng-controller="PlunkerCtrl">
                         <div class="float-right">
-                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.9', 'tabs')">
+                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.10', 'tabs')">
                             <i class="fa fa-edit"></i> Edit in plunker
                           </button>
                         </div>
@@ -2430,7 +2891,7 @@ appendToBody: false
                     <div class="row code">
                       <div class="columns medium-12" ng-controller="PlunkerCtrl">
                         <div class="float-right">
-                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.9', 'tooltip')">
+                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.10', 'tooltip')">
                             <i class="fa fa-edit"></i> Edit in plunker
                           </button>
                         </div>
@@ -2620,7 +3081,7 @@ appendToBody: false
     </div>
     <div class="modal-footer">
       <a class="button" ng-click="cancel()">Cancel</a>
-      <a class="button" ng-click="download('0.11.9')"><i class="fa fa-download"></i> Download 0.11.9</a>
+      <a class="button" ng-click="download('0.11.10')"><i class="fa fa-download"></i> Download 0.11.10</a>
     </div>
   </script>
 </body>

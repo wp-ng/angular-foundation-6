@@ -24,18 +24,6 @@
         value: true
     });
 
-    function _toConsumableArray(arr) {
-        if (Array.isArray(arr)) {
-            for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
-                arr2[i] = arr[i];
-            }
-
-            return arr2;
-        } else {
-            return Array.from(arr);
-        }
-    }
-
     function _classCallCheck(instance, Constructor) {
         if (!(instance instanceof Constructor)) {
             throw new TypeError("Cannot call a class as a function");
@@ -66,11 +54,23 @@
         return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
     };
 
+    function _toConsumableArray(arr) {
+        if (Array.isArray(arr)) {
+            for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
+                arr2[i] = arr[i];
+            }
+
+            return arr2;
+        } else {
+            return Array.from(arr);
+        }
+    }
+
     /*
      * angular-foundation-6
      * http://circlingthesun.github.io/angular-foundation-6/
     
-     * Version: 0.11.8 - 2017-08-30
+     * Version: 0.11.9 - 2017-09-05
      * License: MIT
      * (c) 
      */
@@ -339,11 +339,15 @@
         };
     });
 
-    angular.module('mm.foundation.drilldownMenu', []).directive('drilldownMenu', ['$compile', '$timeout', function ($compile, $timeout) {
+    angular.module('mm.foundation.drilldownMenu', []).directive('drilldownMenu', ['$compile', '$timeout', '$window', function ($compile, $timeout, $window) {
         'ngInject';
 
+        var EVENT_BASE = 'mm.foundation.drilldownMenu';
+
         return {
-            bindToController: {},
+            bindToController: {
+                drilldownMenuApi: '=?'
+            },
             scope: {},
             restrict: 'A',
             controllerAs: 'vm',
@@ -355,12 +359,31 @@
                 vm.maxHeight = -1;
                 vm.maxWidth = -1;
                 vm.childMenus = [];
+                vm.generatedWrapper = null;
 
-                vm.openMenu = openMenu;
-                vm.closeMenu = closeMenu;
+                vm.drilldownMenuApi = {
+                    show: openMenu,
+                    hide: closeMenu,
+                    hideAll: function hideAll() {
+                        return doCloseAll(vm);
+                    },
+                    resizeMenu: function resizeMenu() {
+                        return doResize(vm, $scope);
+                    },
+
+                    EVENTS: {
+                        resize: 'resize.' + EVENT_BASE,
+                        open: 'open.' + EVENT_BASE,
+                        hide: 'hide.' + EVENT_BASE,
+
+                        _emitEvent: emitEvent.bind(vm, $scope, $element)
+                    }
+                };
+
                 vm.reportChild = reportChild;
 
                 vm.$postLink = $postLink;
+                vm.$onDestroy = $onDestroy;
             }],
             link: dmLinkFunction
         };
@@ -389,13 +412,12 @@
                  * Add a wrapper element to hide the overflowed menu items
                  */
                 var wrapper = '<div class="is-drilldown"></div>';
-                var elementWrapper = angular.element(wrapper);
-                $element.wrap(elementWrapper);
+                drilldownMenu.generatedWrapper = angular.element(wrapper);
+                $element.wrap(drilldownMenu.generatedWrapper);
             }
 
             /**
-             * Compile the element so that angular knows about it and will apply the
-             * the li directive below
+             * Store the root element so we have access to it elsewhere
              */
             drilldownMenu.$element = $element;
         }
@@ -408,6 +430,8 @@
         function openMenu(ulChild) {
             ulChild.removeClass('invisible');
             ulChild.addClass('is-active');
+
+            this.EVENTS._emitEvent(this.EVENTS.open, ulChild);
         }
 
         /**
@@ -421,6 +445,20 @@
                 ulParent.removeClass('is-active is-closing');
                 ulParent.addClass('invisible');
             });
+
+            this.EVENTS._emitEvent(this.EVENTS.hide, ulParent);
+        }
+
+        /**
+         * Returns to the top level in the menu.
+         */
+        function doCloseAll(vm) {
+            for (var i = 0; i < vm.childMenus.length; ++i) {
+                var child = vm.childMenus[i];
+                if (child.hasClass('is-active')) {
+                    vm.drilldownMenuApi.hide(child);
+                }
+            }
         }
 
         /**
@@ -434,12 +472,24 @@
         }
 
         /**
-         * Called when everything is finished linking.  We use this to calculate the
-         * height of the sub mnenus so that we can size the wrapper div appropriately
-         * so that the largest submenu is visible.
+         * Does a resize of the control based on the dimensions of the largest
+         * submenu (or the top level if its the biggest(.
+         *
+         * @param {Object} vm   - the view model for this directive
          */
-        function $postLink() {
-            var vm = this;
+        function doResize(vm) {
+            var parent = vm.$element.parent();
+
+            /**
+             * Reset any hardcoded styles so the children can achieve their natural size
+             */
+            parent.css({
+                'max-width': 'none',
+                'min-height': 'none'
+            });
+            vm.maxHeight = -1;
+            vm.maxWidth = -1;
+
             /**
              * Calculate the height of each menu and work out the maxes.
              */
@@ -460,9 +510,81 @@
                 maxWidth: vm.maxWidth + 'px'
             };
 
-            var parent = vm.$element.parent();
-
             parent.css(css);
+
+            /**
+             * Emit an event to say we have been resized
+             */
+            vm.drilldownMenuApi.EVENTS._emitEvent(vm.drilldownMenuApi.EVENTS.resize);
+        }
+
+        /**
+         * Called when everything is finished linking.  We use this to calculate the
+         * height of the sub mnenus so that we can size the wrapper div appropriately
+         * so that the largest submenu is visible.
+         */
+        function $postLink() {
+            var vm = this;
+
+            /**
+             * Set the sizes the first time
+             */
+            doResize(vm);
+
+            /**
+             * Handle window resizes and do it whenever the window size changes.
+             */
+            angular.element($window).on('resize', vm.drilldownMenuApi.resizeMenu);
+        }
+
+        /**
+         * Called when we are being destroyed.
+         *  We use this to do cleanup of the various changes we made
+         */
+        function $onDestroy() {
+            var vm = this;
+
+            /**
+             * Remove the resize event handler
+             */
+            angular.element($window).off('resize', vm.drilldownMenuApi.resizeMenu);
+
+            /**
+             * Find out if we need to remove the generated wrapper element
+             */
+            if (vm.generatedWrapper) {
+                delete vm.generatedWrapper;
+            }
+
+            /**
+             * Cleanup the API functions as they hold the controller by context
+             * and stop the controller deleting properly
+             */
+            delete vm.drilldownMenuApi.hideAll;
+            delete vm.drilldownMenuApi.resizeMenu;
+            delete vm.drilldownMenuApi.EVENTS._emitEvent;
+            vm.drilldownMenuApi = {};
+        }
+
+        /**
+         * Wrapper for $emit to simplify including the base element to identify
+         * the source of our emits.
+         *
+         * @param {Object} $scope               - The scope
+         * @param {angular.element} $element    - The element at the top of the menu
+         * @param {string} name                 - The name of the event to emit
+         * @param {...*} args                   - optional list of arguments to pass on
+         */
+        function emitEvent($scope, $element, name) {
+            for (var _len = arguments.length, args = Array(_len > 3 ? _len - 3 : 0), _key = 3; _key < _len; _key++) {
+                args[_key - 3] = arguments[_key];
+            }
+
+            //
+            // Add our root element as the first extra argument
+            //
+            var newArgs = [$element].concat(args);
+            $scope.$emit.apply($scope, [name].concat(_toConsumableArray(newArgs)));
         }
     }]).directive('ul', ['$compile', function ($compile) {
         'ngInject';
@@ -495,6 +617,7 @@
              * Check if the dom already contains a "back" link with the right class
              */
             var elementBack = null;
+            var generatedBack = false;
             var children = $element.children();
             for (var i = 0; i < children.length; ++i) {
                 var elementChild = angular.element(children[i]);
@@ -507,13 +630,13 @@
                 /**
                  * No existing one, so add in the automatic `back` element
                  */
+                generatedBack = true;
                 var backButton = '<li class="js-drilldown-back"><a tabindex="0">Back</a></li>';
                 elementBack = angular.element(backButton);
                 $element.prepend(elementBack);
 
                 /**
-                 * Compile the element so that angular knows about it and will apply the
-                 * the li directive below
+                 * Compile the element so that angular knows about it
                  */
                 $compile(elementBack)($scope);
             }
@@ -521,11 +644,12 @@
             /**
              * Add the event handler to the `back` element (whether added or existing)
              */
-            elementBack.on('click', function (event) {
-                drilldownMenu.closeMenu($element);
+            function onClickBack(event) {
+                drilldownMenu.drilldownMenuApi.hide($element);
                 event.stopImmediatePropagation();
                 event.preventDefault();
-            });
+            }
+            elementBack.on('click', onClickBack);
 
             /**
              * Report this element to the controller for tracking
@@ -535,18 +659,46 @@
             /**
              * Now set the styles
              */
-            $element.addClass('menu vertical nested submenu is-drilldown-submenu ' + 'drilldown-submenu-cover-previous invisible');
+            var elementClasses = 'vertical nested submenu is-drilldown-submenu ' + 'drilldown-submenu-cover-previous invisible';
+            $element.addClass(elementClasses);
 
             /**
              * Find the parent LI, and set the event handler to open this level
              */
             var parent = $element.parent();
             parent.addClass('is-drilldown-submenu-parent');
-            parent.on('click', function (event) {
-                drilldownMenu.openMenu($element);
-                // $element.attr('data-is-click', 'true');
+
+            function onClickOpen(event) {
+                drilldownMenu.drilldownMenuApi.show($element);
                 event.stopImmediatePropagation();
-                event.preventDefault();
+            }
+            parent.on('click', onClickOpen);
+
+            /**
+             * Handler for $destroy event
+             */
+            $scope.$on('$destroy', function () {
+                /**
+                 * Remove the open event handler from our parent.
+                 */
+                parent.off('click', onClickOpen);
+
+                /**
+                 * Remove the back event handler
+                 */
+                elementBack.off('click', onClickBack);
+
+                /**
+                 * Remove any back element we dynamically added in
+                 */
+                if (generatedBack) {
+                    elementBack.remove();
+                }
+
+                /**
+                 * Remove the classes we added to the element
+                 */
+                $element.removeClass(elementClasses);
             });
         }
     }]);

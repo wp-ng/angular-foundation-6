@@ -331,7 +331,6 @@ angular.module('mm.foundation.drilldownMenu', [])
         function onClickOpen(event) {
             drilldownMenu.drilldownMenuApi.show($element);
             event.stopImmediatePropagation();
-            event.preventDefault();
         }
         parent.on('click', onClickOpen);
 

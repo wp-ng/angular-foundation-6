@@ -19,23 +19,9 @@ angular.module('mm.foundation.drilldownMenu', [])
             vm.childMenus = [];
             vm.generatedWrapper = null;
 
-            vm.drilldownMenuApi = {
-                show: openMenu,
-                hide: closeMenu,
-                hideAll: () => doCloseAll(vm),
-                resizeMenu: () => doResize(vm, $scope),
-
-                EVENTS: {
-                    resize: `resize.${EVENT_BASE}`,
-                    open: `open.${EVENT_BASE}`,
-                    hide: `hide.${EVENT_BASE}`,
-
-                    _emitEvent: emitEvent.bind(vm, $scope, $element),
-                },
-            };
-
             vm.reportChild = reportChild;
 
+            vm.$onInit = $onInit.bind(vm, $scope, $element);
             vm.$postLink = $postLink;
             vm.$onDestroy = $onDestroy;
         },
@@ -178,6 +164,35 @@ angular.module('mm.foundation.drilldownMenu', [])
     }
 
     /**
+     * Called to initialise the directive.
+     * We use this to setup to the API once the binding has been initialised
+     *
+     * @param {Object} $scope   - the current scope
+     * @param {Object} $element - the element
+     */
+    function $onInit($scope, $element) {
+        const vm = this;
+        vm.drilldownMenuApi = {
+            show: openMenu,
+            hide: closeMenu,
+            hideAll: function hideAll() {
+                return doCloseAll(vm);
+            },
+            resizeMenu: function resizeMenu() {
+                return doResize(vm, $scope);
+            },
+
+            EVENTS: {
+                resize: `resize.${EVENT_BASE}`,
+                open: `open.${EVENT_BASE}`,
+                hide: `hide.${EVENT_BASE}`,
+
+                _emitEvent: emitEvent.bind(vm, $scope, $element),
+            },
+        };
+    }
+
+    /**
      * Called when everything is finished linking.  We use this to calculate the
      * height of the sub mnenus so that we can size the wrapper div appropriately
      * so that the largest submenu is visible.
@@ -223,6 +238,8 @@ angular.module('mm.foundation.drilldownMenu', [])
         delete vm.drilldownMenuApi.resizeMenu;
         delete vm.drilldownMenuApi.EVENTS._emitEvent;
         vm.drilldownMenuApi = {};
+
+        delete vm.$onInit;
     }
 
     /**

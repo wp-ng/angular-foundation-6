@@ -70,7 +70,7 @@
      * angular-foundation-6
      * http://circlingthesun.github.io/angular-foundation-6/
     
-     * Version: 0.11.10 - 2017-09-07
+     * Version: 0.11.11 - 2017-10-02
      * License: MIT
      * (c) 
      */
@@ -807,11 +807,13 @@
             }
         };
     }]);
+    'use strict';
     function DropdownToggleController($scope, $attrs, mediaQueries, $element, $position, $timeout, $transclude, dropdownPaneOffset) {
         'ngInject';
 
         var $ctrl = this;
-        var hoverTimeout = void 0;
+        var hoverTimeout = void 0,
+            deRegisterCloseListener = void 0;
         var $body = angular.element(document.querySelector('body'));
         $ctrl.css = {};
 
@@ -832,20 +834,24 @@
 
         function close(e) {
             $ctrl.active = false;
+            $scope.$emit('close.af.dropdownToggle', $element, $scope);
 
             if ($ctrl.closeOnClick) {
                 $body.off('click', closeOnClick);
             }
+            deRegisterCloseListener();
         }
 
         function open(e) {
             $ctrl.active = true;
+            $scope.$emit('open.af.dropdownToggle', $element, $scope);
 
             positionPane(dropdownPaneOffset);
 
             if ($ctrl.closeOnClick) {
                 $body.on('click', closeOnClick);
             }
+            deRegisterCloseListener = $scope.$on('doClose.af.dropdownToggle', close);
         }
 
         function closeOnClick(e) {

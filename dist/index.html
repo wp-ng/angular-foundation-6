@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" ng-app="foundationDemoApp" id="top">
-<head>
+<head ng-csp>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
@@ -19,11 +19,17 @@
   <script src="angular-foundation.js"></script>
   <script src="assets/plunker.js"></script>
   <script src="assets/app.js"></script>
+
+  <!-- Concatenated scripts from the module demo folders -->
+  <script src="index.js"></script>
+
   <link href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.4.3/css/foundation-float.css" rel="stylesheet"/>
   <!-- <link href="//cdnjs.cloudflare.com/ajax/libs/foundation/6.4.3/css/foundation-float.min.css" rel="stylesheet"/> -->
+  <link href="//ajax.googleapis.com/ajax/libs/angularjs/1.5.10/angular-csp.css" rel="stylesheet"/>
   <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet"/>
   <link rel="stylesheet" href="assets/rainbow.css"/>
   <link rel="stylesheet" href="assets/demo.css"/>
+
   <link rel="author" href="https://github.com/circlingthesun/angular-foundation-6/graphs/contributors">
 </head>
 <body class="ng-cloak" ng-controller="MainCtrl">
@@ -81,7 +87,7 @@
                   <h3>With love, from <a href="http://github.com/pineconellc/">Pinecone</a></h3>
                   <hr>
                   <p>
-                  <a class="button radius large" href="https://github.com/circlingthesun/angular-foundation-6/tree/gh-pages"><i class="fa fa-download"></i> Download v0.11.12</a>
+                  <a class="button radius large" href="https://github.com/circlingthesun/angular-foundation-6/tree/gh-pages"><i class="fa fa-download"></i> Download v0.11.13</a>
                     <a class="button radius large" href="https://github.com/circlingthesun/angular-foundation-6"><i class="fa fa-github"></i> Contribute</a>
                   </p>
                 </div>
@@ -173,7 +179,7 @@
                     <div class="row code">
                       <div class="columns medium-12" ng-controller="PlunkerCtrl">
                         <div class="float-right">
-                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.12', 'accordion')">
+                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.13', 'accordion')">
                             <i class="fa fa-edit"></i> Edit in plunker
                           </button>
                         </div>
@@ -236,25 +242,6 @@
                       </div>
                     </div>
                   </section>
-                  <script>angular.module('foundationDemoApp').controller('AccordionDemoCtrl', function($scope) {
-    $scope.oneAtATime = true;
-
-    $scope.groups = [{
-        title: "Dynamic Group Header - 1",
-        content: "Dynamic Group Body - 1"
-    }, {
-        title: "Dynamic Group Header - 2",
-        content: "Dynamic Group Body - 2"
-    }];
-
-    $scope.items = ['Item 1', 'Item 2', 'Item 3'];
-
-    $scope.addItem = function() {
-        var newItemNo = $scope.items.length + 1;
-        $scope.items.push('Item ' + newItemNo);
-    };
-});
-</script>
                 
                   <section class="demo" id="alert">
                     <div class="page-header">
@@ -284,7 +271,7 @@
                     <div class="row code">
                       <div class="columns medium-12" ng-controller="PlunkerCtrl">
                         <div class="float-right">
-                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.12', 'alert')">
+                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.13', 'alert')">
                             <i class="fa fa-edit"></i> Edit in plunker
                           </button>
                         </div>
@@ -322,22 +309,6 @@
                       </div>
                     </div>
                   </section>
-                  <script>angular.module('foundationDemoApp').controller('AlertDemoCtrl', function($scope) {
-  $scope.alerts = [
-    { type: 'alert', msg: 'Oh snap! Change a few things up and try submitting again.' },
-    { type: 'success round', msg: 'Well done! You successfully read this important alert message.' }
-  ];
-
-  $scope.addAlert = function() {
-    $scope.alerts.push({type: 'alert', msg: "Another alert!"});
-  };
-
-  $scope.closeAlert = function(index) {
-    $scope.alerts.splice(index, 1);
-  };
-
-});
-</script>
                 
                   <section class="demo" id="buttons">
                     <div class="page-header">
@@ -382,7 +353,7 @@
                     <div class="row code">
                       <div class="columns medium-12" ng-controller="PlunkerCtrl">
                         <div class="float-right">
-                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.12', 'buttons')">
+                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.13', 'buttons')">
                             <i class="fa fa-edit"></i> Edit in plunker
                           </button>
                         </div>
@@ -434,19 +405,6 @@
                       </div>
                     </div>
                   </section>
-                  <script>angular.module('foundationDemoApp').controller('ButtonsCtrl', function ($scope) {
-
-  $scope.singleModel = 1;
-
-  $scope.radioModel = 'Middle';
-
-  $scope.checkModel = {
-    left: false,
-    middle: true,
-    right: false
-  };
-});
-</script>
                 
                   <section class="demo" id="drilldownMenu">
                     <div class="page-header">
@@ -645,7 +603,7 @@ thus the size is set correctly as part of the initialisation.</p>
                     <div class="row code">
                       <div class="columns medium-12" ng-controller="PlunkerCtrl">
                         <div class="float-right">
-                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.12', 'drilldownMenu')">
+                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.13', 'drilldownMenu')">
                             <i class="fa fa-edit"></i> Edit in plunker
                           </button>
                         </div>
@@ -944,171 +902,6 @@ thus the size is set correctly as part of the initialisation.</p>
                       </div>
                     </div>
                   </section>
-                  <script>angular.module('foundationDemoApp')
-.controller('DrillDownDemoCtrl', function($scope, $element, $timeout, $log) {
-    'ngInject';
-    const vm = {
-        ddmApi: null,
-        shouldShow: false,
-        haveShown: false,
-        haveResized: false,
-        alerts: [],
-
-        showHideMenu: showHideMenu,
-
-        showSubmenu1: showSubmenu1,
-        hideSubmenu1: hideSubmenu1,
-
-        closeAlert: closeAlert,
-    };
-    $scope.vm = vm;
-
-    /**
-     * Initial alert used as part of the API Usage demo
-     */
-    vm.alerts = [{
-        type: 'alert',
-        msg: 'The menu below is hidden with css. Press the button to show it (using ng-show).',
-    }];
-
-    /**
-     * Event handlers for the menu events
-     */
-    $scope.$on('resize.mm.foundation.drilldownMenu', onMenuResized);
-    $scope.$on('open.mm.foundation.drilldownMenu', onSubmenuOpen);
-    $scope.$on('hide.mm.foundation.drilldownMenu', onSubmenuClosed);
-
-    /**
-     * Sets the variable to show or hide the menu block
-     */
-    function showHideMenu() {
-        vm.shouldShow = !vm.shouldShow;
-
-        if (!vm.haveShown) {
-            closeAlert(0);
-            addAlert(
-                'alert',
-                'The menu is now "shown", but because it was hidden initially it will start with ' +
-                '"max-width: 0px" and doesn\'t appear! Press the resize button to trigger ' +
-                'a resize via the API'
-            );
-            vm.haveShown = true;
-        }
-    }
-
-    /**
-     * Get the UL for submenu 1.
-     * NOTE: You MUST use the UL for the submenu to show/hide, NOT the parent LI!
-     *
-     * @returns {angular.element}   - The element for submenu 1 in the API section
-     */
-    function getSubmenu1() {
-        return angular.element($element[0].querySelector('ul#drilldown-api-submenu-1'));
-    }
-
-    /**
-     * Function to use the API to open a specific menu item
-     */
-    function showSubmenu1() {
-        //
-        // Find the item
-        //
-        var element = getSubmenu1();
-
-        //
-        // Use the API to open it
-        //
-        vm.ddmApi.show(element);
-    }
-
-    /**
-     * Function to use the API to close a specific menu item
-     */
-    function hideSubmenu1() {
-        //
-        // Find the item
-        //
-        var element = getSubmenu1();
-
-        //
-        // Use the API to open it
-        //
-        vm.ddmApi.hide(element);
-    }
-
-    /**
-     * Handler for the resized event from the menu
-     *
-     * @param {Object} event                - Angular `event` object (see $rootScope.$on)
-     * @param {angular.element} menuElement - The root element of the menu
-     */
-    function onMenuResized(event, menuElement) {
-        if (menuElement.attr('id') !== 'drilldown-api-menu') {
-            return; // One of the other menus
-        }
-        if (vm.haveShown && !vm.haveResized) {
-            closeAlert(0);
-            addAlert(
-                'success',
-                'Congratulations! The menu should now be visible!'
-            );
-            addAlert(
-                'alert',
-                'The same 0-width problem will happen again if the menu is hidden then ' +
-                'resized (via the API or via a viewport size change). ' +
-                'You MUST trigger a resize via the API after showing it again if this happens.'
-            );
-            vm.haveResized = true;
-        }
-    }
-
-    /**
-     * Example handler for the submenu open event
-     *
-     * @param {Object} event                    - Angular `event` object (see $rootScope.$on)
-     * @param {angular.element} menuElement     - The root element of the menu
-     * @param {angular.element} submenuElement  - The submenu element that has just opened
-     */
-    function onSubmenuOpen(event, menuElement, submenuElement) {
-        if (submenuElement.attr('id') === 'drilldown-api-submenu-1') {
-            $log.log('Submenu 1 has been opened!');
-        }
-    }
-
-    /**
-     * Example handler for the submenu close event
-     *
-     * @param {Object} event                    - Angular `event` object (see $rootScope.$on)
-     * @param {angular.element} menuElement     - The root element of the menu
-     * @param {angular.element} submenuElement  - The submenu element that has just closed
-     */
-    function onSubmenuClosed(event, menuElement, submenuElement) {
-        if (submenuElement.attr('id') === 'drilldown-api-submenu-1') {
-            $log.log('Submenu 1 has been closed!');
-        }
-    }
-
-    /**
-     * Closes the specific alert
-     *
-     * @param {number} index    - The index of the alert to close
-     */
-    function closeAlert(index) {
-        vm.alerts.splice(index, 1);
-    }
-
-    /**
-     * Adds a new alert programmatically.
-     * Used of the explanations of the drilldown menu API and functionality.
-     *
-     * @param {string} type     - the type of alert
-     * @param {string} msg      - the alert message
-     */
-    function addAlert(type, msg) {
-        vm.alerts.push({ type: type, msg: msg });
-    }
-});
-</script>
                 
                   <section class="demo" id="dropdownMenu">
                     <div class="page-header">
@@ -1241,7 +1034,7 @@ thus the size is set correctly as part of the initialisation.</p>
                     <div class="row code">
                       <div class="columns medium-12" ng-controller="PlunkerCtrl">
                         <div class="float-right">
-                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.12', 'dropdownMenu')">
+                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.13', 'dropdownMenu')">
                             <i class="fa fa-edit"></i> Edit in plunker
                           </button>
                         </div>
@@ -1364,10 +1157,6 @@ thus the size is set correctly as part of the initialisation.</p>
                       </div>
                     </div>
                   </section>
-                  <script>angular.module('foundationDemoApp').controller('TopBarDemoCtrl', function ($scope) {
-
-});
-</script>
                 
                   <section class="demo" id="dropdownToggle">
                     <div class="page-header">
@@ -1460,7 +1249,7 @@ thus the size is set correctly as part of the initialisation.</p>
                     <div class="row code">
                       <div class="columns medium-12" ng-controller="PlunkerCtrl">
                         <div class="float-right">
-                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.12', 'dropdownToggle')">
+                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.13', 'dropdownToggle')">
                             <i class="fa fa-edit"></i> Edit in plunker
                           </button>
                         </div>
@@ -1551,18 +1340,6 @@ thus the size is set correctly as part of the initialisation.</p>
                       </div>
                     </div>
                   </section>
-                  <script>angular.module('foundationDemoApp').controller('DropdownCtrl', function($scope) {
-  $scope.items = [
-    "The first choice!",
-    "And another choice for you.",
-    "but wait! A third!"
-  ];
-  $scope.linkItems = {
-    "Google": "http://google.com",
-    "AltaVista": "http://altavista.com"
-  };
-});
-</script>
                 
                   <section class="demo" id="modal">
                     <div class="page-header">
@@ -1642,7 +1419,7 @@ Creating custom modals is straightforward: create a partial view, its controller
                     <div class="row code">
                       <div class="columns medium-12" ng-controller="PlunkerCtrl">
                         <div class="float-right">
-                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.12', 'modal')">
+                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.13', 'modal')">
                             <i class="fa fa-edit"></i> Edit in plunker
                           </button>
                         </div>
@@ -1755,74 +1532,6 @@ Creating custom modals is straightforward: create a partial view, its controller
                       </div>
                     </div>
                   </section>
-                  <script>angular.module('foundationDemoApp').controller('ModalDemoCtrl', function($scope, $modal, $log) {
-
-    $scope.open = open;
-
-    function open(size, backdrop, itemCount, closeOnClick) {
-
-        $scope.items = [];
-
-        var count = itemCount || 3;
-
-        for(var i = 0; i < count; i++){
-            $scope.items.push('item ' + i);
-        }
-
-        var params = {
-            templateUrl: 'myModalContent.html',
-            resolve: {
-                items: function() {
-                    return $scope.items;
-                },
-            },
-            controller: function($scope, $modalInstance, items) {
-
-                $scope.items = items;
-                $scope.selected = {
-                    item: $scope.items[0],
-                };
-
-                $scope.reposition = function() {
-                    $modalInstance.reposition();
-                };
-
-                $scope.ok = function() {
-                    $modalInstance.close($scope.selected.item);
-                };
-
-                $scope.cancel = function() {
-                    $modalInstance.dismiss('cancel');
-                };
-
-                $scope.openNested = function() {
-                    open();
-                };
-            }
-        };
-
-        if(angular.isDefined(closeOnClick)){
-            params.closeOnClick = closeOnClick;
-        }
-
-        if(angular.isDefined(size)){
-            params.size = size;
-        }
-
-        if(angular.isDefined(backdrop)){
-            params.backdrop = backdrop;
-        }
-
-        var modalInstance = $modal.open(params);
-
-        modalInstance.result.then(function(selectedItem) {
-            $scope.selected = selectedItem;
-        }, function() {
-            $log.info('Modal dismissed at: ' + new Date());
-        });
-    };
-});
-</script>
                 
                   <section class="demo" id="offcanvas">
                     <div class="page-header">
@@ -1928,7 +1637,7 @@ Creating custom modals is straightforward: create a partial view, its controller
                     <div class="row code">
                       <div class="columns medium-12" ng-controller="PlunkerCtrl">
                         <div class="float-right">
-                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.12', 'offcanvas')">
+                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.13', 'offcanvas')">
                             <i class="fa fa-edit"></i> Edit in plunker
                           </button>
                         </div>
@@ -2021,10 +1730,6 @@ Creating custom modals is straightforward: create a partial view, its controller
                       </div>
                     </div>
                   </section>
-                  <script>angular.module('foundationDemoApp').controller('OffCanvasDemoCtrl', function ($scope) {
-
-});
-</script>
                 
                   <section class="demo" id="orbit">
                     <div class="page-header">
@@ -2078,7 +1783,7 @@ Creating custom modals is straightforward: create a partial view, its controller
                     <div class="row code">
                       <div class="columns medium-12" ng-controller="PlunkerCtrl">
                         <div class="float-right">
-                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.12', 'orbit')">
+                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.13', 'orbit')">
                             <i class="fa fa-edit"></i> Edit in plunker
                           </button>
                         </div>
@@ -2130,10 +1835,6 @@ Creating custom modals is straightforward: create a partial view, its controller
                       </div>
                     </div>
                   </section>
-                  <script>angular.module('foundationDemoApp').controller('OrbitDemoCtrl', function ($scope) {
-
-});
-</script>
                 
                   <section class="demo" id="pagination">
                     <div class="page-header">
@@ -2248,7 +1949,7 @@ Creating custom modals is straightforward: create a partial view, its controller
                     <div class="row code">
                       <div class="columns medium-12" ng-controller="PlunkerCtrl">
                         <div class="float-right">
-                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.12', 'pagination')">
+                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.13', 'pagination')">
                             <i class="fa fa-edit"></i> Edit in plunker
                           </button>
                         </div>
@@ -2298,19 +1999,6 @@ Creating custom modals is straightforward: create a partial view, its controller
                       </div>
                     </div>
                   </section>
-                  <script>angular.module('foundationDemoApp').controller('PaginationDemoCtrl', function ($scope) {
-  $scope.totalItems = 64;
-  $scope.currentPage = 4;
-  $scope.maxSize = 5;
-  
-  $scope.setPage = function (pageNo) {
-    $scope.currentPage = pageNo;
-  };
-
-  $scope.bigTotalItems = 175;
-  $scope.bigCurrentPage = 1;
-});
-</script>
                 
                   <section class="demo" id="progressbar">
                     <div class="page-header">
@@ -2381,7 +2069,7 @@ Creating custom modals is straightforward: create a partial view, its controller
                     <div class="row code">
                       <div class="columns medium-12" ng-controller="PlunkerCtrl">
                         <div class="float-right">
-                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.12', 'progressbar')">
+                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.13', 'progressbar')">
                             <i class="fa fa-edit"></i> Edit in plunker
                           </button>
                         </div>
@@ -2451,32 +2139,6 @@ Creating custom modals is straightforward: create a partial view, its controller
                       </div>
                     </div>
                   </section>
-                  <script>angular.module('foundationDemoApp').controller('ProgressDemoCtrl', function ($scope) {
-  
-  $scope.max = 200;
-
-  $scope.random = function() {
-    var value = Math.floor((Math.random() * 100) + 1);
-    var type;
-
-    if (value < 25) {
-      type = 'success';
-    } else if (value < 50) {
-      type = 'info';
-    } else if (value < 75) {
-      type = 'warning';
-    } else {
-      type = 'alert';
-    }
-
-    $scope.showWarning = (type === 'alert' || type === 'warning');
-
-    $scope.dynamic = value;
-    $scope.type = type;
-  };
-  $scope.random();
-});
-</script>
                 
                   <section class="demo" id="rating">
                     <div class="page-header">
@@ -2558,7 +2220,7 @@ Creating custom modals is straightforward: create a partial view, its controller
                     <div class="row code">
                       <div class="columns medium-12" ng-controller="PlunkerCtrl">
                         <div class="float-right">
-                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.12', 'rating')">
+                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.13', 'rating')">
                             <i class="fa fa-edit"></i> Edit in plunker
                           </button>
                         </div>
@@ -2616,25 +2278,6 @@ Creating custom modals is straightforward: create a partial view, its controller
                       </div>
                     </div>
                   </section>
-                  <script>angular.module('foundationDemoApp').controller('RatingDemoCtrl', function ($scope) {
-  $scope.rate = 7;
-  $scope.max = 10;
-  $scope.isReadonly = false;
-
-  $scope.hoveringOver = function(value) {
-    $scope.overStar = value;
-    $scope.percent = 100 * (value / $scope.max);
-  };
-
-  $scope.ratingStates = [
-    {stateOn: 'fa-check-circle', stateOff: 'fa-check-circle-o'},
-    {stateOn: 'fa-star', stateOff: 'fa-start-o'},
-    {stateOn: 'fa-heart', stateOff: 'fa-ban'},
-    {stateOn: 'fa-heart'},
-    {stateOff: 'fa-power-off'}
-  ];
-});
-</script>
                 
                   <section class="demo" id="tabs">
                     <div class="page-header">
@@ -2715,7 +2358,7 @@ Whether to open an active tab automatically.</p>
                     <div class="row code">
                       <div class="columns medium-12" ng-controller="PlunkerCtrl">
                         <div class="float-right">
-                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.12', 'tabs')">
+                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.13', 'tabs')">
                             <i class="fa fa-edit"></i> Edit in plunker
                           </button>
                         </div>
@@ -2776,19 +2419,6 @@ Whether to open an active tab automatically.</p>
                       </div>
                     </div>
                   </section>
-                  <script>angular.module('foundationDemoApp').controller('TabsDemoCtrl', function ($scope) {
-  $scope.tabs = [
-    { title:"Dynamic Title 1", content:"Dynamic content 1" },
-    { title:"Dynamic Title 2", content:"Dynamic content 2" }
-  ];
-
-  $scope.alertMe = function() {
-    setTimeout(function() {
-      alert("You've selected the alert tab!");
-    });
-  };
-});
-</script>
                 
                   <section class="demo" id="tooltip">
                     <div class="page-header">
@@ -2891,7 +2521,7 @@ appendToBody: false
                     <div class="row code">
                       <div class="columns medium-12" ng-controller="PlunkerCtrl">
                         <div class="float-right">
-                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.12', 'tooltip')">
+                          <button class="button secondary" id="plunk-btn" ng-click="edit('1.5.10', '6.4.3', '0.11.13', 'tooltip')">
                             <i class="fa fa-edit"></i> Edit in plunker
                           </button>
                         </div>
@@ -2948,12 +2578,6 @@ appendToBody: false
                       </div>
                     </div>
                   </section>
-                  <script>angular.module('foundationDemoApp').controller('TooltipDemoCtrl', function($scope) {
-    $scope.dynamicTooltip = 'Hello, World!';
-    $scope.dynamicTooltipText = 'dynamic';
-    $scope.htmlTooltip = "I've been made <b>bold</b>!";
-});
-</script>
                 
                 <section id="animations">
                   <div class="page-header">
@@ -3081,7 +2705,7 @@ appendToBody: false
     </div>
     <div class="modal-footer">
       <a class="button" ng-click="cancel()">Cancel</a>
-      <a class="button" ng-click="download('0.11.12')"><i class="fa fa-download"></i> Download 0.11.12</a>
+      <a class="button" ng-click="download('0.11.13')"><i class="fa fa-download"></i> Download 0.11.13</a>
     </div>
   </script>
 </body>

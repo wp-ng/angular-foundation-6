@@ -38,6 +38,7 @@ var watchedFiles = [
     'src/**/*.js',
     'src/**/*.md',
     'src/**/*.html',
+    'src/**/*.scss',
     'misc/**/*',
     'gulpfile.js'
 ];
@@ -158,8 +159,9 @@ function findModule(name, modules, foundModules) {
             js: expand('src/' + name + '/docs/*.js')
                 .map(fileContents).join('\n'),
             html: expand('src/' + name + '/docs/*.html')
-                .map(fileContents).join('\n')
-        }
+                .map(fileContents).join('\n'),
+            scss: expand('src/' + name + '/docs/*.scss'),  // Just the filename for scss
+        },
     };
     module.dependencies.forEach((name) => {
         findModule(name, modules, foundModules);
@@ -345,17 +347,31 @@ gulp.task('demo', ['demojs'], () => {
         base: './misc/demo/'
     });
 
-    var css = gulp.src('./misc/demo/assets/demo.scss', {
-        base: './misc/demo/'
-    })
+    //
+    // Get the module SCSS for any modules that have any
+    //
+    const demoModulesScss = demoModules
+        .filter(module => module.docs.scss.length > 0)
+        .map(module => module.docs.scss);
+
+    //
+    // Build the demo css from the overall scss + any demo scss
+    //
+    const css = gulp.src(
+        ['./misc/demo/assets/demo.scss'].concat(...demoModulesScss),
+        {
+            base: './misc/demo/',
+        }
+    )
+    .pipe(concat('assets/demo.css'))
     .pipe(sass({
         includePaths: ['./node_modules/motion-ui/src', './node_modules/foundation-sites/scss']
-    }))
+        }))
     .pipe(postcss([
         autoprefixer({
             browsers: ['last 2 version'],
-            cascade: false
-        })
+            cascade: false,
+        }),
     ]));
 
     return merge(assets, html, css).pipe(gulp.dest('./dist'));

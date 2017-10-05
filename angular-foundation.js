@@ -70,7 +70,7 @@
      * angular-foundation-6
      * http://circlingthesun.github.io/angular-foundation-6/
     
-     * Version: 0.11.11 - 2017-10-03
+     * Version: 0.11.12 - 2017-10-05
      * License: MIT
      * (c) 
      */
@@ -1430,13 +1430,13 @@
             }
 
             var modalDomEl = angular.element('<div modal-window></div>').attr({
-                style: '\n                visibility: visible;\n                z-index: -1;\n                display: block;\n            ',
                 'window-class': classes.join(' '),
                 index: openedWindows.length() - 1
             });
 
             modalDomEl.html(options.content);
             $compile(modalDomEl)(options.scope);
+
             openedWindows.top().value.modalDomEl = modalDomEl;
 
             return $timeout(function () {
@@ -1449,13 +1449,28 @@
                 var modalPos = getModalCenter(modalInstance, true);
                 modalDomEl.detach();
 
-                modalDomEl.attr({
-                    style: '\n                    visibility: visible;\n                    left: ' + modalPos.left + 'px;\n                    display: block;\n                    position: ' + modalPos.position + ';\n                '
+                //
+                // Apply the style with .css() to conform to content security policy
+                //
+                modalDomEl.css({
+                    visibility: 'visible',
+                    left: '${modalPos.left}px',
+                    display: 'block',
+                    position: '${modalPos.position}',
+                    'z-index': '' // Clear the z-index that was previously set above
                 });
 
                 var promises = [];
 
                 if (backdropDomEl) {
+                    //
+                    // Enusre this is display: block
+                    // NOTE: this must be done AFTER $compile or CSP errors are triggered,
+                    //       and after $timeout or it is just replaced by the template.
+                    //
+                    backdropDomEl.css({
+                        display: 'block'
+                    });
                     promises.push($animate.enter(backdropDomEl, body, body[0].lastChild));
                 }
 
@@ -1662,8 +1677,8 @@
 
     (function () {
         angular.module("mm.foundation.modal").run(["$templateCache", function ($templateCache) {
-            $templateCache.put("template/modal/backdrop.html", "<div ng-animate-children=\"true\"\n    class=\"reveal-overlay ng-animate\"\n    ng-click=\"close($event)\"\n    style=\"display: block;\"></div>\n");
-            $templateCache.put("template/modal/window.html", "<div tabindex=\"-1\" class=\"reveal {{ windowClass }}\" style=\"display: block; visibility: visible;\">\n  <div ng-transclude></div>\n</div>\n");
+            $templateCache.put("template/modal/backdrop.html", "<div ng-animate-children=\"true\"\n    class=\"reveal-overlay ng-animate\"\n    ng-click=\"close($event)\"\n    ></div>\n");
+            $templateCache.put("template/modal/window.html", "<div tabindex=\"-1\" class=\"reveal {{ windowClass }}\">\n  <div ng-transclude></div>\n</div>\n");
         }]);
     })();
     angular.module('mm.foundation.offcanvas', []).directive('offCanvasWrapper', ['$window', function ($window) {

@@ -116,8 +116,6 @@ div[role=main] section.demo {
 .ng-submitted .ng-invalid:not(:focus), .ng-touched.ng-invalid:not(:focus) {
   border-color: #cc4b37;
   background-color: #f9ecea; }
-  .ng-submitted .ng-invalid:not(:focus)::-webkit-input-placeholder, .ng-touched.ng-invalid:not(:focus)::-webkit-input-placeholder {
-    color: #cc4b37; }
   .ng-submitted .ng-invalid:not(:focus):-ms-input-placeholder, .ng-touched.ng-invalid:not(:focus):-ms-input-placeholder {
     color: #cc4b37; }
   .ng-submitted .ng-invalid:not(:focus)::placeholder, .ng-touched.ng-invalid:not(:focus)::placeholder {
@@ -211,3 +209,12 @@ div[role=main] section.demo {
 
 .orbit-container {
   transition: all 0.5s cubic-bezier(0.65, 0.05, 0.36, 1); }
+
+.mm-foundation-6-demo-dropdown-menu {
+  max-width: 300px; }
+
+.progress .progress-meter {
+  transition: width 1s ease-out; }
+
+.mm-foundation-rating-demo-pre {
+  margin: 15px 0; }

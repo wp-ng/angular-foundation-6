@@ -961,7 +961,7 @@ thus the size is set correctly as part of the initialisation.</p>
   <!-- Vertical -->
   <h2>Vertical menu</h2>
 
-  <ul class="vertical dropdown menu" dropdown-menu style="max-width: 300px;">
+  <ul class="vertical dropdown menu mm-foundation-6-demo-dropdown-menu" dropdown-menu>
     <li>
       <a href="#" tabindex="0">Item 1</a>
       <ul class="menu">
@@ -1088,7 +1088,7 @@ thus the size is set correctly as part of the initialisation.</p>
   &lt;!-- Vertical --&gt;
   &lt;h2&gt;Vertical menu&lt;/h2&gt;
 
-  &lt;ul class=&quot;vertical dropdown menu&quot; dropdown-menu style=&quot;max-width: 300px;&quot;&gt;
+  &lt;ul class=&quot;vertical dropdown menu mm-foundation-6-demo-dropdown-menu&quot; dropdown-menu&gt;
     &lt;li&gt;
       &lt;a href=&quot;#&quot; tabindex=&quot;0&quot;&gt;Item 1&lt;/a&gt;
       &lt;ul class=&quot;menu&quot;&gt;
@@ -2012,13 +2012,6 @@ Creating custom modals is straightforward: create a partial view, its controller
                     <div class="row">
                       <div class="columns medium-6 show-grid">
                         <div ng-controller="ProgressDemoCtrl">
-    <style>
-      .progress .progress-meter {
-        -webkit-transition: width 1s ease-out;
-        transition: width 1s ease-out;
-      }
-    </style>
-
     <h3>Static</h3>
     <div class="row">
         <div class="columns small-4"><progressbar value="55"></progressbar></div>
@@ -2045,7 +2038,7 @@ Creating custom modals is straightforward: create a partial view, its controller
 <h3 id="settings">Settings</h3>
 <h4 id="-progressbar-"><code>&lt;progressbar&gt;</code></h4>
 <ul>
-<li><p><code>value</code> <i class="fa-eye"></i>
+<li><p><code>value</code> <i class="fa fa-eye"></i>
   :
   The current value of progress completed.</p>
 </li>
@@ -2077,13 +2070,6 @@ Creating custom modals is straightforward: create a partial view, its controller
                           <tab heading="Markup">
                             <div plunker-content="markup">
                               <pre ng-non-bindable><code data-language="html">&lt;div ng-controller=&quot;ProgressDemoCtrl&quot;&gt;
-    &lt;style&gt;
-      .progress .progress-meter {
-        -webkit-transition: width 1s ease-out;
-        transition: width 1s ease-out;
-      }
-    &lt;/style&gt;
-
     &lt;h3&gt;Static&lt;/h3&gt;
     &lt;div class=&quot;row&quot;&gt;
         &lt;div class=&quot;columns small-4&quot;&gt;&lt;progressbar value=&quot;55&quot;&gt;&lt;/progressbar&gt;&lt;/div&gt;
@@ -2156,7 +2142,7 @@ Creating custom modals is straightforward: create a partial view, its controller
     <rating value="rate" max="max" readonly="isReadonly" on-hover="hoveringOver(value)" on-leave="overStar = null"></rating>
     <span class="label" ng-class="{'label-warning': percent<30, 'label-info': percent>=30 && percent<70, 'label-success': percent>=70}" ng-show="overStar && !isReadonly">{{percent}}%</span>
 
-    <pre style="margin:15px 0;">Rate: <b>{{rate}}</b> - Readonly is: <i>{{isReadonly}}</i> - Hovering over: <b>{{overStar || "none"}}</b></pre>
+    <pre class="mm-foundation-rating-demo-pre">Rate: <b>{{rate}}</b> - Readonly is: <i>{{isReadonly}}</i> - Hovering over: <b>{{overStar || "none"}}</b></pre>
 
     <button class="button small alert" ng-click="rate = 0" ng-disabled="isReadonly">Clear</button>
     <button class="button small" ng-click="isReadonly = ! isReadonly">Toggle Readonly</button>
@@ -2232,7 +2218,7 @@ Creating custom modals is straightforward: create a partial view, its controller
     &lt;rating value=&quot;rate&quot; max=&quot;max&quot; readonly=&quot;isReadonly&quot; on-hover=&quot;hoveringOver(value)&quot; on-leave=&quot;overStar = null&quot;&gt;&lt;/rating&gt;
     &lt;span class=&quot;label&quot; ng-class=&quot;{&#39;label-warning&#39;: percent&lt;30, &#39;label-info&#39;: percent&gt;=30 &amp;&amp; percent&lt;70, &#39;label-success&#39;: percent&gt;=70}&quot; ng-show=&quot;overStar &amp;&amp; !isReadonly&quot;&gt;{{percent}}%&lt;/span&gt;
 
-    &lt;pre style=&quot;margin:15px 0;&quot;&gt;Rate: &lt;b&gt;{{rate}}&lt;/b&gt; - Readonly is: &lt;i&gt;{{isReadonly}}&lt;/i&gt; - Hovering over: &lt;b&gt;{{overStar || &quot;none&quot;}}&lt;/b&gt;&lt;/pre&gt;
+    &lt;pre class=&quot;mm-foundation-rating-demo-pre&quot;&gt;Rate: &lt;b&gt;{{rate}}&lt;/b&gt; - Readonly is: &lt;i&gt;{{isReadonly}}&lt;/i&gt; - Hovering over: &lt;b&gt;{{overStar || &quot;none&quot;}}&lt;/b&gt;&lt;/pre&gt;
 
     &lt;button class=&quot;button small alert&quot; ng-click=&quot;rate = 0&quot; ng-disabled=&quot;isReadonly&quot;&gt;Clear&lt;/button&gt;
     &lt;button class=&quot;button small&quot; ng-click=&quot;isReadonly = ! isReadonly&quot;&gt;Toggle Readonly&lt;/button&gt;

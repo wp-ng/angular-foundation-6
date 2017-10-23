@@ -70,7 +70,7 @@
      * angular-foundation-6
      * http://circlingthesun.github.io/angular-foundation-6/
     
-     * Version: 0.11.12 - 2017-10-05
+     * Version: 0.11.13 - 2017-10-23
      * License: MIT
      * (c) 
      */
@@ -1649,8 +1649,8 @@
 
                 openedPromise.then(function () {
                     modalOpenedDeferred.resolve();
-                }, function () {
-                    modalOpenedDeferred.reject();
+                }, function (reason) {
+                    modalOpenedDeferred.reject(reason);
                 });
 
                 return modalInstance;

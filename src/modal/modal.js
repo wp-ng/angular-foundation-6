@@ -537,8 +537,8 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
 
             openedPromise.then(() => {
                 modalOpenedDeferred.resolve();
-            }, () => {
-                modalOpenedDeferred.reject();
+            }, (reason) => {
+                modalOpenedDeferred.reject(reason);
             });
 
             return modalInstance;

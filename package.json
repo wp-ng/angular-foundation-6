@@ -1,6 +1,6 @@
 {
   "name": "angular-foundation-6",
-  "version": "0.11.16",
+  "version": "0.11.17",
   "homepage": "http://circlingthesun.github.io/angular-foundation-6/",
   "main": "dist/angular-foundation.js",
   "repository": {
@@ -52,7 +52,7 @@
     "merge-stream": "^1.0.0",
     "motion-ui": "^1.2.2",
     "run-sequence": "^1.1.5",
-    "semver": "~2.2.0",
+    "semver": "~5.4.1",
     "shelljs": "~0.2.0",
     "streamqueue": "^1.1.1",
     "vinyl-buffer": "^1.0.0",

@@ -20,6 +20,8 @@
     orbitBullets.$inject = ['$element'];
     orbitContainer.$inject = ['$element', '$interval', '$scope', '$swipe'];
     orbitSlide.$inject = ['$element'];
+    orbitPrevious.$inject = ['$element'];
+    orbitNext.$inject = ['$element'];
     Object.defineProperty(exports, "__esModule", {
         value: true
     });
@@ -70,7 +72,7 @@
      * angular-foundation-6
      * http://circlingthesun.github.io/angular-foundation-6/
     
-     * Version: 0.11.15 - 2017-11-05
+     * Version: 0.11.16 - 2017-12-19
      * License: MIT
      * (c) 
      */
@@ -1852,6 +1854,20 @@
             var pct = 100 * _this3.currentIdx / _this3.slides.length;
             $element.css({ transform: 'translateX(' + -pct + '%)' });
         };
+        this.prevState = function () {
+            $scope.$apply(function () {
+                if (_this3.currentIdx > 0) {
+                    _this3.activateState((_this3.currentIdx - 1) % _this3.slides.length);
+                } else {
+                    _this3.activateState(_this3.slides.length - 1);
+                }
+            });
+        };
+        this.nextState = function () {
+            $scope.$apply(function () {
+                _this3.activateState((_this3.currentIdx + 1) % _this3.slides.length);
+            });
+        };
         this.stopAutoPlay = function () {
             $interval.cancel(_this3.autoSlider);
             _this3.autoSlider = null;
@@ -1929,6 +1945,30 @@
         };
     }
 
+    function orbitPrevious($element) {
+        'ngInject';
+
+        var vm = this;
+        $element.css({ cursor: 'pointer' });
+        this.$onInit = function () {
+            $element.on('click', function () {
+                vm.orbit.container.prevState();
+            });
+        };
+    }
+
+    function orbitNext($element) {
+        'ngInject';
+
+        var vm = this;
+        $element.css({ cursor: 'pointer' });
+        this.$onInit = function () {
+            $element.on('click', function () {
+                vm.orbit.container.nextState();
+            });
+        };
+    }
+
     angular.module('mm.foundation.orbit', ['ngTouch']).directive('orbit', function () {
         return {
             scope: {},
@@ -1950,6 +1990,24 @@
             restrict: 'C',
             require: { orbitContainer: '^^orbitContainer' },
             controller: orbitSlide,
+            controllerAs: 'vm',
+            bindToController: true
+        };
+    }).directive('orbitPrevious', function () {
+        return {
+            scope: {},
+            restrict: 'C',
+            require: { orbit: '^^orbit' },
+            controller: orbitPrevious,
+            controllerAs: 'vm',
+            bindToController: true
+        };
+    }).directive('orbitNext', function () {
+        return {
+            scope: {},
+            restrict: 'C',
+            require: { orbit: '^^orbit' },
+            controller: orbitNext,
             controllerAs: 'vm',
             bindToController: true
         };

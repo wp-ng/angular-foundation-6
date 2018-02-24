@@ -28,7 +28,7 @@ function DropdownToggleController($scope, $attrs, mediaQueries, $element, $posit
         if ($ctrl.closeOnClick) {
             $body.off('click', closeOnClick);
         }
-        deRegisterCloseListener();
+        deRegisterCloseListener && deRegisterCloseListener();
     }
 
     function open(e) {

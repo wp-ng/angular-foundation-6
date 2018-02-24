@@ -72,7 +72,7 @@
      * angular-foundation-6
      * http://circlingthesun.github.io/angular-foundation-6/
     
-     * Version: 0.11.17 - 2018-01-19
+     * Version: 0.11.18 - 2018-02-24
      * License: MIT
      * (c) 
      */
@@ -1854,7 +1854,7 @@
             _this3.stopAutoPlay();
             _this3.autoSlider = $interval(function () {
                 _this3.activateState(++_this3.currentIdx % _this3.slides.length);
-            }, 5000);
+            }, _this3.cycleTime || 5000);
         };
         $element.on('mouseenter', this.stopAutoPlay);
         $element.on('mouseleave', this.restartTimer);
@@ -1955,7 +1955,9 @@
         };
     }).directive('orbitContainer', function () {
         return {
-            scope: {},
+            scope: {
+                cycleTime: '<'
+            },
             restrict: 'C',
             require: { orbit: '^^orbit' },
             controller: orbitContainer,

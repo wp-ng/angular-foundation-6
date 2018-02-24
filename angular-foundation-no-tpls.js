@@ -72,7 +72,7 @@
      * angular-foundation-6
      * http://circlingthesun.github.io/angular-foundation-6/
     
-     * Version: 0.11.18 - 2018-02-24
+     * Version: 0.11.19 - 2018-02-24
      * License: MIT
      * (c) 
      */
@@ -830,7 +830,7 @@
             if ($ctrl.closeOnClick) {
                 $body.off('click', closeOnClick);
             }
-            deRegisterCloseListener();
+            deRegisterCloseListener && deRegisterCloseListener();
         }
 
         function open(e) {

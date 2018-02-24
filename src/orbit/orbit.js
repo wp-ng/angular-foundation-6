@@ -53,7 +53,7 @@ function orbitContainer($element, $interval, $scope, $swipe) {
         this.stopAutoPlay();
         this.autoSlider = $interval(() => {
             this.activateState(++this.currentIdx % this.slides.length);
-        }, 5000);
+        }, this.cycleTime || 5000);
     };
     $element.on('mouseenter', this.stopAutoPlay);
     $element.on('mouseleave', this.restartTimer);
@@ -148,7 +148,9 @@ angular.module('mm.foundation.orbit', ['ngTouch'])
     controller: orbit,
 }))
 .directive('orbitContainer', () => ({
-    scope: {},
+    scope: {
+        cycleTime: '<'
+    },
     restrict: 'C',
     require: { orbit: '^^orbit' },
     controller: orbitContainer,

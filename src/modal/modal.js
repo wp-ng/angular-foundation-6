@@ -548,7 +548,6 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
 
                 let ctrlInstance;
                 const ctrlLocals = {};
-                let resolveIter = 1;
 
                 if (modalOptions.component) {
                     const component = {
@@ -559,6 +558,7 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
                     // construct locals
                     component.$scope.$modalInstance = modalInstance;
                     component.$scope.$resolve = {};
+                    let resolveIter = 0;
                     angular.forEach(modalOptions.resolve, (value, key) => {
                         component.$scope.$resolve[key] = tplAndVars[resolveIter++];
                     });
@@ -567,6 +567,7 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
                 } else if (modalOptions.controller) {
                     ctrlLocals.$scope = modalScope;
                     ctrlLocals.$modalInstance = modalInstance;
+                    let resolveIter = 1;
                     angular.forEach(modalOptions.resolve, (value, key) => {
                         ctrlLocals[key] = tplAndVars[resolveIter++];
                     });

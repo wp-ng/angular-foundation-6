@@ -91,6 +91,15 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
     const openedWindows = new StackedMap();
     const $modalStack = {};
 
+    const KEBAB_CASE_REGEXP = /[A-Z]/g;
+
+    function kebabCase(name) {
+        const separator = '-';
+        return name.replace(KEBAB_CASE_REGEXP,
+            (letter, pos) => (pos ? separator : '') + letter.toLowerCase()
+        );
+    }
+
     function backdropIndex() {
         let topBackdropIndex = -1;
         const opened = openedWindows.keys();
@@ -309,12 +318,26 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
             classes.push('without-overlay');
         }
 
+        let content;
+        if (modal.component) {
+            content = document.createElement(kebabCase(modal.component.name));
+            content = angular.element(content);
+            content.attr({
+                resolve: '$resolve',
+                'modal-instance': '$modalInstance',
+                close: '$close($value)',
+                dismiss: '$dismiss($value)',
+            });
+        } else {
+            content = modal.content;
+        }
+
         const modalDomEl = angular.element('<div modal-window></div>').attr({
             'window-class': classes.join(' '),
             index: openedWindows.length() - 1,
         });
 
-        modalDomEl.html(options.content);
+        modalDomEl.append(content);
         $compile(modalDomEl)(options.scope);
 
         openedWindows.top().value.modalDomEl = modalDomEl;
@@ -488,25 +511,56 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
             modalOptions.resolve = modalOptions.resolve || {};
 
             // verify options
-            if (!modalOptions.template && !modalOptions.templateUrl) {
-                throw new Error('One of template or templateUrl options is required.');
+            if (!modalOptions.component && !modalOptions.template && !modalOptions.templateUrl) {
+                throw new Error('One of component or template or templateUrl options is required.');
             }
 
-            const templateAndResolvePromise =
-                $q.all([getTemplatePromise(modalOptions)]
+            let templateAndResolvePromise;
+            if (modalOptions.component) {
+                templateAndResolvePromise =
+                    $q.all(getResolvePromises(modalOptions.resolve));
+            } else {
+                templateAndResolvePromise =
+                    $q.all([getTemplatePromise(modalOptions)]
                     .concat(getResolvePromises(modalOptions.resolve)));
+            }
 
             const openedPromise = templateAndResolvePromise.then((tplAndVars) => {
                 const modalScope = (modalOptions.scope || $rootScope).$new();
                 modalScope.$close = modalInstance.close;
                 modalScope.$dismiss = modalInstance.dismiss;
 
+                const modal = {
+                    scope: modalScope,
+                    deferred: modalResultDeferred,
+                    content: tplAndVars[0],
+                    backdrop: modalOptions.backdrop,
+                    keyboard: modalOptions.keyboard,
+                    windowClass: modalOptions.windowClass,
+                    size: modalOptions.size,
+                    closeOnClick: modalOptions.closeOnClick,
+                    id: modalOptions.id,
+                };
+
                 let ctrlInstance;
                 const ctrlLocals = {};
                 let resolveIter = 1;
 
-                // controllers
-                if (modalOptions.controller) {
+                if (modalOptions.component) {
+                    const component = {
+                        name: modalOptions.component,
+                        $scope: modalScope,
+                    };
+
+                    // construct locals
+                    component.$scope.$modalInstance = modalInstance;
+                    component.$scope.$resolve = {};
+                    angular.forEach(modalOptions.resolve, (value, key) => {
+                        component.$scope.$resolve[key] = tplAndVars[resolveIter++];
+                    });
+
+                    modal.component = component;
+                } else if (modalOptions.controller) {
                     ctrlLocals.$scope = modalScope;
                     ctrlLocals.$modalInstance = modalInstance;
                     angular.forEach(modalOptions.resolve, (value, key) => {
@@ -519,17 +573,11 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
                     }
                 }
 
-                return $modalStack.open(modalInstance, {
-                    scope: modalScope,
-                    deferred: modalResultDeferred,
-                    content: tplAndVars[0],
-                    backdrop: modalOptions.backdrop,
-                    keyboard: modalOptions.keyboard,
-                    windowClass: modalOptions.windowClass,
-                    size: modalOptions.size,
-                    closeOnClick: modalOptions.closeOnClick,
-                    id: modalOptions.id,
-                });
+                if (!modalOptions.component) {
+                    modal.content = tplAndVars[0];
+                }
+
+                return $modalStack.open(modalInstance, modal);
             }, (reason) => {
                 modalResultDeferred.reject(reason);
                 return $q.reject(reason);

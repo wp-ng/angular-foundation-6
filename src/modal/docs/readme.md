@@ -6,6 +6,12 @@ The `$modal` service has only one method: `open(options)` where available option
 * `templateUrl` - a path to a template representing modal's content
 * `template` - inline template representing the modal's content
 * `scope` - a scope instance to be used for the modal's content (actually the `$modal` service is going to create a child scope of a provided scope). Defaults to `$rootScope`
+* `component` - a string reference to the component to be rendered as the modal content.  
+It supports these bindings:
+  * `close` - A method that can be used to close a modal, passing a result.  The result must be passed in this format: ` {$value: myResult} `
+  * `dismiss` - A method that can be used to dismiss a modal, passing a result. The result must be passed in this format: ` {$value: myRejectedResult} `
+  * `modalInstance` - The modal instance.   This is the same as `$modalInstance` injected when using `controller`.
+  * `resolve` - An object containing the resolved values passed in via the `resolve` option.
 * `controller` - a controller for a modal instance - it can initialize scope used by modal. Accepts the "controller-as" syntax, and can be injected with `$modalInstance`
 * `controllerAs` - an alternative to the aforementioned "controller-as" syntax. This is intended for the case of when the `controller` option is assigned an anonymous or local function and thus the "controller-as" syntax couldn't be applied.
 * `resolve` - members that will be resolved and passed to the controller as locals; it is equivalent of the `resolve` property for AngularJS routes

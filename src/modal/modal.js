@@ -319,8 +319,8 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
         }
 
         let content;
-        if (modal.component) {
-            content = document.createElement(kebabCase(modal.component.name));
+        if (options.component) {
+            content = document.createElement(kebabCase(options.component.name));
             content = angular.element(content);
             content.attr({
                 resolve: '$resolve',
@@ -329,7 +329,7 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
                 dismiss: '$dismiss($value)',
             });
         } else {
-            content = modal.content;
+            content = options.content;
         }
 
         const modalDomEl = angular.element('<div modal-window></div>').attr({
@@ -515,6 +515,10 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
                 throw new Error('One of component or template or templateUrl options is required.');
             }
 
+            if (modalOptions.component && (modalOptions.template || modalOptions.templateUrl || modalOptions.controller)) {
+                throw new Error('Either component or template options is required, not both.');
+            }
+
             let templateAndResolvePromise;
             if (modalOptions.component) {
                 templateAndResolvePromise =
@@ -571,10 +575,6 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
                     if (modalOptions.controllerAs) {
                         modalScope[modalOptions.controllerAs] = ctrlInstance;
                     }
-                }
-
-                if (!modalOptions.component) {
-                    modal.content = tplAndVars[0];
                 }
 
                 return $modalStack.open(modalInstance, modal);

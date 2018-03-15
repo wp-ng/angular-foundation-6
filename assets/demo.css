@@ -116,8 +116,6 @@ div[role=main] section.demo {
 .ng-submitted .ng-invalid:not(:focus), .ng-touched.ng-invalid:not(:focus) {
   border-color: #cc4b37;
   background-color: #f9ecea; }
-  .ng-submitted .ng-invalid:not(:focus)::-webkit-input-placeholder, .ng-touched.ng-invalid:not(:focus)::-webkit-input-placeholder {
-    color: #cc4b37; }
   .ng-submitted .ng-invalid:not(:focus):-ms-input-placeholder, .ng-touched.ng-invalid:not(:focus):-ms-input-placeholder {
     color: #cc4b37; }
   .ng-submitted .ng-invalid:not(:focus)::placeholder, .ng-touched.ng-invalid:not(:focus)::placeholder {

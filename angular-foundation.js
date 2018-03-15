@@ -1677,7 +1677,6 @@
 
                     var ctrlInstance = void 0;
                     var ctrlLocals = {};
-                    var resolveIter = 1;
 
                     if (modalOptions.component) {
                         var component = {
@@ -1688,6 +1687,7 @@
                         // construct locals
                         component.$scope.$modalInstance = modalInstance;
                         component.$scope.$resolve = {};
+                        var resolveIter = 0;
                         angular.forEach(modalOptions.resolve, function (value, key) {
                             component.$scope.$resolve[key] = tplAndVars[resolveIter++];
                         });
@@ -1696,8 +1696,9 @@
                     } else if (modalOptions.controller) {
                         ctrlLocals.$scope = modalScope;
                         ctrlLocals.$modalInstance = modalInstance;
+                        var _resolveIter = 1;
                         angular.forEach(modalOptions.resolve, function (value, key) {
-                            ctrlLocals[key] = tplAndVars[resolveIter++];
+                            ctrlLocals[key] = tplAndVars[_resolveIter++];
                         });
 
                         ctrlInstance = $controller(modalOptions.controller, ctrlLocals);

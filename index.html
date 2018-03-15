@@ -567,13 +567,13 @@ associated js for an example.</p>
 <ul>
 <li><code>&#39;resize.mm.foundation.drilldownMenu&#39;</code> when the menu resizes. The event listener function format is <code>function(event, menuElement)</code>:<ul>
 <li><code>event</code> - Standard <a href="https://code.angularjs.org/1.6.5/docs/api/ng/type/$rootScope.Scope#$on">Angular <code>event</code> object</a></li>
-<li><code>menuElement</code> - <a href="https://code.angularjs.org/1.6.5/docs/api/ng/function/angular.element">angular.element</a> for the top level <em>UL</em> element of the menu.</li>
+<li><code>menuElement</code> - <a href="https://code.angularjs.org/1.6.5/docs/api/ng/function/angular.element">angular.element</a> for the top level _UL_ element of the menu.</li>
 </ul>
 </li>
 <li><code>&#39;open.mm.foundation.drilldownMenu&#39;</code> when a submenu is opened. The event listener function format is <code>function(event, menuElement, submenuElement)</code>:<ul>
 <li><code>event</code> - Standard <a href="https://code.angularjs.org/1.6.5/docs/api/ng/type/$rootScope.Scope#$on">Angular <code>event</code> object</a></li>
-<li><code>menuElement</code> - <a href="https://code.angularjs.org/1.6.5/docs/api/ng/function/angular.element">angular.element</a> for the top level <em>UL</em> element of the menu.</li>
-<li><code>submenuElement</code> - <a href="https://code.angularjs.org/1.6.5/docs/api/ng/function/angular.element">angular.element</a> for the <em>UL</em> element at the top of the submenu that has just been opened.</li>
+<li><code>menuElement</code> - <a href="https://code.angularjs.org/1.6.5/docs/api/ng/function/angular.element">angular.element</a> for the top level _UL_ element of the menu.</li>
+<li><code>submenuElement</code> - <a href="https://code.angularjs.org/1.6.5/docs/api/ng/function/angular.element">angular.element</a> for the _UL_ element at the top of the submenu that has just been opened.</li>
 </ul>
 </li>
 <li><code>&#39;hide.mm.foundation.drilldownMenu&#39;</code> when a submenu is closed. The event listener function format is <code>function(event, menuElement, submenuElement)</code> as above.</li>
@@ -1389,6 +1389,13 @@ Creating custom modals is straightforward: create a partial view, its controller
 <li><code>templateUrl</code> - a path to a template representing modal&#39;s content</li>
 <li><code>template</code> - inline template representing the modal&#39;s content</li>
 <li><code>scope</code> - a scope instance to be used for the modal&#39;s content (actually the <code>$modal</code> service is going to create a child scope of a provided scope). Defaults to <code>$rootScope</code></li>
+<li><code>component</code> - a string reference to the component to be rendered as the modal content.<br>It supports these bindings:<ul>
+<li><code>close</code> - A method that can be used to close a modal, passing a result.  The result must be passed in this format: <code>{$value: myResult}</code></li>
+<li><code>dismiss</code> - A method that can be used to dismiss a modal, passing a result. The result must be passed in this format: <code>{$value: myRejectedResult}</code></li>
+<li><code>modalInstance</code> - The modal instance.   This is the same as <code>$modalInstance</code> injected when using <code>controller</code>.</li>
+<li><code>resolve</code> - An object containing the resolved values passed in via the <code>resolve</code> option.</li>
+</ul>
+</li>
 <li><code>controller</code> - a controller for a modal instance - it can initialize scope used by modal. Accepts the &quot;controller-as&quot; syntax, and can be injected with <code>$modalInstance</code></li>
 <li><code>controllerAs</code> - an alternative to the aforementioned &quot;controller-as&quot; syntax. This is intended for the case of when the <code>controller</code> option is assigned an anonymous or local function and thus the &quot;controller-as&quot; syntax couldn&#39;t be applied.</li>
 <li><code>resolve</code> - members that will be resolved and passed to the controller as locals; it is equivalent of the <code>resolve</code> property for AngularJS routes</li>
@@ -2046,7 +2053,7 @@ Creating custom modals is straightforward: create a partial view, its controller
                         <p>A progress bar directive that is focused on providing feedback on the progress of a workflow or action.</p>
 <p>It supports multiple (stacked) bars into the same <code>&lt;progress&gt;</code> element or a single <code>&lt;progressbar&gt;</code> element with optional <code>max</code> attribute and transition animations.</p>
 <h3 id="settings">Settings</h3>
-<h4 id="-progressbar-"><code>&lt;progressbar&gt;</code></h4>
+<h4 id="progressbar"><code>&lt;progressbar&gt;</code></h4>
 <ul>
 <li><p><code>value</code> <i class="fa fa-eye"></i>
   :
@@ -2174,7 +2181,7 @@ Creating custom modals is straightforward: create a partial view, its controller
                         <p>Rating directive that will take care of visualising a star rating bar.</p>
 <p>It uses Font Awesome icons (<a href="http://fontawesome.io/">http://fontawesome.io/</a>) by default.</p>
 <h3 id="settings">Settings</h3>
-<h4 id="-rating-"><code>&lt;rating&gt;</code></h4>
+<h4 id="rating"><code>&lt;rating&gt;</code></h4>
 <ul>
 <li><p><code>value</code> <i class="fa fa-eye"></i>
   :
@@ -2321,7 +2328,7 @@ Creating custom modals is straightforward: create a partial view, its controller
                       <div class="columns medium-6">
                         <p>Foundation version of the tabs directive.</p>
 <h3 id="settings">Settings</h3>
-<h4 id="-tabset-"><code>&lt;tabset&gt;</code></h4>
+<h4 id="tabset"><code>&lt;tabset&gt;</code></h4>
 <ul>
 <li><p><code>vertical</code>
   <em>(Defaults: false)</em> :
@@ -2332,7 +2339,7 @@ Creating custom modals is straightforward: create a partial view, its controller
 Whether to open an active tab automatically.</p>
 </li>
 </ul>
-<h4 id="-tab-"><code>&lt;tab&gt;</code></h4>
+<h4 id="tab"><code>&lt;tab&gt;</code></h4>
 <ul>
 <li><p><code>heading</code> or <code>&lt;tab-heading&gt;</code>
   :

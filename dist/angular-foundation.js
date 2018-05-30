@@ -72,7 +72,7 @@
      * angular-foundation-6
      * http://circlingthesun.github.io/angular-foundation-6/
     
-     * Version: 0.11.19 - 2018-02-24
+     * Version: 0.11.20 - 2018-03-15
      * License: MIT
      * (c) 
      */
@@ -1213,6 +1213,15 @@
         var openedWindows = new StackedMap();
         var $modalStack = {};
 
+        var KEBAB_CASE_REGEXP = /[A-Z]/g;
+
+        function kebabCase(name) {
+            var separator = '-';
+            return name.replace(KEBAB_CASE_REGEXP, function (letter, pos) {
+                return (pos ? separator : '') + letter.toLowerCase();
+            });
+        }
+
         function backdropIndex() {
             var topBackdropIndex = -1;
             var opened = openedWindows.keys();
@@ -1431,12 +1440,26 @@
                 classes.push('without-overlay');
             }
 
+            var content = void 0;
+            if (options.component) {
+                content = document.createElement(kebabCase(options.component.name));
+                content = angular.element(content);
+                content.attr({
+                    resolve: '$resolve',
+                    'modal-instance': '$modalInstance',
+                    close: '$close($value)',
+                    dismiss: '$dismiss($value)'
+                });
+            } else {
+                content = options.content;
+            }
+
             var modalDomEl = angular.element('<div modal-window></div>').attr({
                 'window-class': classes.join(' '),
                 index: openedWindows.length() - 1
             });
 
-            modalDomEl.html(options.content);
+            modalDomEl.append(content);
             $compile(modalDomEl)(options.scope);
 
             openedWindows.top().value.modalDomEl = modalDomEl;
@@ -1620,36 +1643,27 @@
                 modalOptions.resolve = modalOptions.resolve || {};
 
                 // verify options
-                if (!modalOptions.template && !modalOptions.templateUrl) {
-                    throw new Error('One of template or templateUrl options is required.');
+                if (!modalOptions.component && !modalOptions.template && !modalOptions.templateUrl) {
+                    throw new Error('One of component or template or templateUrl options is required.');
                 }
 
-                var templateAndResolvePromise = $q.all([getTemplatePromise(modalOptions)].concat(getResolvePromises(modalOptions.resolve)));
+                if (modalOptions.component && (modalOptions.template || modalOptions.templateUrl || modalOptions.controller)) {
+                    throw new Error('Either component or template options is required, not both.');
+                }
+
+                var templateAndResolvePromise = void 0;
+                if (modalOptions.component) {
+                    templateAndResolvePromise = $q.all(getResolvePromises(modalOptions.resolve));
+                } else {
+                    templateAndResolvePromise = $q.all([getTemplatePromise(modalOptions)].concat(getResolvePromises(modalOptions.resolve)));
+                }
 
                 var openedPromise = templateAndResolvePromise.then(function (tplAndVars) {
                     var modalScope = (modalOptions.scope || $rootScope).$new();
                     modalScope.$close = modalInstance.close;
                     modalScope.$dismiss = modalInstance.dismiss;
 
-                    var ctrlInstance = void 0;
-                    var ctrlLocals = {};
-                    var resolveIter = 1;
-
-                    // controllers
-                    if (modalOptions.controller) {
-                        ctrlLocals.$scope = modalScope;
-                        ctrlLocals.$modalInstance = modalInstance;
-                        angular.forEach(modalOptions.resolve, function (value, key) {
-                            ctrlLocals[key] = tplAndVars[resolveIter++];
-                        });
-
-                        ctrlInstance = $controller(modalOptions.controller, ctrlLocals);
-                        if (modalOptions.controllerAs) {
-                            modalScope[modalOptions.controllerAs] = ctrlInstance;
-                        }
-                    }
-
-                    return $modalStack.open(modalInstance, {
+                    var modal = {
                         scope: modalScope,
                         deferred: modalResultDeferred,
                         content: tplAndVars[0],
@@ -1659,7 +1673,41 @@
                         size: modalOptions.size,
                         closeOnClick: modalOptions.closeOnClick,
                         id: modalOptions.id
-                    });
+                    };
+
+                    var ctrlInstance = void 0;
+                    var ctrlLocals = {};
+
+                    if (modalOptions.component) {
+                        var component = {
+                            name: modalOptions.component,
+                            $scope: modalScope
+                        };
+
+                        // construct locals
+                        component.$scope.$modalInstance = modalInstance;
+                        component.$scope.$resolve = {};
+                        var resolveIter = 0;
+                        angular.forEach(modalOptions.resolve, function (value, key) {
+                            component.$scope.$resolve[key] = tplAndVars[resolveIter++];
+                        });
+
+                        modal.component = component;
+                    } else if (modalOptions.controller) {
+                        ctrlLocals.$scope = modalScope;
+                        ctrlLocals.$modalInstance = modalInstance;
+                        var _resolveIter = 1;
+                        angular.forEach(modalOptions.resolve, function (value, key) {
+                            ctrlLocals[key] = tplAndVars[_resolveIter++];
+                        });
+
+                        ctrlInstance = $controller(modalOptions.controller, ctrlLocals);
+                        if (modalOptions.controllerAs) {
+                            modalScope[modalOptions.controllerAs] = ctrlInstance;
+                        }
+                    }
+
+                    return $modalStack.open(modalInstance, modal);
                 }, function (reason) {
                     modalResultDeferred.reject(reason);
                     return $q.reject(reason);

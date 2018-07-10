@@ -400,7 +400,7 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
                 focusedElem.focus();
                 modalParent[0].scrollTop = y;
             });
-        });
+        }, 100); // Dirty hack to work around angular's lazy compilation: https://github.com/angular/angular.js/issues/14343
     };
 
     $modalStack.reposition = (modalInstance) => {

@@ -72,7 +72,7 @@
      * angular-foundation-6
      * http://circlingthesun.github.io/angular-foundation-6/
     
-     * Version: 0.11.20 - 2018-05-30
+     * Version: 0.11.21 - 2018-07-10
      * License: MIT
      * (c) 
      */
@@ -1524,7 +1524,7 @@
                     focusedElem.focus();
                     modalParent[0].scrollTop = y;
                 });
-            });
+            }, 100); // Dirty hack to work around angular's lazy compilation: https://github.com/angular/angular.js/issues/14343
         };
 
         $modalStack.reposition = function (modalInstance) {

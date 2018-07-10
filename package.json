@@ -76,5 +76,7 @@
       "core-js": "npm:core-js@^1.1.4"
     }
   },
-  "dependencies": {}
+  "dependencies": {
+    "babel-preset-stage-2": "^6.24.1"
+  }
 }

@@ -35,49 +35,6 @@ export class StackedMap {
 
 angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
 
-
-/**
- * A helper directive for the $modal service. It creates a backdrop element.
- */
-.directive('modalBackdrop', ($modalStack) => {
-    'ngInject';
-    return {
-        restrict: 'EA',
-        replace: true,
-        templateUrl: 'template/modal/backdrop.html',
-        link: (scope) => {
-            scope.close = (evt) => {
-                const modal = $modalStack.getTop();
-                if (modal && modal.value.closeOnClick && modal.value.backdrop && modal.value.backdrop !== 'static' && (evt.target === evt.currentTarget)) {
-                    evt.preventDefault();
-                    evt.stopPropagation();
-                    $modalStack.dismiss(modal.key, 'backdrop click');
-                }
-            };
-        },
-    };
-})
-
-.directive('modalWindow', ($modalStack) => {
-    'ngInject';
-    return {
-        restrict: 'EA',
-        scope: {
-            index: '@',
-        },
-        replace: true,
-        transclude: true,
-        templateUrl: 'template/modal/window.html',
-        link: (scope, element, attrs) => {
-            scope.windowClass = attrs.windowClass || '';
-            scope.isTop = () => {
-                const top = $modalStack.getTop();
-                return top ? top.value.modalScope && top.value.modalScope === scope.$parent : true;
-            };
-        },
-    };
-})
-
 .factory('$modalStack', ($window, $timeout, $document, $compile, $rootScope, $animate, $q, mediaQueries) => {
     'ngInject';
     const isMobile = mediaQueries.mobileSniff();
@@ -129,13 +86,6 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
 
         // clean up the stack
         openedWindows.remove(modalInstance);
-
-        // Remove backdrop
-        if (modalWindow.backdropDomEl) {
-            $animate.leave(modalWindow.backdropDomEl).then(() => {
-                modalWindow.backdropScope.$destroy();
-            });
-        }
 
         // Remove modal
         if (openedWindows.length() === 0) {
@@ -292,15 +242,6 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
 
         const currBackdropIndex = backdropIndex();
 
-        let backdropDomEl;
-
-        if (options.backdrop) {
-            const backdropScope = $rootScope.$new(true);
-            backdropDomEl = $compile('<div modal-backdrop></div>')(backdropScope);
-            openedWindows.top().value.backdropDomEl = backdropDomEl;
-            openedWindows.top().value.backdropScope = backdropScope;
-        }
-
         if (openedWindows.length() === 1) {
             angular.element($window).on('resize', resizeHandler);
         }
@@ -332,86 +273,93 @@ angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
             content = options.content;
         }
 
-        const modalDomEl = angular.element('<div modal-window></div>').attr({
-            'window-class': classes.join(' '),
-            index: openedWindows.length() - 1,
-        });
+        let tpl = `
+            <div
+                class="${['reveal', ...classes].join(' ')}"
+                tabindex="-1"
+                style="display: block;"
+            >
+                ${content}
+            </div>
+        `;
 
-        modalDomEl.append(content);
+        if (options.backdrop) {
+            tpl = `<div
+                ng-animate-children="true"
+                class="reveal-overlay ng-animate"
+                ng-click="$$close($event)"
+                style="display: block;"
+            >
+                ${tpl}
+            </div>`
+        }
+
+        const modalDomEl = angular.element(tpl);
+
+        options.scope.$$close = (evt) => {
+            const modal = $modalStack.getTop();
+            if (modal && modal.value.closeOnClick && modal.value.backdrop && modal.value.backdrop !== 'static' && (evt.target === evt.currentTarget)) {
+                evt.preventDefault();
+                evt.stopPropagation();
+                $modalStack.dismiss(modal.key, 'backdrop click');
+            }
+        }
+
         $compile(modalDomEl)(options.scope);
 
         openedWindows.top().value.modalDomEl = modalDomEl;
 
-        return $timeout(() => {
-            // let the directives kick in
-            options.scope.$apply();
+        // Attach, measure, remove
+        const body = $document.find('body').eq(0);
+        // body.prepend(modalDomEl);
+        // const modalPos = getModalCenter(modalInstance, true);
+        // modalDomEl.detach();
 
-            // Attach, measure, remove
-            const body = $document.find('body').eq(0);
-            body.prepend(modalDomEl);
-            const modalPos = getModalCenter(modalInstance, true);
-            modalDomEl.detach();
+        //
+        // Apply the style with .css() to conform to content security policy
+        //
+        // modalDomEl.css({
+        //     visibility: 'visible',
+        //     left: '${modalPos.left}px',
+        //     display: 'block',
+        //     position: '${modalPos.position}',
+        //     'z-index': '',  // Clear the z-index that was previously set above
+        // });
 
-            //
-            // Apply the style with .css() to conform to content security policy
-            //
-            modalDomEl.css({
-                visibility: 'visible',
-                left: '${modalPos.left}px',
-                display: 'block',
-                position: '${modalPos.position}',
-                'z-index': '',  // Clear the z-index that was previously set above
-            });
+        const promises = [];
 
-            const promises = [];
+        promises.push($animate.enter(modalDomEl, body, body[0].lastChild));
 
-            if (backdropDomEl) {
-                //
-                // Enusre this is display: block
-                // NOTE: this must be done AFTER $compile or CSP errors are triggered,
-                //       and after $timeout or it is just replaced by the template.
-                //
-                backdropDomEl.css({
-                    display: 'block',
-                });
-                promises.push($animate.enter(backdropDomEl, body, body[0].lastChild));
-            }
+        if (isMobile) {
+            originalScrollPos = $window.pageYOffset;
+            const html = $document.find('html').eq(0);
+            html.addClass(OPENED_MODAL_CLASS);
+        }
 
-            const modalParent = backdropDomEl || body;
+        body.addClass(OPENED_MODAL_CLASS);
 
-            promises.push($animate.enter(modalDomEl, modalParent, modalParent[0].lastChild));
+        // Only for no backdrop modals
+        if (!options.backdrop) {
+            options.scope.$watch(() => Math.floor(modalDomEl[0].offsetHeight / 10), resizeHandler);
+        }
 
-            if (isMobile) {
-                originalScrollPos = $window.pageYOffset;
-                const html = $document.find('html').eq(0);
-                html.addClass(OPENED_MODAL_CLASS);
-            }
-
-            body.addClass(OPENED_MODAL_CLASS);
-
-            // Only for no backdrop modals
-            if (!options.backdrop) {
-                options.scope.$watch(() => Math.floor(modalDomEl[0].offsetHeight / 10), resizeHandler);
-            }
-
-            return $q.all(promises).then(() => {
-                const focusedElem = (modalDomEl[0].querySelector('[autofocus]') || modalDomEl[0]);
-                const y = modalParent[0].scrollTop;
-                focusedElem.focus();
-                modalParent[0].scrollTop = y;
-            });
-        }, 100); // Dirty hack to work around angular's lazy compilation: https://github.com/angular/angular.js/issues/14343
+        return $q.all(promises).then(() => {
+            const focusedElem = (modalDomEl[0].querySelector('[autofocus]') || modalDomEl[0]);
+            const y = body[0].scrollTop;
+            focusedElem.focus();
+            body[0].scrollTop = y;
+        });
     };
 
     $modalStack.reposition = (modalInstance) => {
         const modalWindow = openedWindows.get(modalInstance).value;
-        if (modalWindow) {
-            const modalDomEl = modalWindow.modalDomEl;
-            const modalPos = getModalCenter(modalInstance);
-            modalDomEl.css('left', `${modalPos.left}px`);
-            modalDomEl.css('position', modalPos.position);
-            return modalPos;
-        }
+        // if (modalWindow) {
+        //     const modalDomEl = modalWindow.modalDomEl;
+        //     const modalPos = getModalCenter(modalInstance);
+        //     modalDomEl.css('left', `${modalPos.left}px`);
+        //     modalDomEl.css('position', modalPos.position);
+        //     return modalPos;
+        // }
         return {};
     };
 

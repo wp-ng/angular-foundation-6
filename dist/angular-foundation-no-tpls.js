@@ -72,7 +72,7 @@
      * angular-foundation-6
      * http://circlingthesun.github.io/angular-foundation-6/
     
-     * Version: 0.11.21 - 2018-07-10
+     * Version: 0.11.22 - 2018-07-10
      * License: MIT
      * (c) 
      */
@@ -1143,49 +1143,7 @@
         return StackedMap;
     }();
 
-    angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries'])
-
-    /**
-     * A helper directive for the $modal service. It creates a backdrop element.
-     */
-    .directive('modalBackdrop', ['$modalStack', function ($modalStack) {
-        'ngInject';
-
-        return {
-            restrict: 'EA',
-            replace: true,
-            templateUrl: 'template/modal/backdrop.html',
-            link: function link(scope) {
-                scope.close = function (evt) {
-                    var modal = $modalStack.getTop();
-                    if (modal && modal.value.closeOnClick && modal.value.backdrop && modal.value.backdrop !== 'static' && evt.target === evt.currentTarget) {
-                        evt.preventDefault();
-                        evt.stopPropagation();
-                        $modalStack.dismiss(modal.key, 'backdrop click');
-                    }
-                };
-            }
-        };
-    }]).directive('modalWindow', ['$modalStack', function ($modalStack) {
-        'ngInject';
-
-        return {
-            restrict: 'EA',
-            scope: {
-                index: '@'
-            },
-            replace: true,
-            transclude: true,
-            templateUrl: 'template/modal/window.html',
-            link: function link(scope, element, attrs) {
-                scope.windowClass = attrs.windowClass || '';
-                scope.isTop = function () {
-                    var top = $modalStack.getTop();
-                    return top ? top.value.modalScope && top.value.modalScope === scope.$parent : true;
-                };
-            }
-        };
-    }]).factory('$modalStack', ['$window', '$timeout', '$document', '$compile', '$rootScope', '$animate', '$q', 'mediaQueries', function ($window, $timeout, $document, $compile, $rootScope, $animate, $q, mediaQueries) {
+    angular.module('mm.foundation.modal', ['mm.foundation.mediaQueries']).factory('$modalStack', ['$window', '$timeout', '$document', '$compile', '$rootScope', '$animate', '$q', 'mediaQueries', function ($window, $timeout, $document, $compile, $rootScope, $animate, $q, mediaQueries) {
         'ngInject';
 
         var isMobile = mediaQueries.mobileSniff();
@@ -1235,13 +1193,6 @@
 
             // clean up the stack
             openedWindows.remove(modalInstance);
-
-            // Remove backdrop
-            if (modalWindow.backdropDomEl) {
-                $animate.leave(modalWindow.backdropDomEl).then(function () {
-                    modalWindow.backdropScope.$destroy();
-                });
-            }
 
             // Remove modal
             if (openedWindows.length() === 0) {
@@ -1398,15 +1349,6 @@
 
             var currBackdropIndex = backdropIndex();
 
-            var backdropDomEl = void 0;
-
-            if (options.backdrop) {
-                var backdropScope = $rootScope.$new(true);
-                backdropDomEl = $compile('<div modal-backdrop></div>')(backdropScope);
-                openedWindows.top().value.backdropDomEl = backdropDomEl;
-                openedWindows.top().value.backdropScope = backdropScope;
-            }
-
             if (openedWindows.length() === 1) {
                 angular.element($window).on('resize', resizeHandler);
             }
@@ -1438,88 +1380,80 @@
                 content = options.content;
             }
 
-            var modalDomEl = angular.element('<div modal-window></div>').attr({
-                'window-class': classes.join(' '),
-                index: openedWindows.length() - 1
-            });
+            var tpl = '\n            <div\n                class="' + ['reveal'].concat(classes).join(' ') + '"\n                tabindex="-1"\n                style="display: block;"\n            >\n                ' + content + '\n            </div>\n        ';
 
-            modalDomEl.append(content);
+            if (options.backdrop) {
+                tpl = '<div\n                ng-animate-children="true"\n                class="reveal-overlay ng-animate"\n                ng-click="$$close($event)"\n                style="display: block;"\n            >\n                ' + tpl + '\n            </div>';
+            }
+
+            var modalDomEl = angular.element(tpl);
+
+            options.scope.$$close = function (evt) {
+                var modal = $modalStack.getTop();
+                if (modal && modal.value.closeOnClick && modal.value.backdrop && modal.value.backdrop !== 'static' && evt.target === evt.currentTarget) {
+                    evt.preventDefault();
+                    evt.stopPropagation();
+                    $modalStack.dismiss(modal.key, 'backdrop click');
+                }
+            };
+
             $compile(modalDomEl)(options.scope);
 
             openedWindows.top().value.modalDomEl = modalDomEl;
 
-            return $timeout(function () {
-                // let the directives kick in
-                options.scope.$apply();
+            // Attach, measure, remove
+            var body = $document.find('body').eq(0);
+            // body.prepend(modalDomEl);
+            // const modalPos = getModalCenter(modalInstance, true);
+            // modalDomEl.detach();
 
-                // Attach, measure, remove
-                var body = $document.find('body').eq(0);
-                body.prepend(modalDomEl);
-                var modalPos = getModalCenter(modalInstance, true);
-                modalDomEl.detach();
+            //
+            // Apply the style with .css() to conform to content security policy
+            //
+            // modalDomEl.css({
+            //     visibility: 'visible',
+            //     left: '${modalPos.left}px',
+            //     display: 'block',
+            //     position: '${modalPos.position}',
+            //     'z-index': '',  // Clear the z-index that was previously set above
+            // });
 
-                //
-                // Apply the style with .css() to conform to content security policy
-                //
-                modalDomEl.css({
-                    visibility: 'visible',
-                    left: '${modalPos.left}px',
-                    display: 'block',
-                    position: '${modalPos.position}',
-                    'z-index': '' // Clear the z-index that was previously set above
-                });
+            var promises = [];
 
-                var promises = [];
+            promises.push($animate.enter(modalDomEl, body, body[0].lastChild));
 
-                if (backdropDomEl) {
-                    //
-                    // Enusre this is display: block
-                    // NOTE: this must be done AFTER $compile or CSP errors are triggered,
-                    //       and after $timeout or it is just replaced by the template.
-                    //
-                    backdropDomEl.css({
-                        display: 'block'
-                    });
-                    promises.push($animate.enter(backdropDomEl, body, body[0].lastChild));
-                }
+            if (isMobile) {
+                originalScrollPos = $window.pageYOffset;
+                var html = $document.find('html').eq(0);
+                html.addClass(OPENED_MODAL_CLASS);
+            }
 
-                var modalParent = backdropDomEl || body;
+            body.addClass(OPENED_MODAL_CLASS);
 
-                promises.push($animate.enter(modalDomEl, modalParent, modalParent[0].lastChild));
+            // Only for no backdrop modals
+            if (!options.backdrop) {
+                options.scope.$watch(function () {
+                    return Math.floor(modalDomEl[0].offsetHeight / 10);
+                }, resizeHandler);
+            }
 
-                if (isMobile) {
-                    originalScrollPos = $window.pageYOffset;
-                    var html = $document.find('html').eq(0);
-                    html.addClass(OPENED_MODAL_CLASS);
-                }
-
-                body.addClass(OPENED_MODAL_CLASS);
-
-                // Only for no backdrop modals
-                if (!options.backdrop) {
-                    options.scope.$watch(function () {
-                        return Math.floor(modalDomEl[0].offsetHeight / 10);
-                    }, resizeHandler);
-                }
-
-                return $q.all(promises).then(function () {
-                    var focusedElem = modalDomEl[0].querySelector('[autofocus]') || modalDomEl[0];
-                    var y = modalParent[0].scrollTop;
-                    focusedElem.focus();
-                    modalParent[0].scrollTop = y;
-                });
-            }, 100); // Dirty hack to work around angular's lazy compilation: https://github.com/angular/angular.js/issues/14343
+            return $q.all(promises).then(function () {
+                var focusedElem = modalDomEl[0].querySelector('[autofocus]') || modalDomEl[0];
+                var y = body[0].scrollTop;
+                focusedElem.focus();
+                body[0].scrollTop = y;
+            });
         };
 
         $modalStack.reposition = function (modalInstance) {
             var modalWindow = openedWindows.get(modalInstance).value;
-            if (modalWindow) {
-                var modalDomEl = modalWindow.modalDomEl;
-                var modalPos = getModalCenter(modalInstance);
-                modalDomEl.css('left', modalPos.left + 'px');
-                modalDomEl.css('position', modalPos.position);
-                return modalPos;
-            }
+            // if (modalWindow) {
+            //     const modalDomEl = modalWindow.modalDomEl;
+            //     const modalPos = getModalCenter(modalInstance);
+            //     modalDomEl.css('left', `${modalPos.left}px`);
+            //     modalDomEl.css('position', modalPos.position);
+            //     return modalPos;
+            // }
             return {};
         };
 

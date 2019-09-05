@@ -72,7 +72,7 @@
      * angular-foundation-6
      * http://circlingthesun.github.io/angular-foundation-6/
     
-     * Version: 0.11.21 - 2018-07-10
+     * Version: 0.11.22 - 2019-09-05
      * License: MIT
      * (c) 
      */
@@ -2312,7 +2312,7 @@
     (function () {
         angular.module("mm.foundation.pagination").run(["$templateCache", function ($templateCache) {
             $templateCache.put("template/pagination/pager.html", "<ul class=\"pagination\">\n  <li ng-repeat=\"page in pages\" class=\"arrow\" ng-class=\"{unavailable: page.disabled, left: page.previous, right: page.next}\"><a ng-click=\"selectPage(page.number)\">{{page.text}}</a></li>\n</ul>\n");
-            $templateCache.put("template/pagination/pagination.html", "<ul class=\"pagination\" role=\"navigation\" aria-label=\"Pagination\">\n  <li ng-repeat=\"page in pages\"\n    ng-class=\"{\n        \'pagination-previous\': $first,\n        \'pagination-next\': $last,\n        current: page.active,\n        disabled: page.disabled\n        }\">\n    <a ng-if=\"!page.active\" ng-click=\"selectPage(page.number)\">{{page.text}}</a>\n    <span ng-if=\"page.active\">{{page.text}}</span>\n  </li>\n</ul>\n");
+            $templateCache.put("template/pagination/pagination.html", "<ul class=\"pagination\" role=\"navigation\" aria-label=\"Pagination\">\n  <li ng-repeat=\"page in pages\"\n    ng-class=\"{\n        \'pagination-previous\': $first,\n        \'pagination-next\': $last,\n        current: page.active,\n        disabled: page.disabled\n        }\">\n    <a ng-if=\"!page.active  && !page.disabled\" ng-click=\"selectPage(page.number)\">{{page.text}}</a>\n    <span ng-if=\"page.active || page.disabled\">{{page.text}}</span>\n  </li>\n</ul>\n");
         }]);
     })();
     angular.module('mm.foundation.position', [])

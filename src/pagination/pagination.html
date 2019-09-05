@@ -6,7 +6,7 @@
         current: page.active,
         disabled: page.disabled
         }">
-    <a ng-if="!page.active  && !page.disabled" ng-click="selectPage(page.number)">{{page.text}}</a>
-    <span ng-if="page.active || page.disabled">{{page.text}}</span>
+    <a ng-if="!page.active" ng-click="selectPage(page.number)">{{page.text}}</a>
+    <span ng-if="page.active">{{page.text}}</span>
   </li>
 </ul>

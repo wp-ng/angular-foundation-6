@@ -567,13 +567,13 @@ associated js for an example.</p>
 <ul>
 <li><code>&#39;resize.mm.foundation.drilldownMenu&#39;</code> when the menu resizes. The event listener function format is <code>function(event, menuElement)</code>:<ul>
 <li><code>event</code> - Standard <a href="https://code.angularjs.org/1.6.5/docs/api/ng/type/$rootScope.Scope#$on">Angular <code>event</code> object</a></li>
-<li><code>menuElement</code> - <a href="https://code.angularjs.org/1.6.5/docs/api/ng/function/angular.element">angular.element</a> for the top level <em>UL</em> element of the menu.</li>
+<li><code>menuElement</code> - <a href="https://code.angularjs.org/1.6.5/docs/api/ng/function/angular.element">angular.element</a> for the top level _UL_ element of the menu.</li>
 </ul>
 </li>
 <li><code>&#39;open.mm.foundation.drilldownMenu&#39;</code> when a submenu is opened. The event listener function format is <code>function(event, menuElement, submenuElement)</code>:<ul>
 <li><code>event</code> - Standard <a href="https://code.angularjs.org/1.6.5/docs/api/ng/type/$rootScope.Scope#$on">Angular <code>event</code> object</a></li>
-<li><code>menuElement</code> - <a href="https://code.angularjs.org/1.6.5/docs/api/ng/function/angular.element">angular.element</a> for the top level <em>UL</em> element of the menu.</li>
-<li><code>submenuElement</code> - <a href="https://code.angularjs.org/1.6.5/docs/api/ng/function/angular.element">angular.element</a> for the <em>UL</em> element at the top of the submenu that has just been opened.</li>
+<li><code>menuElement</code> - <a href="https://code.angularjs.org/1.6.5/docs/api/ng/function/angular.element">angular.element</a> for the top level _UL_ element of the menu.</li>
+<li><code>submenuElement</code> - <a href="https://code.angularjs.org/1.6.5/docs/api/ng/function/angular.element">angular.element</a> for the _UL_ element at the top of the submenu that has just been opened.</li>
 </ul>
 </li>
 <li><code>&#39;hide.mm.foundation.drilldownMenu&#39;</code> when a submenu is closed. The event listener function format is <code>function(event, menuElement, submenuElement)</code> as above.</li>
@@ -2053,7 +2053,7 @@ Creating custom modals is straightforward: create a partial view, its controller
                         <p>A progress bar directive that is focused on providing feedback on the progress of a workflow or action.</p>
 <p>It supports multiple (stacked) bars into the same <code>&lt;progress&gt;</code> element or a single <code>&lt;progressbar&gt;</code> element with optional <code>max</code> attribute and transition animations.</p>
 <h3 id="settings">Settings</h3>
-<h4 id="-progressbar-"><code>&lt;progressbar&gt;</code></h4>
+<h4 id="progressbar"><code>&lt;progressbar&gt;</code></h4>
 <ul>
 <li><p><code>value</code> <i class="fa fa-eye"></i>
   :
@@ -2181,7 +2181,7 @@ Creating custom modals is straightforward: create a partial view, its controller
                         <p>Rating directive that will take care of visualising a star rating bar.</p>
 <p>It uses Font Awesome icons (<a href="http://fontawesome.io/">http://fontawesome.io/</a>) by default.</p>
 <h3 id="settings">Settings</h3>
-<h4 id="-rating-"><code>&lt;rating&gt;</code></h4>
+<h4 id="rating"><code>&lt;rating&gt;</code></h4>
 <ul>
 <li><p><code>value</code> <i class="fa fa-eye"></i>
   :
@@ -2328,7 +2328,7 @@ Creating custom modals is straightforward: create a partial view, its controller
                       <div class="columns medium-6">
                         <p>Foundation version of the tabs directive.</p>
 <h3 id="settings">Settings</h3>
-<h4 id="-tabset-"><code>&lt;tabset&gt;</code></h4>
+<h4 id="tabset"><code>&lt;tabset&gt;</code></h4>
 <ul>
 <li><p><code>vertical</code>
   <em>(Defaults: false)</em> :
@@ -2339,7 +2339,7 @@ Creating custom modals is straightforward: create a partial view, its controller
 Whether to open an active tab automatically.</p>
 </li>
 </ul>
-<h4 id="-tab-"><code>&lt;tab&gt;</code></h4>
+<h4 id="tab"><code>&lt;tab&gt;</code></h4>
 <ul>
 <li><p><code>heading</code> or <code>&lt;tab-heading&gt;</code>
   :
